@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://brx3qhbs2mlxk"]
+
+[ext_resource type="Script" uid="uid://bj1t5rmkktqjj" path="res://scripts/interactable_item.gd" id="1_g3ofv"]
+[ext_resource type="Script" uid="uid://babykw3cnhmlq" path="res://scripts/interactable.gd" id="3_i38tp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i0tec"]
+size = Vector2(64, 64)
+
+[node name="InteractableItem" type="Node2D" unique_id=676369717 node_paths=PackedStringArray("interactable", "interact_label")]
+script = ExtResource("1_g3ofv")
+interactable = NodePath("Interactable")
+interact_label = NodePath("InteractLabel")
+
+[node name="ItemSprite" type="Sprite2D" parent="." unique_id=377260770]
+
+[node name="Interactable" type="Area2D" parent="." unique_id=404557334]
+script = ExtResource("3_i38tp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable" unique_id=741194521]
+y_sort_enabled = true
+shape = SubResource("RectangleShape2D_i0tec")
+
+[node name="InteractLabel" type="Label" parent="." unique_id=1108215502]
+offset_left = -120.0
+offset_top = -66.0
+offset_right = 120.0
+offset_bottom = -32.0
+theme_override_font_sizes/font_size = 24
+text = "Press key to interact"
+horizontal_alignment = 1
+vertical_alignment = 1
