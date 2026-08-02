@@ -11,10 +11,14 @@ const WATERTILESET = preload("uid://cnn5d42l12km6")
 @export var characters_list: Array[PackedScene]
 @export var characters_positions: Array[Vector2]
 @export var character_items_to_give: Array[int]
+@export var user_interface_component: PackedScene
+
+var _user_interface: Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+	if user_interface_component != null:
+		_spawn_user_interface(user_interface_component)
 	if player_component != null && playerPosition != null:
 		_spawn_player(player_component,playerPosition)
 	if item_list.size() == item_positions.size() && item_positions.size() == item_id_list.size():
@@ -23,6 +27,7 @@ func _ready():
 	if characters_list.size() == characters_positions.size() and characters_positions.size() == character_items_to_give.size():
 		for i in range(characters_list.size()):
 			_spawn_non_players(characters_list[i],characters_positions[i], character_items_to_give[i])
+
 	
 	var water: Resource = load("res://assets/tiles/Water.png")
 	var tile_size = Vector2i(64,64)
@@ -167,7 +172,12 @@ func _process(_delta):
 func _spawn_player(player: PackedScene, new_position: Vector2):
 	var pl = player.instantiate()
 	add_child(pl)
+	#pl.add_child(_user_interface)
 	pl.position = new_position
+	if _user_interface == null:
+		return
+	if _user_interface.has_method("connect_player_adding_item"):
+		_user_interface.connect_player_adding_item(pl)
 
 func _spawn_item(item: PackedScene, new_position: Vector2, id: int):
 	var it = item.instantiate()
@@ -182,3 +192,12 @@ func _spawn_non_players(npc: PackedScene, new_position: Vector2, item_to_give: i
 	new_npc.position = new_position
 	if item_to_give != -1 and new_npc.has_signal("assign_item_to_give"):
 		new_npc.emit_signal("assign_item_to_give", item_to_give)
+	if _user_interface == null:
+		return
+	if _user_interface.has_method("connect_characters_dialogues"):
+		_user_interface.connect_characters_dialogues(new_npc)
+
+func _spawn_user_interface(ui: PackedScene):
+	var new_ui = ui.instantiate()
+	add_child(new_ui)
+	_user_interface = new_ui

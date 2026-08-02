@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://d4ghxn1adm0of"]
+
+[ext_resource type="Script" uid="uid://c0yt472wm2bbp" path="res://scripts/user_interface_node.gd" id="1_5dbsk"]
+[ext_resource type="PackedScene" uid="uid://cdhgl6y06d038" path="res://scenes/option_button.tscn" id="2_hawkg"]
+
+[node name="UserInterfaceNode" type="Control" unique_id=1552629879]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5dbsk")
+option_button_component = ExtResource("2_hawkg")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1646032098]
+
+[node name="MainContainer" type="MarginContainer" parent="CanvasLayer" unique_id=395478691]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="SecondaryContainer" type="VBoxContainer" parent="CanvasLayer/MainContainer" unique_id=1172361499]
+layout_mode = 2
+alignment = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="CanvasLayer/MainContainer/SecondaryContainer" unique_id=2063191630]
+layout_mode = 2
+alignment = 1
+
+[node name="DialogueLabel" type="Label" parent="CanvasLayer/MainContainer/SecondaryContainer" unique_id=1188102812]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "THIS IS DIALOGUE
+HERE IS SOME MORE"
+horizontal_alignment = 1
