@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c0yt472wm2bbp" path="res://scripts/user_interface_node.gd" id="1_5dbsk"]
 [ext_resource type="PackedScene" uid="uid://cdhgl6y06d038" path="res://scenes/option_button.tscn" id="2_hawkg"]
+[ext_resource type="PackedScene" uid="uid://bcdhuqgwfio1g" path="res://scenes/inventory_ui_slot.tscn" id="3_rtxc5"]
 
 [node name="UserInterfaceNode" type="Control" unique_id=1552629879]
 layout_mode = 3
@@ -12,6 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5dbsk")
 option_button_component = ExtResource("2_hawkg")
+slot_scene = ExtResource("3_rtxc5")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1646032098]
 
@@ -25,6 +27,14 @@ theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
+
+[node name="TerchiaryContainer" type="VBoxContainer" parent="CanvasLayer/MainContainer" unique_id=1850581304]
+layout_mode = 2
+
+[node name="ItemCollection" type="HBoxContainer" parent="CanvasLayer/MainContainer/TerchiaryContainer" unique_id=305998026]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
 
 [node name="SecondaryContainer" type="VBoxContainer" parent="CanvasLayer/MainContainer" unique_id=1172361499]
 layout_mode = 2

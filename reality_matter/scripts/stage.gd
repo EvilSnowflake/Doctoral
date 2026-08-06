@@ -5,29 +5,36 @@ const WATERTILESET = preload("uid://cnn5d42l12km6")
 
 @export var player_component: PackedScene
 @export var item_list: Array[PackedScene]
-@export var item_id_list: Array[int]
+@export var item_resources_list: Array[Item]
 @export var item_positions: Array[Vector2]
 @export var playerPosition: Vector2
 @export var characters_list: Array[PackedScene]
 @export var characters_positions: Array[Vector2]
-@export var character_items_to_give: Array[int]
+@export var character_items_to_give: Array[Item]
 @export var user_interface_component: PackedScene
+@export var inventory_spaces: int
+
+var inventory_instance: Inventory
 
 var _user_interface: Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	inventory_instance = Inventory.new()
+	#inventory_instance.max_slots = inventory_spaces
+	if inventory_instance.has_method("change_max_slots") and inventory_spaces != null:
+		inventory_instance.change_max_slots(inventory_spaces)
+	
 	if user_interface_component != null:
 		_spawn_user_interface(user_interface_component)
 	if player_component != null && playerPosition != null:
 		_spawn_player(player_component,playerPosition)
-	if item_list.size() == item_positions.size() && item_positions.size() == item_id_list.size():
+	if item_list.size() == item_positions.size() && item_positions.size() == item_resources_list.size():
 		for i in range(item_list.size()):
-			_spawn_item(item_list[i],item_positions[i], item_id_list[i])
+			_spawn_item(item_list[i],item_positions[i], item_resources_list[i])
 	if characters_list.size() == characters_positions.size() and characters_positions.size() == character_items_to_give.size():
 		for i in range(characters_list.size()):
 			_spawn_non_players(characters_list[i],characters_positions[i], character_items_to_give[i])
-
 	
 	var water: Resource = load("res://assets/tiles/Water.png")
 	var tile_size = Vector2i(64,64)
@@ -178,19 +185,26 @@ func _spawn_player(player: PackedScene, new_position: Vector2):
 		return
 	if _user_interface.has_method("connect_player_adding_item"):
 		_user_interface.connect_player_adding_item(pl)
+	if pl.has_method("receive_inventory") and inventory_instance != null:
+		pl.receive_inventory(inventory_instance)
 
-func _spawn_item(item: PackedScene, new_position: Vector2, id: int):
+func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item):
 	var it = item.instantiate()
 	add_child(it)
 	it.position = new_position
-	if it.has_signal("assign_id"):
-		it.emit_signal("assign_id",id)
+	#var item_contained: Item = item_resource
+	#item_contained.id = "5A"
+	#item_contained.description = "THIS DOES NOTHING"
+	#item_contained.name = "GARBAGE"
+	print_debug(item_resource.description)
+	if it.has_signal("assign_item_contained"):
+		it.emit_signal("assign_item_contained",item_resource)
 
-func _spawn_non_players(npc: PackedScene, new_position: Vector2, item_to_give: int = -1):
+func _spawn_non_players(npc: PackedScene, new_position: Vector2, item_to_give: Item = null):
 	var new_npc = npc.instantiate()
 	add_child(new_npc)
 	new_npc.position = new_position
-	if item_to_give != -1 and new_npc.has_signal("assign_item_to_give"):
+	if item_to_give != null and new_npc.has_signal("assign_item_to_give"):
 		new_npc.emit_signal("assign_item_to_give", item_to_give)
 	if _user_interface == null:
 		return
@@ -201,3 +215,5 @@ func _spawn_user_interface(ui: PackedScene):
 	var new_ui = ui.instantiate()
 	add_child(new_ui)
 	_user_interface = new_ui
+	if new_ui.has_method("receive_inventory") and inventory_instance != null:
+		new_ui.receive_inventory(inventory_instance)

@@ -3,7 +3,7 @@ extends StaticBody2D
 signal player_collided
 signal player_left
 signal start_conversation(player: CharacterBody2D)
-signal assign_item_to_give(item_id: int)
+signal assign_item_to_give(item: Item)
 signal initiate_dialogue(npc: StaticBody2D)
 signal end_dialogue()
 signal show_dialogue_text(text: String)
@@ -47,7 +47,7 @@ var CharacterDialogue: Dictionary = {
 @export_category("Components")
 @export var sprite: Sprite2D
 @export var dialogue_label: Label
-@export var item_id_to_give: int
+@export var item_to_give: Item
 
 var hFrames: int = 7
 var vFrames: int = 5
@@ -115,9 +115,9 @@ func _on_player_left_char() -> void:
 	#print_debug("Player left collision")
 	dialogue_label.text = ""
 
-func _on_assign_item_to_give(item_id: int):
-	if item_id != null:
-		item_id_to_give = item_id
+func _on_assign_item_to_give(item: Item):
+	if item != null:
+		item_to_give = item
 
 #This funciton determines what happens when the users attempts to converse with
 #the character
@@ -151,11 +151,11 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 				#we break the conversation
 				print_debug("Conversation Ended!")
 				break
-			elif curr_word == "GIVE_ITEM" and item_id_to_give != -1 and player_character.has_signal("add_item"):
-				player_character.emit_signal("add_item",item_id_to_give)
-				item_id_to_give = -1
+			elif curr_word == "GIVE_ITEM" and item_to_give != null and player_character.has_signal("add_item"):
+				player_character.emit_signal("add_item",item_to_give)
+				item_to_give = null
 				break
-			elif curr_word == "GIVE_ITEM" and item_id_to_give != -1:
+			elif curr_word == "GIVE_ITEM" and item_to_give != null:
 				break
 			else:
 				#This part is appropriate when the current word spoken has no

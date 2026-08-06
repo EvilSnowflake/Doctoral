@@ -3,10 +3,13 @@ extends Control
 @export var dialog_label: Label
 @export var option_button_component: PackedScene
 @export var button_container: HBoxContainer
+@export var slot_scene: PackedScene
+@export var item_collection: HBoxContainer
 
 var _current_npc_conversing: StaticBody2D
 var _await_user_input: bool = false
 var _has_options: bool = false
+var _inventory: Inventory
 
 #Here we will hold what the Interface will be able to do
 #When created this item gets connected to the user and all the npcs's related
@@ -22,6 +25,8 @@ func _ready():
 	dialog_label.text = ""
 	if button_container == null:
 		button_container = find_child("ButtonContainer")
+	if item_collection == null:
+		item_collection = find_child("ItemCollection")
 
 # Called every frame. '_delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -47,8 +52,8 @@ func connect_player_adding_item(player: CharacterBody2D) -> void:
 #Here we should have the function that adds the graphic of an item to the
 #inventory
 #NOT CURRENTLY MADE
-func _make_item_appear_on_onventory(id: int) -> void:
-	print_debug("Item " + str(id) + " added to inventory")
+func _make_item_appear_on_onventory(item_instance: Item) -> void:
+	print_debug("Item " + str(item_instance.name) + " added to inventory")
 
 #Here the interface connects to an npc's needed signals that: initiate a dialog
 #end the dialogue, show the dialogue's next text, adds the user's options
@@ -113,3 +118,24 @@ func _option_button_pressed(button_num: int):
 	if _current_npc_conversing!= null:
 		_current_npc_conversing.emit_signal("continue_dialogue",button_num)
 		_has_options = false
+
+func receive_inventory(inventory_instance: Inventory):
+	_inventory = inventory_instance
+	if _inventory.has_signal("inventory_changed"):
+		_inventory.inventory_changed.connect(_inventory_modified)
+	_inventory_modified()
+
+func _inventory_modified():
+	print_debug("Inventory changed")
+	#clear ui
+	for child in item_collection.get_children():
+		child.queue_free()
+	
+	#rebuild
+	for slot in _inventory.slots:
+		var ui_slot: PanelContainer = slot_scene.instantiate()
+		item_collection.add_child(ui_slot)
+		if !ui_slot.has_method("set_slot_data"):
+			return
+			
+		ui_slot.set_slot_data(slot)

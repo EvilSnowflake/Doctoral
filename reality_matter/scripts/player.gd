@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-signal add_item(item_id: int)
+signal add_item(item: Item)
 signal adjust_moving(ability: bool)
 
 var inputs: Dictionary = {
@@ -27,7 +27,7 @@ var TweenItems: Dictionary = {}
 @export var sprite: Sprite2D
 @export_category("Exterior Items")
 @export var lastItemCollided: Area2D
-@export var inventory_list: Array[int]
+@export var inventory_list: Inventory
 @export_category("Exterior Characters")
 @export var lastCharCollided: StaticBody2D
 
@@ -187,8 +187,8 @@ func _interact() -> void:
 	#		lastItemCollided.emit_signal("player_collided")
 
 #Funciton to add an item to the item list
-func _add_item_to_inventory(item_id: int) -> void:
-	inventory_list.append(item_id)
+func _add_item_to_inventory(item: Item) -> void:
+	inventory_list.add_item(item)
 	#print_debug("User picked up an item, has inventory: " + str(inventory_list))
 
 #Function that places the sprite resource in the sprite of the player
@@ -201,6 +201,9 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D) -> void:
 
 func change_moveability(ability: bool):
 	_moveability = ability
+
+func receive_inventory(inventory_instance: Inventory):
+	inventory_list = inventory_instance
 
 #Function to change our current animation to our state
 func update_animation() -> void:

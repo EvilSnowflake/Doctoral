@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bcdhuqgwfio1g"]
+
+[ext_resource type="Script" uid="uid://gms5eptkvj0u" path="res://scripts/inventory_ui_slot.gd" id="1_mouc6"]
+
+[node name="InventoryUISlot" type="PanelContainer" unique_id=1543961843]
+custom_minimum_size = Vector2(64, 96)
+custom_maximum_size = Vector2(64, 96)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_mouc6")
+
+[node name="InventoryDataContainer" type="VBoxContainer" parent="." unique_id=552093849]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="InventoryDataContainer" unique_id=365082619]
+layout_mode = 2
+
+[node name="QuantityLabel" type="Label" parent="InventoryDataContainer" unique_id=1076534683]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 2

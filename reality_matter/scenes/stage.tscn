@@ -4,7 +4,27 @@
 [ext_resource type="Script" uid="uid://cmm34oiqwaxsb" path="res://scripts/stage.gd" id="1_gi7kc"]
 [ext_resource type="PackedScene" uid="uid://brx3qhbs2mlxk" path="res://scenes/interactable_item.tscn" id="3_kewym"]
 [ext_resource type="PackedScene" uid="uid://d72q57iowsw8" path="res://scenes/npc.tscn" id="4_6c5u0"]
+[ext_resource type="Script" uid="uid://d3tlecq5q3cl4" path="res://scripts/item.gd" id="4_st0q7"]
+[ext_resource type="Texture2D" uid="uid://da4yjjcpixbf0" path="res://assets/sprites/items/14.png" id="5_1hwpr"]
 [ext_resource type="PackedScene" uid="uid://d4ghxn1adm0of" path="res://scenes/user_interface_node.tscn" id="5_vcsse"]
+
+[sub_resource type="Resource" id="Resource_vcsse"]
+script = ExtResource("4_st0q7")
+id = "1"
+name = "Bone"
+description = "This is a bone"
+icon = ExtResource("5_1hwpr")
+max_stack = 5
+metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
+
+[sub_resource type="Resource" id="Resource_dexii"]
+script = ExtResource("4_st0q7")
+id = "1"
+name = "Bone"
+description = "This is a bone"
+icon = ExtResource("5_1hwpr")
+max_stack = 5
+metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
 
 [node name="Stage" type="Node2D" unique_id=1704407866]
 z_as_relative = false
@@ -12,10 +32,11 @@ y_sort_enabled = true
 script = ExtResource("1_gi7kc")
 player_component = ExtResource("1_8rem4")
 item_list = Array[PackedScene]([ExtResource("3_kewym")])
-item_id_list = Array[int]([1])
+item_resources_list = Array[ExtResource("4_st0q7")]([SubResource("Resource_vcsse")])
 item_positions = Array[Vector2]([Vector2(352, 96)])
 playerPosition = Vector2(96, 96)
 characters_list = Array[PackedScene]([ExtResource("4_6c5u0")])
 characters_positions = Array[Vector2]([Vector2(416, 96)])
-character_items_to_give = Array[int]([1])
+character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii")])
 user_interface_component = ExtResource("5_vcsse")
+inventory_spaces = 5
