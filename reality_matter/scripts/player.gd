@@ -199,11 +199,17 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D) -> void:
 	if spritePath != null and sprite != null:
 		sprite_comp.texture = spritePath
 
+#Either stop moving or start moving again
 func change_moveability(ability: bool):
 	_moveability = ability
 
+#Receive a copy of the inventory
 func receive_inventory(inventory_instance: Inventory):
 	inventory_list = inventory_instance
+
+#Called by characters to try and take an item from the user
+func give_item(item_id: String) -> bool:
+	return inventory_list.remove_item(item_id)
 
 #Function to change our current animation to our state
 func update_animation() -> void:

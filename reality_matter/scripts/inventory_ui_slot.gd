@@ -1,13 +1,11 @@
 extends PanelContainer
 
-#@onready var icon: TextureRect = $Icon
-@onready var icon: TextureRect = $InventoryDataContainer/Icon
-@onready var quantity_label: Label = $InventoryDataContainer/QuantityLabel
+@onready var icon: TextureRect = $Icon
+@onready var quantity_label: Label = $QuantityLabel
 
-
+#This function sets what item the slot contains, changing the icon and the
+#quantity if its more than 1
 func set_slot_data(slot: InventorySlot) -> void:
-	#icon = get_child(0)
-	#quantity_label = get_child(1)
 	if icon == null or quantity_label == null:
 		print_debug("no icon or quantity label")
 		return
@@ -17,3 +15,8 @@ func set_slot_data(slot: InventorySlot) -> void:
 	else:
 		icon.texture = slot.item.icon
 		quantity_label.text = str(slot.quantity) if slot.quantity > 1 else ""
+
+#This function can be called if we need to change how big the slot is
+func set_custom_min_max_size(x: float, y: float):
+	custom_minimum_size = Vector2(x,y)
+	custom_maximum_size = Vector2(x,y)

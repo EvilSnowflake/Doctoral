@@ -13,36 +13,7 @@ signal continue_dialogue()
 
 
 var TweenItems: Dictionary = {}
-var CharacterDialogue: Dictionary = {
-	"Dialogue_2":{
-		"STARTING_CONVERSATION" :
-			{"Hello#1": 
-				{"OPTION_1": "Hi there#1",
-				"OPTION_2": "Hello to you too!#1"
-				}
-			},
-		"Hi there#1":
-			{"Here' an item for you#2":
-				{"OPTION_1": "Thanks#2",
-				"OPTION_2": "Bye#2"
-				}
-			},
-		"Hello to you too!#1":
-			{"Goodbye#2":
-				{"OPTION_1": "Bye#2",
-				"OPTION_2": "Sure#2"
-				}
-			},
-		"Bye#2":"ENDING_CONVERSATION",
-		"Goodbye#2": "ENDING_CONVERSATION",
-		"Sure#2": "ENDING_CONVERSATION",
-		"Thanks#2": "GIVE_ITEM"
-	},
-	"Dialogue_1":{
-		"STARTING_CONVERSATION" : "I already said hi go away#1",
-		"I already said hi go away#1": "ENDING_CONVERSATION"
-	}
-}
+var CharacterDialogue: Dictionary = {}
 
 @export_category("Components")
 @export var sprite: Sprite2D
@@ -57,11 +28,12 @@ var tweenComps: Array[String] = ["Sprite2D"]
 var tweenProps: Array[String] = ["frame"]
 var tweenChanges: Array[Vector2i] = [Vector2i(0,6)]
 var tweenDurations: Array[float] = [0.7]
+var option_chosen: int
 
 var _texturePath: Resource
 var _can_interact_text: String = "Press key to interact"
 var _dialogues_num: int
-var option_chosen: int
+var _move_on_dialogue: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -86,7 +58,7 @@ func _ready():
 	if dialogue_label == null:
 		dialogue_label = find_child("DialogueLabel")
 	
-	_dialogues_num = CharacterDialogue.keys().size()
+	
 	
 	player_collided.connect(_on_player_collided_with_char)
 	player_left.connect(_on_player_left_char)
@@ -106,6 +78,10 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 		return
 	if spritePath != null and sprite_comp != null:
 		sprite_comp.texture = spritePath
+
+func add_dialogue(dial: Dictionary) -> void:
+	CharacterDialogue = dial
+	_dialogues_num = CharacterDialogue.keys().size()
 
 func _on_player_collided_with_char() -> void:
 	#print_debug("Colliding player")
@@ -157,6 +133,28 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 				break
 			elif curr_word == "GIVE_ITEM" and item_to_give != null:
 				break
+			#Also if the dialogue wants the user to give an item we check if the
+			#user has the ability to give items and then ask for the spesific
+			#item id written in the dialogue. If the user's function returns
+			#false the the user didnt have the asked for ite, and if its true
+			#he did. Depending on the answer we either move on with the dialogue
+			#or we don't
+			elif curr_word.begins_with("TAKE_ITEM") and player_character.has_method("give_item"):
+				var item_to_take: String = curr_word.trim_prefix("TAKE_ITEM_")
+				print_debug("Item to take: " + item_to_take)
+				_move_on_dialogue = player_character.give_item(item_to_take)
+				#this should try and take the item from the user's interface
+				#and if it takes it we move the conversation, otherwise
+				#we stay in the same conversation
+				break
+			#If the dialogue had the prerequisite that the user give an item
+			#we give the ability for the user to refuse and if he does we
+			#dont continue to the next conversation if we have one
+			elif curr_word == "NOT_TAKE_ITEM":
+				print_debug("I wont take any items from the player")
+				_move_on_dialogue = false
+				#This should not move the conversation to the next dialogue
+				break
 			else:
 				#This part is appropriate when the current word spoken has no
 				#options and thus the user just has to press interact to
@@ -191,9 +189,10 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 	#After ending the conversation we hide the text and signal the player to move
 	#again
 	dialogue_label.text = ""
-	if _dialogues_num > 1:
+	if _dialogues_num > 1 and _move_on_dialogue:
+		#print_debug("Moved on the next dialogue")
 		_dialogues_num -= 1
-	print_debug("ending conversation")
+	#print_debug("ending conversation")
 	end_dialogue.emit()
 	if player_character.has_signal("adjust_moving"):
 		player_character.emit_signal("adjust_moving",true)

@@ -1,6 +1,12 @@
 class_name Inventory
 extends Resource
 
+#This class contains the functionality of the inventory. The inventory is a
+#resource which happens to be more lightweight than a regular node something
+#that makes it easier to move as a reference.
+
+## The inventory contains a signal that when called informs other nodes that
+## it just got changed
 signal inventory_changed
 
 var slots: Array[InventorySlot] = []
@@ -47,17 +53,31 @@ func add_item(new_item: Item, amount: int = 1) -> int:
 	inventory_changed.emit()
 	return remaining #returns whatever didn't manage to get in the inventory
 
-func remove_item(target_item: Item, amount: int = 1) -> bool:
+#THIS FUNCTION CURRENTLY TAKES ITEMS EVEN IF WE ASK FOR MORE THAN IT HAS
+#THEREFORE IF A QUESTS ASKS FOR 5 ITEM AND WE HAVE 3 IT TAKES ALL 3
+#BUT IT WILL RETURN FALSE BECAUSE REMAINING WILL BE MORE THAN 0
+func remove_item(target_item, amount: int = 1) -> bool:
 	var remaining: int = amount
 	
 	for slot in slots:
 		if remaining <= 0:
 			break
-		if slot.item == target_item:
-			var to_remove: int = mini(remaining, slot.quantity)
-			slot.quantity -= to_remove
-			if slot.quantity <= 0:
-				slot.item = null
-				slot.quantity = 0
+		if target_item is String and slot.item != null:
+			if slot.item.id == target_item:
+				var to_remove: int = mini(remaining, slot.quantity)
+				slot.quantity -= to_remove
+				remaining -= to_remove
+				if slot.quantity <= 0:
+					slot.item = null
+					slot.quantity = 0
+		elif target_item is Item:
+			if slot.item == target_item:
+				var to_remove: int = mini(remaining, slot.quantity)
+				slot.quantity -= to_remove
+				remaining -= to_remove
+				if slot.quantity <= 0:
+					slot.item = null
+					slot.quantity = 0
+	
 	inventory_changed.emit()
 	return remaining <= 0 #true if we removed everything requested

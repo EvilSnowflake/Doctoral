@@ -11,6 +11,55 @@ const WATERTILESET = preload("uid://cnn5d42l12km6")
 @export var characters_list: Array[PackedScene]
 @export var characters_positions: Array[Vector2]
 @export var character_items_to_give: Array[Item]
+@export var character_dialogues_to_say: Dictionary =  {
+	"NPC_1":{
+		"Dialogue_2":{
+			"STARTING_CONVERSATION" :
+				{"Hello#1": 
+					{"OPTION_1": "Hi there#1",
+					"OPTION_2": "Hello to you too!#1"
+					}
+				},
+			"Hi there#1":
+				{"Here' an item for you#2":
+					{"OPTION_1": "Thanks#2",
+					"OPTION_2": "Bye#2"
+					}
+				},
+			"Hello to you too!#1":
+				{"Goodbye#2":
+					{"OPTION_1": "Bye#2",
+					"OPTION_2": "Sure#2"
+					}
+				},
+			"Bye#2":"ENDING_CONVERSATION",
+			"Goodbye#2": "ENDING_CONVERSATION",
+			"Sure#2": "ENDING_CONVERSATION",
+			"Thanks#2": "GIVE_ITEM"
+		},
+		"Dialogue_1":{
+			"STARTING_CONVERSATION" : "I already said hi go away#1",
+			"I already said hi go away#1": "ENDING_CONVERSATION"
+			}
+	},
+	"NPC_2":{
+		"Dialogue_2":{
+			"STARTING_CONVERSATION" : "Do you perhaps have a bone item on you?#1",
+			"Do you perhaps have a bone item on you?#1":
+				{"If you do please give it to me#2":
+					{"OPTION_1": "Sure#2",
+					"OPTION_2": "No#2"}
+					},
+			"Sure#2":"TAKE_ITEM_1",
+			"No#2":"NOT_TAKE_ITEM"
+		},
+		"Dialogue_1":{
+			"STARTING_CONVERSATION" : "Thank you for the item#1",
+			"Thank you for the item#1": "ENDING_CONVERSATION"
+			
+		}
+	}
+}
 @export var user_interface_component: PackedScene
 @export var inventory_spaces: int
 
@@ -34,7 +83,7 @@ func _ready():
 			_spawn_item(item_list[i],item_positions[i], item_resources_list[i])
 	if characters_list.size() == characters_positions.size() and characters_positions.size() == character_items_to_give.size():
 		for i in range(characters_list.size()):
-			_spawn_non_players(characters_list[i],characters_positions[i], character_items_to_give[i])
+			_spawn_non_players(characters_list[i],characters_positions[i], character_dialogues_to_say["NPC_"+str(i+1)], character_items_to_give[i])
 	
 	var water: Resource = load("res://assets/tiles/Water.png")
 	var tile_size = Vector2i(64,64)
@@ -200,12 +249,14 @@ func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item):
 	if it.has_signal("assign_item_contained"):
 		it.emit_signal("assign_item_contained",item_resource)
 
-func _spawn_non_players(npc: PackedScene, new_position: Vector2, item_to_give: Item = null):
+func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionary, item_to_give: Item = null):
 	var new_npc = npc.instantiate()
 	add_child(new_npc)
 	new_npc.position = new_position
 	if item_to_give != null and new_npc.has_signal("assign_item_to_give"):
 		new_npc.emit_signal("assign_item_to_give", item_to_give)
+	if new_npc.has_method("add_dialogue"):
+		new_npc.add_dialogue(dial)
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):

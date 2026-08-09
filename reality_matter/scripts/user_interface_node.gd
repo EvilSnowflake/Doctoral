@@ -126,7 +126,7 @@ func receive_inventory(inventory_instance: Inventory):
 	_inventory_modified()
 
 func _inventory_modified():
-	print_debug("Inventory changed")
+	#print_debug("Inventory changed")
 	#clear ui
 	for child in item_collection.get_children():
 		child.queue_free()
@@ -135,7 +135,8 @@ func _inventory_modified():
 	for slot in _inventory.slots:
 		var ui_slot: PanelContainer = slot_scene.instantiate()
 		item_collection.add_child(ui_slot)
-		if !ui_slot.has_method("set_slot_data"):
+		if !ui_slot.has_method("set_slot_data") or !ui_slot.has_method("set_custom_min_max_size"):
 			return
-			
+		#if slot.item != null:
+		#	ui_slot.set_custom_min_max_size(slot.item.icon.get_height(),slot.item.icon.get_width())
 		ui_slot.set_slot_data(slot)
