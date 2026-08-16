@@ -6,10 +6,14 @@ extends Control
 @export var slot_scene: PackedScene
 @export var item_collection: HBoxContainer
 
+var slot_graphic_resource: Resource
+
 var _current_npc_conversing: StaticBody2D
 var _await_user_input: bool = false
 var _has_options: bool = false
 var _inventory: Inventory
+var _slot_graphic: String = "res://assets/sprites/uielements/TinySquareBlueButton.png"
+var _slot_margin: Vector4 = Vector4(8.0,8.0,8.0,8.0)
 
 #Here we will hold what the Interface will be able to do
 #When created this item gets connected to the user and all the npcs's related
@@ -27,6 +31,7 @@ func _ready():
 		button_container = find_child("ButtonContainer")
 	if item_collection == null:
 		item_collection = find_child("ItemCollection")
+	slot_graphic_resource = load(_slot_graphic)
 
 # Called every frame. '_delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -135,8 +140,9 @@ func _inventory_modified():
 	for slot in _inventory.slots:
 		var ui_slot: PanelContainer = slot_scene.instantiate()
 		item_collection.add_child(ui_slot)
-		if !ui_slot.has_method("set_slot_data") or !ui_slot.has_method("set_custom_min_max_size"):
+		if !ui_slot.has_method("set_slot_data") or !ui_slot.has_method("set_custom_min_max_size") or !ui_slot.has_method("set_panel_texture"):
 			return
 		#if slot.item != null:
 		#	ui_slot.set_custom_min_max_size(slot.item.icon.get_height(),slot.item.icon.get_width())
 		ui_slot.set_slot_data(slot)
+		ui_slot.set_panel_texture(slot_graphic_resource,_slot_margin)

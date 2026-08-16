@@ -1,42 +1,116 @@
 extends StaticBody2D
 
+#This script gives non player characters the lgoic required to
+#converse with the player when interacted with
+
+## This signal is emitted when the interactable component of the
+## npc is infront of the player character after they move towards
+## it
 signal player_collided
+## This signal is emitted if they players moves away from the
+## character after the interactable component has noticed them
+## moving towards it
 signal player_left
+## This signal is emitted by the player when they begin interacting
+## with the npc, its requires the user as input
 signal start_conversation(player: CharacterBody2D)
+## This signal is used to give an item to the npc to hold so that
+## they can then give it to the player
 signal assign_item_to_give(item: Item)
+## This signal is emitted from the npc when the dialogue starts
+## It takes the npc as an argument which then passes on to the
+## User Interface so that it knows which character is conversing
 signal initiate_dialogue(npc: StaticBody2D)
+## This signal should be emitted when the dialogue between the user
+## and the npc ends. It is required so that the UI stops showing the
+## dialogue.
 signal end_dialogue()
+## This signal is used to send the UI the text currently said by
+## the character talking.
 signal show_dialogue_text(text: String)
+## This signal is required to show the user any options given
+## with the current conveersation. Th first argument is the
+## dictionary containing the options and the second is the
+## number of options that we want to show the user
 signal add_options(options: Dictionary, num: int)
+## The await_user_input signal is emitted when the npc presents
+## what thy have to say to the user and any options if any and
+## then needs to wait for the user to either pick an option
+## or just press a button to continue with the conversation
 signal await_user_input()
+## After emitting the await user input signal the character then
+## waits for the interface to emit the continue_dialogue signal
+## so that it can then move on to the next peice of dialogue
 signal continue_dialogue()
 
-
+## This variable contains the animations for the character as a
+## dictionary. It gets filled with tweens that when played should
+## animate the character accordingly and the key for each tween
+## is the name of the animation for example Idle, Run, Die, etc.
 var TweenItems: Dictionary = {}
+## This variable should contain any dialogue the character has
+## towards the player in dictionary form. The structure of the
+## dialogue needs to be: {STARTING DIALOGUE: WORD#1: OPTION_1#1,
+## OPTION2#1, OPTION_1#1:WORD#2:OPTION_1#2, OPTION_2#2, OPTION_2#1...
+## OPTION_2#2:ENDING_CONVERSATION}
+## The character dialogue can have multiple dialogues and the character will
+## start from the last dialogue and move on to the next every time the user
+## converses with them. The first word should be contained in the STARTING
+## DIALOGUE key and the dialogue ends in ENDING DIALOGUE, GIVE ITEM, TAKE ITEM
 var CharacterDialogue: Dictionary = {}
 
 @export_category("Components")
+## This variable should hold a reference to the sprite of the npc
 @export var sprite: Sprite2D
+## This variable should point to the label that shows informs the
+## user that the character can be interacted with
 @export var dialogue_label: Label
+## This variable should hold the item the character gives to the
+## user 
 @export var item_to_give: Item
 
+## This variable along with vframes informs the animation and sprite
+## how many frames the character sprite file contains
 var hFrames: int = 7
+## This variable along with hframes informs the animation and sprite
+## how many frames the character sprite file contains
 var vFrames: int = 5
+## This variable shows how big each tile on the world is
 var tilesize: int = 64
+## This array should contain the name of each animation
 var tweenNames: Array[String] = ["IdleTween"]
+## This array should contain the type of the animation component
 var tweenComps: Array[String] = ["Sprite2D"]
+## This array should contain the property type of each animation
 var tweenProps: Array[String] = ["frame"]
+## This array should hold the starting and ending frame of each
+## animation in a vector2i
 var tweenChanges: Array[Vector2i] = [Vector2i(0,6)]
+## This array should hold the duration for each animation
 var tweenDurations: Array[float] = [0.7]
+## This variable should contain the number for the option chosen
+## for the dialogue when the user presses one
 var option_chosen: int
 
+## This variable should contain the path for the character texture
 var _texturePath: Resource
+## This variable is the text the character shows when we want the
+## user to know they can be interacted with.
 var _can_interact_text: String = "Press key to interact"
+## This variable should contain the which dialogue the character
+## is currently in, if it is on 1 then the character uses the
+## first dialogue
 var _dialogues_num: int
+## This variable informs the character that after conversing with
+## the user they can move on to the next dialogue if it has more
 var _move_on_dialogue: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	#During the ready function we locate the character's sprite
+	#then we set up the character's animations using tweens and
+	#the connect the character's signals with the appropriate
+	#functions 
 	if sprite == null:
 		sprite = find_child("Sprite2D")
 	if sprite != null:
@@ -58,8 +132,6 @@ func _ready():
 	if dialogue_label == null:
 		dialogue_label = find_child("DialogueLabel")
 	
-	
-	
 	player_collided.connect(_on_player_collided_with_char)
 	player_left.connect(_on_player_left_char)
 	start_conversation.connect(_on_player_start_conversing)
@@ -67,11 +139,13 @@ func _ready():
 	continue_dialogue.connect(_on_dialogue_continue)
 	_on_player_left_char()
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
 
+## This function should be called when we want to add a sprite to the character
+## As input it takes a loaded sprite resource and the sprite component of the
+## npc
 func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 	if sprite_comp == null and sprite != null:
 		sprite.texture = spritePath
@@ -79,24 +153,35 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 	if spritePath != null and sprite_comp != null:
 		sprite_comp.texture = spritePath
 
+## This function is used by other scripts to give the npc dialogue. When adding
+## the dialogue we search how many dialogues are contained so that we start with
+## the last one
 func add_dialogue(dial: Dictionary) -> void:
 	CharacterDialogue = dial
 	_dialogues_num = CharacterDialogue.keys().size()
 
+## This function should be connected to the instance of the player colliding
+## with the interactable component of the character
 func _on_player_collided_with_char() -> void:
 	#print_debug("Colliding player")
 	dialogue_label.text = _can_interact_text
 
+## This function should be connected to the instance of the player leaving the
+## collision state of the character's interactable component
 func _on_player_left_char() -> void:
 	#print_debug("Player left collision")
 	dialogue_label.text = ""
 
+## This function can be used to give the character an item that they can then
+## pass it on to the player
 func _on_assign_item_to_give(item: Item):
 	if item != null:
 		item_to_give = item
 
-#This funciton determines what happens when the users attempts to converse with
-#the character
+## This function is called when the player starts interaction with the character
+## For this type of npcs the interaction involves conversing with the user
+## using the User Interface as a way to show their dialogue. THe dialogue can
+## involve giving an item, taking items from the user or just showing text
 func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 	print_debug("Player " + str(player_character) + " started conversation with current dialogue num : " + str(_dialogues_num))
 	initiate_dialogue.emit(self)
@@ -197,8 +282,8 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 	if player_character.has_signal("adjust_moving"):
 		player_character.emit_signal("adjust_moving",true)
 
-#This function gets called when the user selects an option or just presses
-#continue. We receive the option number or if there is none we don't
+## This function gets called when the user selects an option or just presses
+## continue. We receive the option number or if there is none we don't
 func _on_dialogue_continue(option: int = 0) -> void:
 	if option != 0:
 		option_chosen = option

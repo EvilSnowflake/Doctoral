@@ -2,11 +2,14 @@
 
 [ext_resource type="Script" uid="uid://gms5eptkvj0u" path="res://scripts/inventory_ui_slot.gd" id="1_mouc6"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rtxc5"]
+
 [node name="InventoryUISlot" type="PanelContainer" unique_id=1543961843]
 custom_minimum_size = Vector2(48, 48)
 custom_maximum_size = Vector2(48, 48)
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 48.0
+offset_bottom = 48.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_rtxc5")
 script = ExtResource("1_mouc6")
 
 [node name="Icon" type="TextureRect" parent="." unique_id=365082619]
