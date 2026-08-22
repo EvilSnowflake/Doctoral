@@ -207,6 +207,8 @@ func move(dir: String) -> void:
 			lastCharCollided = ray.get_collider()
 			if lastCharCollided.has_signal("player_collided"):
 				lastCharCollided.emit_signal("player_collided")
+	#If it is colliding then we check if the item we are colliding with is an
+	#area2d (npc) or a staticbody2d (item) and we act accordingly
 	else:
 		ray.target_position = _vector_position
 		ray.force_raycast_update()
@@ -223,8 +225,11 @@ func move(dir: String) -> void:
 			if lastCharCollided.has_signal("player_collided"):
 				lastCharCollided.emit_signal("player_collided")
 
+## This function is called when the user presses the Interact button, if we are
+## not moving and we have the ability to move then we check if we collided with
+## an item or an npc and we emit a signal to them signifying that the user wants
+## to interact with it
 func _interact() -> void:
-	#pass
 	if _moving or !_moveability:
 		return
 	
@@ -236,23 +241,13 @@ func _interact() -> void:
 	elif lastCharCollided != null:
 		if lastCharCollided.has_signal("start_conversation"):
 			lastCharCollided.emit_signal("start_conversation",self)
-	#var facing_position = facing*tilesize
-	#ray.target_position = facing_position
-	#ray.force_raycast_update()
-	#if ray.get_collider() == null:
-	#	return
-	#if ray.get_collider().get_class() == "Area2D" :
-	#	print_debug(ray.get_collider())
-	#	lastItemCollided = ray.get_collider()
-	#	if lastItemCollided.has_signal("player_collided"):
-	#		lastItemCollided.emit_signal("player_collided")
 
-#Funciton to add an item to the item list
+## Funciton to add an item to the ivnentory
 func _add_item_to_inventory(item: Item) -> void:
 	inventory_list.add_item(item)
 	#print_debug("User picked up an item, has inventory: " + str(inventory_list))
 
-#Function that places the sprite resource in the sprite of the player
+## Function that places the sprite resource in the sprite of the player
 func add_sprite(spritePath: Resource, sprite_comp: Sprite2D) -> void:
 	if sprite_comp == null and sprite != null:
 		sprite.texture = spritePath
@@ -260,21 +255,24 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D) -> void:
 	if spritePath != null and sprite != null:
 		sprite_comp.texture = spritePath
 
-#Either stop moving or start moving again
+## Function that gets a true or false as input and either takes the user's
+## ability to move or gives it back
 func change_moveability(ability: bool):
 	_moveability = ability
 
-#Receive a copy of the inventory
+## Function to get a copy of the inventory
 func receive_inventory(inventory_instance: Inventory):
 	inventory_list = inventory_instance
 
-#Called by characters to try and take an item from the user
+## Called by characters to try and take an item from the user. If they have the
+## specified item id given then it returns true
 func give_item(item_id: String) -> bool:
 	return inventory_list.remove_item(item_id)
 
-#Function to change our current animation to our state
+## Function to change our current animation to our state. There is no input
+## because we first need to update the current state variable and depending on
+## its integer we invoke the appropriate tween item
 func update_animation() -> void:
-	
 	if TweenItems.is_empty() or State.is_empty():
 		return
 		
