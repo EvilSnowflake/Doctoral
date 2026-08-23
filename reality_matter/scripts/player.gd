@@ -39,6 +39,10 @@ var TweenItems: Dictionary = {}
 ## This variable holds the current state of the user's animations. It is an
 ## integer because the citronary containing the states has integer values
 @export var current_state: int
+#########NEW SCRIPT
+@export var character_name: String = "Player"
+@export var user_combat_stats: Combat_Stats
+#########NEW SCRIPT
 @export_category("Components")
 ## This variable should point to the raycast component of the user. It is used
 ## the get informations about what is infront of the user when they move
@@ -57,6 +61,7 @@ var TweenItems: Dictionary = {}
 ## collided with its raycast so that when the users tries to interact with it
 ## we know which character it was
 @export var lastCharCollided: StaticBody2D
+
 
 ## This variable contains the default state of the user when they are created
 ## right now its set to IDLE
@@ -143,7 +148,7 @@ func _physics_process(_delta):
 			#Here we check if there was an item or characeter we had collided
 			#with and we clear it before we start to move in order to then check
 			#if there is a new one in front
-			if (lastItemCollided != null):
+			if (lastItemCollided != null ):
 				if (lastItemCollided.has_signal("player_left")):
 					lastItemCollided.emit_signal("player_left")
 					lastItemCollided = null
@@ -198,7 +203,7 @@ func move(dir: String) -> void:
 			return
 		#If we find an area 2d its a character and inform them that we collided
 		#with them
-		if ray.get_collider().get_class() == "Area2D" :
+		if ray.get_collider().get_class() == "Area2D":
 			lastItemCollided = ray.get_collider()
 			if lastItemCollided.has_signal("player_collided"):
 				lastItemCollided.emit_signal("player_collided")
@@ -239,8 +244,8 @@ func _interact() -> void:
 		if lastItemCollided.has_signal("interacted"):
 			lastItemCollided.emit_signal("interacted",self)
 	elif lastCharCollided != null:
-		if lastCharCollided.has_signal("start_conversation"):
-			lastCharCollided.emit_signal("start_conversation",self)
+		if lastCharCollided.has_signal("interacted"):
+			lastCharCollided.emit_signal("interacted",self)
 
 ## Funciton to add an item to the ivnentory
 func _add_item_to_inventory(item: Item) -> void:
@@ -268,7 +273,10 @@ func receive_inventory(inventory_instance: Inventory):
 ## specified item id given then it returns true
 func give_item(item_id: String) -> bool:
 	return inventory_list.remove_item(item_id)
-
+######NEW SCRIPT
+func receive_combat_stats(com_stats: Combat_Stats):
+	user_combat_stats = com_stats
+######NEW SCRIPT
 ## Function to change our current animation to our state. There is no input
 ## because we first need to update the current state variable and depending on
 ## its integer we invoke the appropriate tween item

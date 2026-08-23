@@ -24,6 +24,9 @@ extends Node2D
 ## This variable contains the vector2 position the player will be standing on
 ## when entering a scene
 @export var playerPosition: Vector2
+#########NEW SCRIPT
+@export var playerStats: Combat_Stats
+#########NEW SCRIPT
 ## This variable holds an array with the non player character scenes that will
 ## be instantiated on to the environment
 @export var characters_list: Array[PackedScene]
@@ -84,6 +87,11 @@ extends Node2D
 		}
 	}
 }
+#########NEW SCRIPT
+@export var character_names: Array[String]
+@export var npc_stats: Array[Combat_Stats]
+#########NEW SCRIPT
+@export var npc_combatability: Array[bool]
 ## This variable should contain a reference to the user interface scene to
 ## instantiate
 @export var user_interface_component: PackedScene
@@ -109,16 +117,16 @@ func _ready():
 		_spawn_user_interface(user_interface_component)
 	#And then spawn the player's character
 	if player_component != null && playerPosition != null:
-		_spawn_player(player_component,playerPosition)
+		_spawn_player(player_component,playerPosition, playerStats)
 	#After we check the items array and spawn each of them in the position set
 	#by the item position list and then assign an item to it
 	if item_list.size() == item_positions.size() && item_positions.size() == item_resources_list.size():
 		for i in range(item_list.size()):
 			_spawn_item(item_list[i],item_positions[i], item_resources_list[i])
 	#After that we do the same but for non player characters
-	if characters_list.size() == characters_positions.size() and characters_positions.size() == character_items_to_give.size():
+	if characters_list.size() == characters_positions.size() and characters_positions.size() == character_items_to_give.size() and character_items_to_give.size() == character_names.size() and npc_stats.size() == npc_combatability.size():
 		for i in range(characters_list.size()):
-			_spawn_non_players(characters_list[i],characters_positions[i], character_dialogues_to_say["NPC_"+str(i+1)], character_items_to_give[i])
+			_spawn_non_players(characters_list[i],characters_positions[i], character_dialogues_to_say["NPC_"+str(i+1)], character_names[i], npc_stats[i], npc_combatability[i] ,character_items_to_give[i])
 	#Having completed the spawning of characters and items i then move on to the
 	#tileset of the environment
 	#We first have to load the water tileset and then create a new tilemap layer
@@ -240,7 +248,7 @@ func _process(_delta):
 ## This function is used to spawn the player on the current scene. It requires a
 ## player scene to instantiate and a position. After setting the player's
 ## position we then add a reference to the user's inventory on that character
-func _spawn_player(player: PackedScene, new_position: Vector2):
+func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats: Combat_Stats):
 	var pl = player.instantiate()
 	add_child(pl)
 	#pl.add_child(_user_interface)
@@ -251,6 +259,10 @@ func _spawn_player(player: PackedScene, new_position: Vector2):
 		_user_interface.connect_player_adding_item(pl)
 	if pl.has_method("receive_inventory") and inventory_instance != null:
 		pl.receive_inventory(inventory_instance)
+	#########NEW SCRIPT
+	if pl.has_method("receive_combat_stats"):
+		pl.receive_combat_stats(user_combat_stats)
+	#########NEW SCRIPT
 
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
@@ -267,7 +279,7 @@ func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item):
 ## than the player character. We require the character's scene, their position
 ## on the environemnt, their dialogue and what item (if any) they can give the
 ## player character.
-func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionary, item_to_give: Item = null):
+func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionary, new_name: String, npc_combat_stats: Combat_Stats, npc_can_fight: bool ,item_to_give: Item = null):
 	var new_npc = npc.instantiate()
 	add_child(new_npc)
 	new_npc.position = new_position
@@ -275,6 +287,12 @@ func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionar
 		new_npc.emit_signal("assign_item_to_give", item_to_give)
 	if new_npc.has_method("add_dialogue"):
 		new_npc.add_dialogue(dial)
+	if new_npc.has_method("set_char_name"):
+		new_npc.set_char_name(new_name)
+	#########NEW SCRIPT
+	if new_npc.has_method("set_npc_combat"):
+		new_npc.set_npc_combat(npc_combat_stats, npc_can_fight)
+	#########NEW SCRIPT
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):

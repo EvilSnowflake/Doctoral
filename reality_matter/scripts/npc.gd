@@ -11,6 +11,9 @@ signal player_collided
 ## character after the interactable component has noticed them
 ## moving towards it
 signal player_left
+######NEW SCRIPT
+signal interacted(player: CharacterBody2D)
+######NEW SCRIPT
 ## This signal is emitted by the player when they begin interacting
 ## with the npc, its requires the user as input
 signal start_conversation(player: CharacterBody2D)
@@ -42,6 +45,9 @@ signal await_user_input()
 ## waits for the interface to emit the continue_dialogue signal
 ## so that it can then move on to the next peice of dialogue
 signal continue_dialogue()
+######NEW SCRIPT
+signal engage_battle(char: StaticBody2D, user: CharacterBody2D)
+######NEW SCRIPT
 
 ## This variable contains the animations for the character as a
 ## dictionary. It gets filled with tweens that when played should
@@ -59,6 +65,12 @@ var TweenItems: Dictionary = {}
 ## DIALOGUE key and the dialogue ends in ENDING DIALOGUE, GIVE ITEM, TAKE ITEM
 var CharacterDialogue: Dictionary = {}
 
+#######NEW SCRIPT
+@export_category("Stats")
+@export var character_name: String = "Default"
+@export var character_stats: Combat_Stats
+@export var can_combat: bool = false
+#######NEW SCRIPT
 @export_category("Components")
 ## This variable should hold a reference to the sprite of the npc
 @export var sprite: Sprite2D
@@ -104,6 +116,9 @@ var _dialogues_num: int
 ## This variable informs the character that after conversing with
 ## the user they can move on to the next dialogue if it has more
 var _move_on_dialogue: bool = true
+########NEW SCRIPT
+var _can_battle_text: String = "Press key to begin battle"
+########NEW SCRIPT
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -135,6 +150,7 @@ func _ready():
 	player_collided.connect(_on_player_collided_with_char)
 	player_left.connect(_on_player_left_char)
 	start_conversation.connect(_on_player_start_conversing)
+	interacted.connect(_on_player_interacted_with)
 	assign_item_to_give.connect(_on_assign_item_to_give)
 	continue_dialogue.connect(_on_dialogue_continue)
 	_on_player_left_char()
@@ -159,11 +175,23 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 func add_dialogue(dial: Dictionary) -> void:
 	CharacterDialogue = dial
 	_dialogues_num = CharacterDialogue.keys().size()
+######NEW SCRIPT
+func set_char_name(nm: String) -> void:
+	character_name = nm
 
+func set_npc_combat(com_stat: Combat_Stats, combability: bool):
+	character_stats = com_stat
+	can_combat = combability
+######NEW SCRIPT
 ## This function should be connected to the instance of the player colliding
 ## with the interactable component of the character
 func _on_player_collided_with_char() -> void:
 	#print_debug("Colliding player")
+	#############NEW SCRIPT
+	if can_combat:
+		dialogue_label.text= _can_battle_text
+		return
+	#############NEW SCRIPT
 	dialogue_label.text = _can_interact_text
 
 ## This function should be connected to the instance of the player leaving the
@@ -177,6 +205,15 @@ func _on_player_left_char() -> void:
 func _on_assign_item_to_give(item: Item):
 	if item != null:
 		item_to_give = item
+
+############NEW SCRIPT
+func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
+	print_debug("Player interacted with me")
+	if can_combat:
+		print_debug("Begin combat here")
+	else:
+		_on_player_start_conversing(player_character)
+##############NEW SCRIPT
 
 ## This function is called when the player starts interaction with the character
 ## For this type of npcs the interaction involves conversing with the user

@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://d3tlecq5q3cl4" path="res://scripts/item.gd" id="4_st0q7"]
 [ext_resource type="Texture2D" uid="uid://da4yjjcpixbf0" path="res://assets/sprites/items/14.png" id="5_1hwpr"]
 [ext_resource type="PackedScene" uid="uid://d4ghxn1adm0of" path="res://scenes/user_interface_node.tscn" id="5_vcsse"]
+[ext_resource type="Script" uid="uid://c8670nkn1e3ym" path="res://scripts/combat_stats.gd" id="6_1hwpr"]
 
 [sub_resource type="Resource" id="Resource_vcsse"]
 script = ExtResource("4_st0q7")
@@ -17,6 +18,13 @@ icon = ExtResource("5_1hwpr")
 max_stack = 5
 metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
 
+[sub_resource type="Resource" id="Resource_st0q7"]
+script = ExtResource("6_1hwpr")
+health = 100
+attack_power = 10
+defense = 5
+metadata/_custom_type_script = "uid://c8670nkn1e3ym"
+
 [sub_resource type="Resource" id="Resource_dexii"]
 script = ExtResource("4_st0q7")
 id = "1"
@@ -25,6 +33,14 @@ description = "This is a bone"
 icon = ExtResource("5_1hwpr")
 max_stack = 5
 metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
+
+[sub_resource type="Resource" id="Resource_1hwpr"]
+script = ExtResource("6_1hwpr")
+metadata/_custom_type_script = "uid://c8670nkn1e3ym"
+
+[sub_resource type="Resource" id="Resource_yd2gm"]
+script = ExtResource("6_1hwpr")
+metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 
 [node name="Stage" type="Node2D" unique_id=1704407866]
 z_as_relative = false
@@ -35,8 +51,12 @@ item_list = Array[PackedScene]([ExtResource("3_kewym")])
 item_resources_list = Array[ExtResource("4_st0q7")]([SubResource("Resource_vcsse")])
 item_positions = Array[Vector2]([Vector2(352, 96)])
 playerPosition = Vector2(96, 96)
+playerStats = SubResource("Resource_st0q7")
 characters_list = Array[PackedScene]([ExtResource("4_6c5u0"), ExtResource("4_6c5u0")])
 characters_positions = Array[Vector2]([Vector2(416, 96), Vector2(416, 160)])
 character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii"), null])
+character_names = Array[String](["Bill", "Frank"])
+npc_stats = Array[ExtResource("6_1hwpr")]([SubResource("Resource_1hwpr"), SubResource("Resource_yd2gm")])
+npc_combatability = Array[bool]([false, false])
 user_interface_component = ExtResource("5_vcsse")
 inventory_spaces = 5
