@@ -1,4 +1,3 @@
-########NEW SCRIPT
 class_name Combat_Stats
 #This resource should be used by the combat system to draw in each characters
 #combat statistics
@@ -14,9 +13,25 @@ var _experience: int = 1
 var _default_experience_to_next_level: int = 9
 var _exp_to_level: int = 9
 
+func _ready():
+	_exp_to_level = _default_experience_to_next_level
+
 func set_statistics(hlth: int, ap: int, dfnc: int, spd: int) -> void:
 	health = hlth
 	attack_power = ap
 	defense = dfnc
 	speed = spd
-#######NEWSCRIPT
+
+func add_experience(amount: int) -> void:
+	_experience += amount
+	while _experience >= _exp_to_level:
+		_experience -= _exp_to_level
+		_levelup()
+
+func _levelup():
+	_level += 1
+	health += 5
+	attack_power += 1
+	defense += 1
+	speed += 1
+	_exp_to_level += 1

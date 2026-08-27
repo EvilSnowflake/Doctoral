@@ -85,12 +85,11 @@ extends Node2D
 			"Thank you for the item#1": "ENDING_CONVERSATION"
 			
 		}
-	}
+	},
+	"NPC_3":{}
 }
-#########NEW SCRIPT
 @export var character_names: Array[String]
 @export var npc_stats: Array[Combat_Stats]
-#########NEW SCRIPT
 @export var npc_combatability: Array[bool]
 ## This variable should contain a reference to the user interface scene to
 ## instantiate
@@ -240,7 +239,6 @@ func _ready():
 	tilemapl_el.set_cell(Vector2i(0,2), tileSet.get_source_id(0), Vector2i(3,4))
 	tilemapl_el.set_cell(Vector2i(0,3), tileSet.get_source_id(0), Vector2i(3,5))
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
@@ -259,10 +257,8 @@ func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats
 		_user_interface.connect_player_adding_item(pl)
 	if pl.has_method("receive_inventory") and inventory_instance != null:
 		pl.receive_inventory(inventory_instance)
-	#########NEW SCRIPT
 	if pl.has_method("receive_combat_stats"):
 		pl.receive_combat_stats(user_combat_stats)
-	#########NEW SCRIPT
 
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
@@ -289,10 +285,10 @@ func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionar
 		new_npc.add_dialogue(dial)
 	if new_npc.has_method("set_char_name"):
 		new_npc.set_char_name(new_name)
-	#########NEW SCRIPT
 	if new_npc.has_method("set_npc_combat"):
 		new_npc.set_npc_combat(npc_combat_stats, npc_can_fight)
-	#########NEW SCRIPT
+	if new_npc.has_signal("engage_battle"):
+		new_npc.engage_battle.connect(_create_combat_env)
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):
@@ -306,3 +302,8 @@ func _spawn_user_interface(ui: PackedScene):
 	_user_interface = new_ui
 	if new_ui.has_method("receive_inventory") and inventory_instance != null:
 		new_ui.receive_inventory(inventory_instance)
+
+func _create_combat_env(usr: CharacterBody2D, npc: StaticBody2D):
+	if !usr.has_method("get_character_name") or !npc.has_method("get_character_name"):
+		return
+	print_debug("The combat begins for %s and %s" % [usr.get_character_name(), npc.get_character_name()])

@@ -42,6 +42,13 @@ metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 script = ExtResource("6_1hwpr")
 metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 
+[sub_resource type="Resource" id="Resource_0hg5s"]
+script = ExtResource("6_1hwpr")
+health = 20
+attack_power = 5
+defense = 5
+metadata/_custom_type_script = "uid://c8670nkn1e3ym"
+
 [node name="Stage" type="Node2D" unique_id=1704407866]
 z_as_relative = false
 y_sort_enabled = true
@@ -52,11 +59,11 @@ item_resources_list = Array[ExtResource("4_st0q7")]([SubResource("Resource_vcsse
 item_positions = Array[Vector2]([Vector2(352, 96)])
 playerPosition = Vector2(96, 96)
 playerStats = SubResource("Resource_st0q7")
-characters_list = Array[PackedScene]([ExtResource("4_6c5u0"), ExtResource("4_6c5u0")])
-characters_positions = Array[Vector2]([Vector2(416, 96), Vector2(416, 160)])
-character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii"), null])
-character_names = Array[String](["Bill", "Frank"])
-npc_stats = Array[ExtResource("6_1hwpr")]([SubResource("Resource_1hwpr"), SubResource("Resource_yd2gm")])
-npc_combatability = Array[bool]([false, false])
+characters_list = Array[PackedScene]([ExtResource("4_6c5u0"), ExtResource("4_6c5u0"), ExtResource("4_6c5u0")])
+characters_positions = Array[Vector2]([Vector2(416, 96), Vector2(416, 160), Vector2(416, 224)])
+character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii"), null, null])
+character_names = Array[String](["Bill", "Frank", "Greg"])
+npc_stats = Array[ExtResource("6_1hwpr")]([SubResource("Resource_1hwpr"), SubResource("Resource_yd2gm"), SubResource("Resource_0hg5s")])
+npc_combatability = Array[bool]([false, false, true])
 user_interface_component = ExtResource("5_vcsse")
 inventory_spaces = 5

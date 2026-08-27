@@ -50,17 +50,13 @@ var TweenItems: Dictionary = {}
 ## This variable should point to the sprite used for the user's graphic design
 @export var sprite: Sprite2D
 @export_category("Exterior Items")
-## In this variable we should give a reference to the last item collided with
-## the player's raycast so that when the user tries to interact with it we
-## know which item it is
-@export var lastItemCollided: Area2D
 ## This variable holds the user's inventory
 @export var inventory_list: Inventory
 @export_category("Exterior Characters")
-## In this variable we should give a reference to the last character the user
+## In this variable we should give a reference to the last entity the user
 ## collided with its raycast so that when the users tries to interact with it
-## we know which character it was
-@export var lastCharCollided: StaticBody2D
+## we know which entity it was
+var _last_entity_collided
 
 
 ## This variable contains the default state of the user when they are created
@@ -148,14 +144,10 @@ func _physics_process(_delta):
 			#Here we check if there was an item or characeter we had collided
 			#with and we clear it before we start to move in order to then check
 			#if there is a new one in front
-			if (lastItemCollided != null ):
-				if (lastItemCollided.has_signal("player_left")):
-					lastItemCollided.emit_signal("player_left")
-					lastItemCollided = null
-			if (lastCharCollided != null):
-				if (lastCharCollided.has_signal("player_left")):
-					lastCharCollided.emit_signal("player_left")
-					lastCharCollided = null
+			if _last_entity_collided != null:
+				if _last_entity_collided.has_signal("player_left"):
+					_last_entity_collided.emit_signal("player_left")
+					_last_entity_collided = null
 			#We then call the move function to try to move the character
 			move(dir)
 			#and also change the facing variable
@@ -203,15 +195,10 @@ func move(dir: String) -> void:
 			return
 		#If we find an area 2d its a character and inform them that we collided
 		#with them
-		if ray.get_collider().get_class() == "Area2D":
-			lastItemCollided = ray.get_collider()
-			if lastItemCollided.has_signal("player_collided"):
-				lastItemCollided.emit_signal("player_collided")
-		#If it is a staticbody2d then its an item and we inform thme as well
-		elif ray.get_collider().get_class() == "StaticBody2D":
-			lastCharCollided = ray.get_collider()
-			if lastCharCollided.has_signal("player_collided"):
-				lastCharCollided.emit_signal("player_collided")
+		if ray.get_collider().get_class() == "Area2D" or ray.get_collider().get_class() == "StaticBody2D":
+			_last_entity_collided = ray.get_collider()
+			if _last_entity_collided.has_signal("player_collided"):
+				_last_entity_collided.emit_signal("player_collided")
 	#If it is colliding then we check if the item we are colliding with is an
 	#area2d (npc) or a staticbody2d (item) and we act accordingly
 	else:
@@ -219,16 +206,10 @@ func move(dir: String) -> void:
 		ray.force_raycast_update()
 		if ray.get_collider() == null:
 			return
-		if ray.get_collider().get_class() == "Area2D" :
-			print_debug(ray.get_collider())
-			lastItemCollided = ray.get_collider()
-			if lastItemCollided.has_signal("player_collided"):
-				lastItemCollided.emit_signal("player_collided")
-		elif ray.get_collider().get_class() == "StaticBody2D":
-			print_debug(ray.get_collider())
-			lastCharCollided = ray.get_collider()
-			if lastCharCollided.has_signal("player_collided"):
-				lastCharCollided.emit_signal("player_collided")
+		if ray.get_collider().get_class() == "Area2D" or ray.get_collider().get_class() == "StaticBody2D":
+			_last_entity_collided = ray.get_collider()
+			if _last_entity_collided.has_signal("player_collided"):
+				_last_entity_collided.emit_signal("player_collided")
 
 ## This function is called when the user presses the Interact button, if we are
 ## not moving and we have the ability to move then we check if we collided with
@@ -237,15 +218,10 @@ func move(dir: String) -> void:
 func _interact() -> void:
 	if _moving or !_moveability:
 		return
-	
-	#Interact with lastItemCollided!!!
-	if lastItemCollided != null:
+	if _last_entity_collided != null:
 		#When interacting, give the player as an argument
-		if lastItemCollided.has_signal("interacted"):
-			lastItemCollided.emit_signal("interacted",self)
-	elif lastCharCollided != null:
-		if lastCharCollided.has_signal("interacted"):
-			lastCharCollided.emit_signal("interacted",self)
+		if _last_entity_collided.has_signal("interacted"):
+			_last_entity_collided.emit_signal("interacted",self)
 
 ## Funciton to add an item to the ivnentory
 func _add_item_to_inventory(item: Item) -> void:
@@ -276,6 +252,9 @@ func give_item(item_id: String) -> bool:
 ######NEW SCRIPT
 func receive_combat_stats(com_stats: Combat_Stats):
 	user_combat_stats = com_stats
+
+func get_character_name() -> String:
+	return character_name
 ######NEW SCRIPT
 ## Function to change our current animation to our state. There is no input
 ## because we first need to update the current state variable and depending on

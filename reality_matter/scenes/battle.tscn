@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://bbqiv41j337r"]
+
+[ext_resource type="Texture2D" uid="uid://bcsyc8refloae" path="res://assets/backgrounds/battleback10.png" id="1_th188"]
+[ext_resource type="Texture2D" uid="uid://blbdj06vikgkp" path="res://assets/sprites/characters/Torch_Blue.png" id="2_p1qf1"]
+
+[node name="Battle" type="Control" unique_id=1499474918]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="." unique_id=1207907062]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_th188")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1280438397]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=447343822]
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1822706610]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=2142638864]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="CharacterControl" type="Control" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=555752238]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="MarginContainer/HBoxContainer/VBoxContainer2/CharacterControl" unique_id=1761172350]
+texture = ExtResource("2_p1qf1")
+hframes = 7
+vframes = 5
+
+[node name="Filler" type="Control" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1229987437]
+layout_mode = 2
+
+[node name="Filler2" type="Control" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1932497390]
+layout_mode = 2

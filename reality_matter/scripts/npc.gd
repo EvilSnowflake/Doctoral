@@ -149,7 +149,6 @@ func _ready():
 	
 	player_collided.connect(_on_player_collided_with_char)
 	player_left.connect(_on_player_left_char)
-	start_conversation.connect(_on_player_start_conversing)
 	interacted.connect(_on_player_interacted_with)
 	assign_item_to_give.connect(_on_assign_item_to_give)
 	continue_dialogue.connect(_on_dialogue_continue)
@@ -175,14 +174,19 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 func add_dialogue(dial: Dictionary) -> void:
 	CharacterDialogue = dial
 	_dialogues_num = CharacterDialogue.keys().size()
-######NEW SCRIPT
+
+
 func set_char_name(nm: String) -> void:
 	character_name = nm
+
+func get_character_name() -> String:
+	return character_name
 
 func set_npc_combat(com_stat: Combat_Stats, combability: bool):
 	character_stats = com_stat
 	can_combat = combability
-######NEW SCRIPT
+
+
 ## This function should be connected to the instance of the player colliding
 ## with the interactable component of the character
 func _on_player_collided_with_char() -> void:
@@ -210,7 +214,7 @@ func _on_assign_item_to_give(item: Item):
 func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
 	print_debug("Player interacted with me")
 	if can_combat:
-		print_debug("Begin combat here")
+		engage_battle.emit(player_character,self)
 	else:
 		_on_player_start_conversing(player_character)
 ##############NEW SCRIPT
