@@ -1,8 +1,30 @@
 [gd_scene format=3 uid="uid://bbqiv41j337r"]
 
+[ext_resource type="Script" uid="uid://bm20ryjro1cf2" path="res://scripts/battle.gd" id="1_p1qf1"]
 [ext_resource type="Texture2D" uid="uid://bcsyc8refloae" path="res://assets/backgrounds/battleback10.png" id="1_th188"]
-[ext_resource type="FontFile" uid="uid://488xyso4pju6" path="res://assets/fonts/CustomFont/multfont_3.ttf" id="2_a12nh"]
+[ext_resource type="PackedScene" uid="uid://d1jhva1a44v24" path="res://scenes/actions_button.tscn" id="2_a12nh"]
 [ext_resource type="Texture2D" uid="uid://blbdj06vikgkp" path="res://assets/sprites/characters/Torch_Blue.png" id="2_p1qf1"]
+[ext_resource type="Script" uid="uid://c8670nkn1e3ym" path="res://scripts/combat_stats.gd" id="3_lpir7"]
+
+[sub_resource type="Resource" id="Resource_a12nh"]
+script = ExtResource("3_lpir7")
+max_health = 20
+health = 20
+attack_power = 5
+defense = 5
+speed = 2
+metadata/_custom_type_script = "uid://c8670nkn1e3ym"
+
+[sub_resource type="Resource" id="Resource_lpir7"]
+script = ExtResource("3_lpir7")
+max_health = 90
+health = 85
+attack_power = 10
+speed = 2
+metadata/_custom_type_script = "uid://c8670nkn1e3ym"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1qf1"]
+bg_color = Color(0.003921569, 0.003921569, 0.003921569, 0.6745098)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_th188"]
 bg_color = Color(1, 0, 0, 1)
@@ -16,16 +38,14 @@ border_color = Color(0, 0, 0, 1)
 bg_color = Color(0, 1, 0, 1)
 border_width_left = 2
 border_width_top = 2
+border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1qf1"]
-bg_color = Color(0.003921569, 0.003921569, 0.003921569, 0.6745098)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a12nh"]
 bg_color = Color(0.3137255, 0.3137255, 0.3137255, 0.81960785)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s551c"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_co48d"]
 bg_color = Color(0.003921569, 0.003921569, 0.003921569, 1)
 border_width_left = 2
 border_width_top = 2
@@ -33,17 +53,20 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_feutv"]
-bg_color = Color(11.708, 11.708, 11.708, 1)
-border_color = Color(1, 1, 1, 1)
-
-[node name="Battle" type="Control" unique_id=1499474918]
+[node name="Battle" type="Control" unique_id=1499474918 node_paths=PackedStringArray("enemy_sprite_default")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_p1qf1")
+actions_button_scene = ExtResource("2_a12nh")
+enemy_sprite_default = NodePath("EnemySprite2")
+enemy_combat_stats_default = SubResource("Resource_a12nh")
+enemy_name_default = "Bill"
+player_name_default = "Frank"
+player_stats_default = SubResource("Resource_lpir7")
 
 [node name="Background" type="TextureRect" parent="." unique_id=1207907062]
 layout_mode = 1
@@ -53,68 +76,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_th188")
-
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1280438397]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
-
-[node name="EnemyHContainer" type="HBoxContainer" parent="MarginContainer" unique_id=447343822]
-layout_mode = 2
-theme_override_constants/separation = 50
-alignment = 1
-
-[node name="EnemyVContainer" type="VBoxContainer" parent="MarginContainer/EnemyHContainer" unique_id=1822706610]
-custom_minimum_size = Vector2(375, 0)
-layout_mode = 2
-theme_override_constants/separation = 100
-alignment = 1
-
-[node name="HealthBar" type="ProgressBar" parent="MarginContainer/EnemyHContainer/EnemyVContainer" unique_id=2142638864]
-custom_maximum_size = Vector2(-1, 30)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
-theme_override_styles/background = SubResource("StyleBoxFlat_th188")
-theme_override_styles/fill = SubResource("StyleBoxFlat_ggspc")
-step = 1.0
-value = 50.0
-show_percentage = false
-
-[node name="HealthValue" type="Label" parent="MarginContainer/EnemyHContainer/EnemyVContainer/HealthBar" unique_id=1379329406]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_a12nh")
-theme_override_font_sizes/font_size = 12
-text = "HP : 25/50	"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CharacterControl" type="Control" parent="MarginContainer/EnemyHContainer/EnemyVContainer" unique_id=555752238]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Sprite2D" type="Sprite2D" parent="MarginContainer/EnemyHContainer/EnemyVContainer/CharacterControl" unique_id=1761172350]
-scale = Vector2(2, 2)
-texture = ExtResource("2_p1qf1")
-hframes = 7
-vframes = 5
-
-[node name="Filler" type="Control" parent="MarginContainer/EnemyHContainer/EnemyVContainer" unique_id=1229987437]
-layout_mode = 2
 
 [node name="PlayerPanelContainer" type="VBoxContainer" parent="." unique_id=1667685855]
 layout_mode = 1
@@ -146,8 +107,8 @@ size_flags_horizontal = 3
 theme_override_constants/margin_left = 32
 
 [node name="PlayerName" type="Label" parent="PlayerPanelContainer/PlayerPanel/PlayerData/PlayerNameMargin" unique_id=1534447110]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_a12nh")
 theme_override_font_sizes/font_size = 20
 text = "PLAYER"
 horizontal_alignment = 1
@@ -158,7 +119,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_right = 32
 
-[node name="HealthBar" type="ProgressBar" parent="PlayerPanelContainer/PlayerPanel/PlayerData/HealthMargin" unique_id=170756429]
+[node name="PlayerHealthBar" type="ProgressBar" parent="PlayerPanelContainer/PlayerPanel/PlayerData/HealthMargin" unique_id=170756429]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 100)
 layout_mode = 2
@@ -171,7 +133,7 @@ step = 1.0
 value = 50.0
 show_percentage = false
 
-[node name="HealthValue" type="Label" parent="PlayerPanelContainer/PlayerPanel/PlayerData/HealthMargin/HealthBar" unique_id=1460681064]
+[node name="HealthValue" type="Label" parent="PlayerPanelContainer/PlayerPanel/PlayerData/HealthMargin/PlayerHealthBar" unique_id=1460681064]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -179,12 +141,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_a12nh")
 text = "HP : 25/50	"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ActionsPanelContainer" type="VBoxContainer" parent="." unique_id=1161071353]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -208,55 +170,127 @@ grow_vertical = 2
 alignment = 1
 
 [node name="ActionsDataH" type="HBoxContainer" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV" unique_id=49171901]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Filler" type="Control" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV/ActionsDataH" unique_id=1230024106]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1280438397]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="EnemyHContainer" type="HBoxContainer" parent="MarginContainer" unique_id=447343822]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="EnemyVContainer" type="VBoxContainer" parent="MarginContainer/EnemyHContainer" unique_id=1822706610]
+custom_minimum_size = Vector2(375, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="MarginContainer/EnemyHContainer/EnemyVContainer" unique_id=2142638864]
+unique_name_in_owner = true
+custom_maximum_size = Vector2(-1, 30)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/background = SubResource("StyleBoxFlat_th188")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ggspc")
+step = 1.0
+value = 50.0
+show_percentage = false
+
+[node name="HealthValue" type="Label" parent="MarginContainer/EnemyHContainer/EnemyVContainer/EnemyHealthBar" unique_id=1379329406]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "HP : 25/50	"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CharacterControl" type="Control" parent="MarginContainer/EnemyHContainer/EnemyVContainer" unique_id=555752238]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="EnemySprite" type="Sprite2D" parent="MarginContainer/EnemyHContainer/EnemyVContainer/CharacterControl" unique_id=1761172350]
+unique_name_in_owner = true
+scale = Vector2(2, 2)
+
+[node name="Filler" type="Control" parent="MarginContainer/EnemyHContainer/EnemyVContainer" unique_id=1229987437]
 layout_mode = 2
 
-[node name="AttackButton" type="Button" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV/ActionsDataH" unique_id=1339542249]
+[node name="TextBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1359638761]
+unique_name_in_owner = true
+custom_maximum_size = Vector2(-1, 150)
 layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(16.638, 16.638, 16.638, 1)
-theme_override_colors/font_pressed_color = Color(0.13319641, 0.13319641, 0.13319635, 1)
-theme_override_colors/font_hover_color = Color(0.0042362656, 0.0042362656, 0.0042362656, 1)
-theme_override_fonts/font = ExtResource("2_a12nh")
-theme_override_styles/normal = SubResource("StyleBoxFlat_s551c")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_feutv")
-theme_override_styles/hover = SubResource("StyleBoxFlat_feutv")
-text = "ATTACK"
+mouse_filter = 2
 
-[node name="DefendButton" type="Button" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV/ActionsDataH" unique_id=683925150]
+[node name="TextBox" type="Panel" parent="MarginContainer/TextBoxContainer" unique_id=1218830538]
 layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(16.638, 16.638, 16.638, 1)
-theme_override_colors/font_pressed_color = Color(0.13319641, 0.13319641, 0.13319635, 1)
-theme_override_colors/font_hover_color = Color(0.0042362656, 0.0042362656, 0.0042362656, 1)
-theme_override_fonts/font = ExtResource("2_a12nh")
-theme_override_styles/normal = SubResource("StyleBoxFlat_s551c")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_feutv")
-theme_override_styles/hover = SubResource("StyleBoxFlat_feutv")
-text = "DEFEND"
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_co48d")
 
-[node name="RunButton" type="Button" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV/ActionsDataH" unique_id=993279699]
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(16.638, 16.638, 16.638, 1)
-theme_override_colors/font_pressed_color = Color(0.13319641, 0.13319641, 0.13319635, 1)
-theme_override_colors/font_hover_color = Color(0.0042362656, 0.0042362656, 0.0042362656, 1)
-theme_override_fonts/font = ExtResource("2_a12nh")
-theme_override_styles/normal = SubResource("StyleBoxFlat_s551c")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_feutv")
-theme_override_styles/hover = SubResource("StyleBoxFlat_feutv")
-text = "RUN"
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TextBoxContainer/TextBox" unique_id=98207970]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="Filler2" type="Control" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV/ActionsDataH" unique_id=780093211]
+[node name="EngagementLabel" type="Label" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer" unique_id=1655289132]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 32
+text = "A [name] appears!"
+
+[node name="TickerContainerH" type="HBoxContainer" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer" unique_id=343485755]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="TickerContainerV" type="VBoxContainer" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer/TickerContainerH" unique_id=1853532414]
+layout_mode = 2
+alignment = 2
+
+[node name="Ticker" type="Label" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer/TickerContainerH/TickerContainerV" unique_id=804926881]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = ">"
+
+[node name="AwaitTimer" type="Timer" parent="." unique_id=135312124]
+unique_name_in_owner = true
+wait_time = 0.25
+one_shot = true
+
+[node name="EnemySprite2" type="Sprite2D" parent="." unique_id=573570214]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("2_p1qf1")
+hframes = 7
+vframes = 5

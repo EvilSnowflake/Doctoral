@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://d1jhva1a44v24"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cudks"]
+bg_color = Color(0.003921569, 0.003921569, 0.003921569, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0071o"]
+bg_color = Color(11.708, 11.708, 11.708, 1)
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0hdj1"]
+bg_color = Color(11.708, 11.708, 11.708, 1)
+border_color = Color(1, 1, 1, 1)
+
+[node name="ActionsButton" type="Button" unique_id=910127226]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.6706895, 0.6706895, 0.6706895, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_cudks")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0071o")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0hdj1")
+text = "ActionName"

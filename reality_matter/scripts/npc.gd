@@ -46,7 +46,7 @@ signal await_user_input()
 ## so that it can then move on to the next peice of dialogue
 signal continue_dialogue()
 ######NEW SCRIPT
-signal engage_battle(char: StaticBody2D, user: CharacterBody2D)
+signal engage_battle(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats)
 ######NEW SCRIPT
 
 ## This variable contains the animations for the character as a
@@ -168,6 +168,9 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 	if spritePath != null and sprite_comp != null:
 		sprite_comp.texture = spritePath
 
+func get_sprite() -> Sprite2D:
+	return sprite
+
 ## This function is used by other scripts to give the npc dialogue. When adding
 ## the dialogue we search how many dialogues are contained so that we start with
 ## the last one
@@ -182,9 +185,15 @@ func set_char_name(nm: String) -> void:
 func get_character_name() -> String:
 	return character_name
 
-func set_npc_combat(com_stat: Combat_Stats, combability: bool):
+func set_npc_combat(com_stat: Combat_Stats, combability: bool) -> void:
 	character_stats = com_stat
 	can_combat = combability
+
+func get_npc_combat() -> Combat_Stats:
+	if !can_combat:
+		print_debug("This character cannot combat")
+		return null
+	return character_stats
 
 
 ## This function should be connected to the instance of the player colliding

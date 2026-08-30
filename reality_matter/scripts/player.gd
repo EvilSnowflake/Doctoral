@@ -250,8 +250,11 @@ func receive_inventory(inventory_instance: Inventory):
 func give_item(item_id: String) -> bool:
 	return inventory_list.remove_item(item_id)
 ######NEW SCRIPT
-func receive_combat_stats(com_stats: Combat_Stats):
+func receive_combat_stats(com_stats: Combat_Stats) -> void:
 	user_combat_stats = com_stats
+
+func get_combat_stats() -> Combat_Stats:
+	return user_combat_stats
 
 func get_character_name() -> String:
 	return character_name

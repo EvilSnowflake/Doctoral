@@ -3,6 +3,7 @@ class_name Combat_Stats
 #combat statistics
 extends Resource
 
+@export var max_health: int = 10
 @export var health: int = 10
 @export var attack_power: int = 1
 @export var defense: int = 1
@@ -17,7 +18,8 @@ func _ready():
 	_exp_to_level = _default_experience_to_next_level
 
 func set_statistics(hlth: int, ap: int, dfnc: int, spd: int) -> void:
-	health = hlth
+	max_health = hlth
+	health = max_health
 	attack_power = ap
 	defense = dfnc
 	speed = spd
@@ -27,6 +29,10 @@ func add_experience(amount: int) -> void:
 	while _experience >= _exp_to_level:
 		_experience -= _exp_to_level
 		_levelup()
+
+func deal_damage(amount: int) -> int:
+	health -= amount
+	return health
 
 func _levelup():
 	_level += 1
