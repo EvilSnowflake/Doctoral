@@ -31,7 +31,7 @@ func add_experience(amount: int) -> void:
 		_levelup()
 
 func deal_damage(amount: int) -> int:
-	health -= amount
+	health = max(0, health-amount)
 	return health
 
 func _levelup():
