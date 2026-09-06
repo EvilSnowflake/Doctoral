@@ -38,16 +38,14 @@ var _is_defending: bool = false
 func _ready():
 	text_box_container.hide()
 	engagement_text_hidden.connect(_show_actions_panel)
-	set_up_player(player_name_default, player_stats_default)
+	#set_up_player(player_name_default, player_stats_default)
 	for stri in _button_array_names:
 		var act_button: Button = actions_button_scene.instantiate()
 		actions_data_h.add_child(act_button)
 		act_button.text = stri
 		act_button.size_flags_horizontal = _size_flag_actions
 		act_button.pressed.connect(_on_button_pressed.bind(act_button.text))
-	setup_combat_second(enemy_sprite_default, enemy_name_default, enemy_combat_stats_default)
-	#await engagement_text_hidden
-	#actions_panel_container.show()
+	#setup_combat_second(enemy_sprite_default, enemy_name_default, enemy_combat_stats_default)
 
 func _input(_event):
 	if !text_box_container.is_visible_in_tree():
@@ -82,13 +80,13 @@ func set_up_player(user_name: String, player_stats: Combat_Stats) -> void:
 	_user_name = user_name
 	player_name.text = _user_name
 	_user_statistics = player_stats
+	#_set_bar_value(player_health_bar,player_stats.max_health,player_stats.health)
+	#print_debug("Player setup!")
 
 func setup_combat(charac: StaticBody2D) -> void:
 	if !charac.has_method("get_sprite") or !charac.has_method("get_character_name") or !charac.has_method("get_npc_combat"):
 		print_debug("NPC does not have a get sprite method or get name or get combat")
 		return
-	pass
-	#Here we setup the encounter after the user interacts with an enemy
 
 func setup_combat_second(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats):
 	_set_bar_value(player_health_bar, _user_statistics.max_health, _user_statistics.health)
@@ -103,7 +101,7 @@ func setup_combat_second(char_sprite: Sprite2D, char_name: String, char_stats: C
 	_display_text("A wild " + _npc_name + " appears!")
 
 func _on_button_pressed(button_name: String) -> void:
-	print_debug(button_name + " BUTTON PRESSED!")
+	#print_debug(button_name + " BUTTON PRESSED!")
 	var behaviour: String = _button_name_behaviour[button_name]
 	if behaviour.contains("DISENGAGE_COMBAT"):
 		var number: int = int(behaviour.trim_prefix("DISENGAGE_COMBAT"))
@@ -124,7 +122,7 @@ func _disengage_combat(amount: int) -> void:
 
 func _synthesize_attack(amount: int) -> void:
 	_display_text("You start a devastating attack!")
-	print_debug("Attack with " + str(amount))
+	#print_debug("Attack with " + str(amount))
 	await engagement_text_hidden
 	_deal_damage_to(amount*_user_statistics.attack_power, _npc_statistics, _npc_name)
 
@@ -137,6 +135,7 @@ func _stop_damage(amount: int) -> void:
 	_enemy_turn()
 
 func _set_bar_value(bar: ProgressBar, max_val: int, curr_val: int):
+	#print_debug("Bar %s now has max health: %s and current health: %s" % [str(bar), str(max_val), str(curr_val)])
 	bar.max_value = max_val
 	bar.value = curr_val
 	var bar_text: Label = bar.get_child(0)
@@ -144,7 +143,7 @@ func _set_bar_value(bar: ProgressBar, max_val: int, curr_val: int):
 
 func _deal_damage_to(amount: int, person: Combat_Stats, charname: String):
 	#_display_text("Person " + charname + " was dealt : " + str(amount))
-	print_debug("Person " + charname + " was dealt : " + str(amount))
+	#print_debug("Person " + charname + " was dealt : " + str(amount))
 	var remaining_hp = person.deal_damage(amount)
 	if charname == player_name.text:
 		_set_bar_value(player_health_bar, person.max_health, remaining_hp)

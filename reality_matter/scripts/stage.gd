@@ -8,6 +8,10 @@ extends Node2D
 #will be passed to the game manager eventualy and the game manager will take
 #those properties from a json file
 
+## This signal should be called when we want to enable or disable the player's
+## camera
+signal player_camera_changeability(ability: bool)
+
 ## This variable contains a reference to the player character scene used to
 ## instantiate the player character
 @export var player_component: PackedScene
@@ -97,12 +101,27 @@ extends Node2D
 ## This variable dictates how many inventory slots the user interface is going
 ## to contain
 @export var inventory_spaces: int
+## The scene all battles happen on
+@export var battle_scene: PackedScene
+
+
+#var tweenNames: Array[String] = ["IdleTween", "RunTween"]
+#var tweenComps: Array[String] = ["Sprite2D", "Sprite2D"]
+#var tweenProps: Array[String] = ["frame", "frame"]
+#var tweenChanges: Array[Vector2i] = [Vector2i(0,5), Vector2i(6,11)]
+#var tweenDurations: Array[float] = [0.4, 0.4]
+#var tweensItems: Dictionary = {
+#	"NAMES": { "NAME_1" : "ENEMY_DAMAGED", "NAME_2" : "ENEMY_DIED", "NAME_3" : "SHAKE", "NAME_4" : "MINI_SHAKE"},
+#	"COMPONENTS": { "COMPONENT_1" : "Enemy_Sprite", "COMPONENT_2" : "Enemy_Sprite", "COMPONENT_3" : "Background", "COMPONENT_4" : "Background"},
+#	"PROPERTIES" : { "PROPERTY_1" : "modulate", "PROPERTY_2" : "modulate", "PROPERTY_3" : "position", "PROPERTY_4" : "position"}
+#}
 
 ## This variable should contain the current instance of the user inventory
 var inventory_instance: Inventory
 
 ## This variable should contain the user interface instance
 var _user_interface: Control
+var _batt: Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -259,6 +278,10 @@ func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats
 		pl.receive_inventory(inventory_instance)
 	if pl.has_method("receive_combat_stats"):
 		pl.receive_combat_stats(user_combat_stats)
+	if pl.has_method("get_combat_stats") and pl.has_method("get_character_name"):
+		create_combat_environment(pl.get_character_name(), pl.get_combat_stats())
+	if pl.has_method("change_camera_ability"):
+		player_camera_changeability.connect(pl.change_camera_ability)
 
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
@@ -288,7 +311,7 @@ func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionar
 	if new_npc.has_method("set_npc_combat"):
 		new_npc.set_npc_combat(npc_combat_stats, npc_can_fight)
 	if new_npc.has_signal("engage_battle"):
-		new_npc.engage_battle.connect(_create_combat_env)
+		new_npc.engage_battle.connect(_start_combat_env)
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):
@@ -303,7 +326,25 @@ func _spawn_user_interface(ui: PackedScene):
 	if new_ui.has_method("receive_inventory") and inventory_instance != null:
 		new_ui.receive_inventory(inventory_instance)
 
-func _create_combat_env(usr: CharacterBody2D, npc: StaticBody2D):
-	if !usr.has_method("get_character_name") or !npc.has_method("get_character_name"):
+func create_combat_environment(nm: String, sts: Combat_Stats):
+	_batt = battle_scene.instantiate()
+	_user_interface.get_child(0).add_child(_batt)
+	#add_child(_batt)
+	if !_batt.has_method("set_up_player"):
+		print_debug("Battle does not have the ability for the player to be setup!")
 		return
-	print_debug("The combat begins for %s and %s" % [usr.get_character_name(), npc.get_character_name()])
+	_batt.set_up_player(nm,sts)
+	print_debug("Player was setup with name: %s and stats %s" % [nm,str(sts)])
+	_batt.hide()
+
+func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats):
+	print_debug("The combat begins for %s and %s" % ["player", nm])
+	if _batt == null:
+		print_debug("Battle does not exist")
+		return
+	if !_batt.has_method("setup_combat_second"):
+		print_debug("Battle can't be set up")
+		return
+	_batt.show()
+	_batt.setup_combat_second(spr,nm,sts)
+	player_camera_changeability.emit(false)

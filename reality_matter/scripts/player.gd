@@ -72,6 +72,7 @@ var _moving: bool = false
 ## This variable informs the character if the user can move them, usually set
 ## to false when there is a dialogue in the process
 var _moveability: bool = true
+var _player_camera: Camera2D
 
 ## This variable tells the character how big each tile is in the environment so
 ## that they know how big each step is going to be
@@ -113,6 +114,9 @@ func _ready():
 		add_sprite(texturePath, sprite)
 		sprite.hframes = hFrames
 		sprite.vframes = vFrames
+	
+	if _player_camera == null:
+		_player_camera = find_child("Camera2D")
 	
 	#Here we create all the characters animations based on the variables we have
 	#created
@@ -258,6 +262,11 @@ func get_combat_stats() -> Combat_Stats:
 
 func get_character_name() -> String:
 	return character_name
+
+func change_camera_ability(ability: bool) -> void:
+	if _player_camera != null:
+		print_debug("Change camera's ability to %s" % [str(ability)])
+		_player_camera.enabled = ability
 ######NEW SCRIPT
 ## Function to change our current animation to our state. There is no input
 ## because we first need to update the current state variable and depending on

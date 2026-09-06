@@ -223,7 +223,9 @@ func _on_assign_item_to_give(item: Item):
 func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
 	print_debug("Player interacted with me")
 	if can_combat:
-		engage_battle.emit(player_character,self)
+		engage_battle.emit(sprite, character_name, character_stats)
+		if player_character.has_signal("adjust_moving"):
+			player_character.emit_signal("adjust_moving",false)
 	else:
 		_on_player_start_conversing(player_character)
 ##############NEW SCRIPT

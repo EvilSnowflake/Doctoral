@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://da4yjjcpixbf0" path="res://assets/sprites/items/14.png" id="5_1hwpr"]
 [ext_resource type="PackedScene" uid="uid://d4ghxn1adm0of" path="res://scenes/user_interface_node.tscn" id="5_vcsse"]
 [ext_resource type="Script" uid="uid://c8670nkn1e3ym" path="res://scripts/combat_stats.gd" id="6_1hwpr"]
+[ext_resource type="PackedScene" uid="uid://bbqiv41j337r" path="res://scenes/battle.tscn" id="9_dexii"]
 
 [sub_resource type="Resource" id="Resource_vcsse"]
 script = ExtResource("4_st0q7")
@@ -20,6 +21,7 @@ metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
 
 [sub_resource type="Resource" id="Resource_st0q7"]
 script = ExtResource("6_1hwpr")
+max_health = 100
 health = 100
 attack_power = 10
 defense = 5
@@ -44,6 +46,7 @@ metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 
 [sub_resource type="Resource" id="Resource_0hg5s"]
 script = ExtResource("6_1hwpr")
+max_health = 20
 health = 20
 attack_power = 5
 defense = 5
@@ -67,3 +70,4 @@ npc_stats = Array[ExtResource("6_1hwpr")]([SubResource("Resource_1hwpr"), SubRes
 npc_combatability = Array[bool]([false, false, true])
 user_interface_component = ExtResource("5_vcsse")
 inventory_spaces = 5
+battle_scene = ExtResource("9_dexii")

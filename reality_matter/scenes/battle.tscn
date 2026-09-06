@@ -79,6 +79,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [Vector2(0, 0)]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Background:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_6vh42"]
 resource_name = "enemy_damaged"
@@ -126,6 +138,18 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(0, 0), Vector2(5, 5), Vector2(-5, 0), Vector2(-5, -5), Vector2(0, -5), Vector2(0, 0)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Background:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(5, 5), Vector2(-5, 0), Vector2(-5, -5), Vector2(0, -5), Vector2(0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_4k1nj"]
 resource_name = "shake"
@@ -142,6 +166,18 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-10, -10), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10), Vector2(0, 0)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Background:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-10, -10), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10), Vector2(0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4k1nj"]
 _data = {
@@ -153,7 +189,6 @@ _data = {
 }
 
 [node name="Battle" type="Control" unique_id=1499474918 node_paths=PackedStringArray("enemy_sprite_default")]
-modulate = Color(1, 1, 1, 0.9607843)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
