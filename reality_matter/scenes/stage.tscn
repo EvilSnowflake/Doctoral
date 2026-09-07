@@ -36,6 +36,15 @@ icon = ExtResource("5_1hwpr")
 max_stack = 5
 metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
 
+[sub_resource type="Resource" id="Resource_jl6nj"]
+script = ExtResource("4_st0q7")
+id = "1"
+name = "Bone"
+description = "This is a bone"
+icon = ExtResource("5_1hwpr")
+max_stack = 5
+metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
+
 [sub_resource type="Resource" id="Resource_1hwpr"]
 script = ExtResource("6_1hwpr")
 metadata/_custom_type_script = "uid://c8670nkn1e3ym"
@@ -64,7 +73,7 @@ playerPosition = Vector2(96, 96)
 playerStats = SubResource("Resource_st0q7")
 characters_list = Array[PackedScene]([ExtResource("4_6c5u0"), ExtResource("4_6c5u0"), ExtResource("4_6c5u0")])
 characters_positions = Array[Vector2]([Vector2(416, 96), Vector2(416, 160), Vector2(416, 224)])
-character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii"), null, null])
+character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii"), null, SubResource("Resource_jl6nj")])
 character_names = Array[String](["Bill", "Frank", "Greg"])
 npc_stats = Array[ExtResource("6_1hwpr")]([SubResource("Resource_1hwpr"), SubResource("Resource_yd2gm"), SubResource("Resource_0hg5s")])
 npc_combatability = Array[bool]([false, false, true])

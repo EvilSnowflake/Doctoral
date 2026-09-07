@@ -3,6 +3,9 @@ class_name Combat_Stats
 #combat statistics
 extends Resource
 
+signal living_died()
+signal char_run()
+
 @export var max_health: int = 10
 @export var health: int = 10
 @export var attack_power: int = 1
@@ -13,6 +16,7 @@ var _level: int = 1
 var _experience: int = 1
 var _default_experience_to_next_level: int = 9
 var _exp_to_level: int = 9
+var _alive: bool = true
 
 func _ready():
 	_exp_to_level = _default_experience_to_next_level
@@ -32,6 +36,9 @@ func add_experience(amount: int) -> void:
 
 func deal_damage(amount: int) -> int:
 	health = max(0, health-amount)
+	if health == 0:
+		_alive = false
+		living_died.emit()
 	return health
 
 func _levelup():

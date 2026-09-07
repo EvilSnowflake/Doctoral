@@ -14,9 +14,6 @@ signal player_left
 ######NEW SCRIPT
 signal interacted(player: CharacterBody2D)
 ######NEW SCRIPT
-## This signal is emitted by the player when they begin interacting
-## with the npc, its requires the user as input
-signal start_conversation(player: CharacterBody2D)
 ## This signal is used to give an item to the npc to hold so that
 ## they can then give it to the player
 signal assign_item_to_give(item: Item)
@@ -47,6 +44,8 @@ signal await_user_input()
 signal continue_dialogue()
 ######NEW SCRIPT
 signal engage_battle(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats)
+signal adjust_player_movement(ability: bool)
+signal give_item_to_player(itm: Item)
 ######NEW SCRIPT
 
 ## This variable contains the animations for the character as a
@@ -178,7 +177,6 @@ func add_dialogue(dial: Dictionary) -> void:
 	CharacterDialogue = dial
 	_dialogues_num = CharacterDialogue.keys().size()
 
-
 func set_char_name(nm: String) -> void:
 	character_name = nm
 
@@ -188,13 +186,13 @@ func get_character_name() -> String:
 func set_npc_combat(com_stat: Combat_Stats, combability: bool) -> void:
 	character_stats = com_stat
 	can_combat = combability
+	character_stats.living_died.connect(_die)
 
 func get_npc_combat() -> Combat_Stats:
 	if !can_combat:
 		print_debug("This character cannot combat")
 		return null
 	return character_stats
-
 
 ## This function should be connected to the instance of the player colliding
 ## with the interactable component of the character
@@ -224,8 +222,7 @@ func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
 	print_debug("Player interacted with me")
 	if can_combat:
 		engage_battle.emit(sprite, character_name, character_stats)
-		if player_character.has_signal("adjust_moving"):
-			player_character.emit_signal("adjust_moving",false)
+		adjust_player_movement.emit(false)
 	else:
 		_on_player_start_conversing(player_character)
 ##############NEW SCRIPT
@@ -240,8 +237,7 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 	dialogue_label.text = ""
 	
 	#First we disable the players movement with a signal
-	if player_character.has_signal("adjust_moving"):
-		player_character.emit_signal("adjust_moving",false)
+	adjust_player_movement.emit(false)
 	
 	#Then we assign the first dialogue in the dictionary
 	var current_dialogue = CharacterDialogue["Dialogue_"+str(_dialogues_num)]
@@ -264,8 +260,8 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 				#we break the conversation
 				print_debug("Conversation Ended!")
 				break
-			elif curr_word == "GIVE_ITEM" and item_to_give != null and player_character.has_signal("add_item"):
-				player_character.emit_signal("add_item",item_to_give)
+			elif curr_word == "GIVE_ITEM" and item_to_give != null:
+				give_item_to_player.emit(item_to_give)
 				item_to_give = null
 				break
 			elif curr_word == "GIVE_ITEM" and item_to_give != null:
@@ -278,7 +274,7 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 			#or we don't
 			elif curr_word.begins_with("TAKE_ITEM") and player_character.has_method("give_item"):
 				var item_to_take: String = curr_word.trim_prefix("TAKE_ITEM_")
-				print_debug("Item to take: " + item_to_take)
+				#print_debug("Item to take: " + item_to_take)
 				_move_on_dialogue = player_character.give_item(item_to_take)
 				#this should try and take the item from the user's interface
 				#and if it takes it we move the conversation, otherwise
@@ -331,11 +327,23 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 		_dialogues_num -= 1
 	#print_debug("ending conversation")
 	end_dialogue.emit()
-	if player_character.has_signal("adjust_moving"):
-		player_character.emit_signal("adjust_moving",true)
+	adjust_player_movement.emit(true)
 
 ## This function gets called when the user selects an option or just presses
 ## continue. We receive the option number or if there is none we don't
 func _on_dialogue_continue(option: int = 0) -> void:
 	if option != 0:
 		option_chosen = option
+
+func _die() -> void:
+	print_debug("I died")
+	if item_to_give != null:
+		print_debug("Can give item to player with id %s" %[str(item_to_give.id)])
+		give_item_to_player.emit(item_to_give)
+		item_to_give = null
+	for itm: Tween in TweenItems.values():
+		itm.stop()
+	adjust_player_movement.emit(true)
+	#if player_character.has_signal("adjust_moving"):
+	#	player_character.emit_signal("adjust_moving",true)
+	queue_free()

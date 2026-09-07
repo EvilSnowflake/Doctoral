@@ -1,6 +1,7 @@
 extends Control
 
 signal engagement_text_hidden()
+signal engagement_ended()
 
 @export var actions_button_scene: PackedScene
 @export var enemy_sprite_default: Sprite2D
@@ -33,6 +34,7 @@ var _user_name: String
 var _npc_statistics: Combat_Stats
 var _npc_name: String
 var _is_defending: bool = false
+var _can_press_buttons: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -67,6 +69,7 @@ func _enemy_turn() -> void:
 		_display_text("You defended succesfully!")
 		await engagement_text_hidden
 		_show_actions_panel()
+		_can_press_buttons = true
 		return
 	
 	_display_text(_npc_name + " attacks you!")
@@ -102,7 +105,10 @@ func setup_combat_second(char_sprite: Sprite2D, char_name: String, char_stats: C
 
 func _on_button_pressed(button_name: String) -> void:
 	#print_debug(button_name + " BUTTON PRESSED!")
+	if !_can_press_buttons:
+		return
 	var behaviour: String = _button_name_behaviour[button_name]
+	_can_press_buttons = false
 	if behaviour.contains("DISENGAGE_COMBAT"):
 		var number: int = int(behaviour.trim_prefix("DISENGAGE_COMBAT"))
 		_disengage_combat(number)
@@ -118,6 +124,7 @@ func _disengage_combat(amount: int) -> void:
 	await engagement_text_hidden
 	await_timer.start()
 	await await_timer.timeout
+	_user_statistics.char_run.emit()
 	_end_combat()
 
 func _synthesize_attack(amount: int) -> void:
@@ -128,7 +135,7 @@ func _synthesize_attack(amount: int) -> void:
 
 func _stop_damage(amount: int) -> void:
 	_is_defending = true
-	_display_text("You try to defend")
+	_display_text("You try to defend with number %s" % [str(amount)])
 	await engagement_text_hidden
 	await_timer.start()
 	await await_timer.timeout
@@ -157,17 +164,21 @@ func _deal_damage_to(amount: int, person: Combat_Stats, charname: String):
 		await animation_player.animation_finished
 		_display_text("You dealt : " + str(amount) + " damage")
 		await engagement_text_hidden
-		
 		if person.health == 0:
 			_display_text(charname + " was defeated!")
 			await engagement_text_hidden
 			animation_player.play("enemy_died")
 			await animation_player.animation_finished
+			_can_press_buttons = true
 			_end_combat()
+			return
 		
+		_can_press_buttons = true
 		_enemy_turn()
 
 func _end_combat():
 	battle_camera.enabled = false
-	self.hide()
+	_can_press_buttons = true
+	engagement_ended.emit()
+	#Here we need to add what we will give the player character!
 	

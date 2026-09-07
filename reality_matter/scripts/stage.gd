@@ -122,6 +122,7 @@ var inventory_instance: Inventory
 ## This variable should contain the user interface instance
 var _user_interface: Control
 var _batt: Control
+var _player: CharacterBody2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -265,40 +266,44 @@ func _process(_delta):
 ## This function is used to spawn the player on the current scene. It requires a
 ## player scene to instantiate and a position. After setting the player's
 ## position we then add a reference to the user's inventory on that character
-func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats: Combat_Stats):
-	var pl = player.instantiate()
-	add_child(pl)
+func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats: Combat_Stats) -> void:
+	_player = player.instantiate()
+	add_child(_player)
 	#pl.add_child(_user_interface)
-	pl.position = new_position
+	_player.position = new_position
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_player_adding_item"):
-		_user_interface.connect_player_adding_item(pl)
-	if pl.has_method("receive_inventory") and inventory_instance != null:
-		pl.receive_inventory(inventory_instance)
-	if pl.has_method("receive_combat_stats"):
-		pl.receive_combat_stats(user_combat_stats)
-	if pl.has_method("get_combat_stats") and pl.has_method("get_character_name"):
-		create_combat_environment(pl.get_character_name(), pl.get_combat_stats())
-	if pl.has_method("change_camera_ability"):
-		player_camera_changeability.connect(pl.change_camera_ability)
+		_user_interface.connect_player_adding_item(_player)
+	if _player.has_method("receive_inventory") and inventory_instance != null:
+		_player.receive_inventory(inventory_instance)
+	if _player.has_method("receive_combat_stats"):
+		_player.receive_combat_stats(user_combat_stats)
+	if _player.has_method("get_combat_stats") and _player.has_method("get_character_name"):
+		create_combat_environment(_player.get_character_name(), _player.get_combat_stats())
+	if _player.has_method("change_camera_ability"):
+		player_camera_changeability.connect(_player.change_camera_ability)
 
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
 ## to have and what item is going to be
-func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item):
+func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item) -> void:
 	var it = item.instantiate()
 	add_child(it)
 	it.position = new_position
 	print_debug(item_resource.description)
 	if it.has_signal("assign_item_contained"):
 		it.emit_signal("assign_item_contained",item_resource)
+	if _player == null:
+		return
+	if it.has_signal("give_item_to_player") and _player.has_method("add_item_to_inventory"):
+		it.give_item_to_player.connect(_player.add_item_to_inventory)
 
 ## This function is used to spawn the characters that populate the scene other
 ## than the player character. We require the character's scene, their position
 ## on the environemnt, their dialogue and what item (if any) they can give the
 ## player character.
-func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionary, new_name: String, npc_combat_stats: Combat_Stats, npc_can_fight: bool ,item_to_give: Item = null):
+func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionary, new_name: String, npc_combat_stats: Combat_Stats, npc_can_fight: bool ,item_to_give: Item = null) -> void:
 	var new_npc = npc.instantiate()
 	add_child(new_npc)
 	new_npc.position = new_position
@@ -312,6 +317,10 @@ func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionar
 		new_npc.set_npc_combat(npc_combat_stats, npc_can_fight)
 	if new_npc.has_signal("engage_battle"):
 		new_npc.engage_battle.connect(_start_combat_env)
+	if new_npc.has_signal("adjust_player_movement") and _player.has_method("change_moveability"):
+		new_npc.adjust_player_movement.connect(_player.change_moveability)
+	if new_npc.has_signal("give_item_to_player") and _player.has_method("add_item_to_inventory"):
+		new_npc.give_item_to_player.connect(_player.add_item_to_inventory)
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):
@@ -319,25 +328,29 @@ func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionar
 
 ## This function is used to instantiate the user interface on the scene. It only
 ## requires the interface's scene.
-func _spawn_user_interface(ui: PackedScene):
+func _spawn_user_interface(ui: PackedScene) -> void:
 	var new_ui = ui.instantiate()
 	add_child(new_ui)
 	_user_interface = new_ui
 	if new_ui.has_method("receive_inventory") and inventory_instance != null:
 		new_ui.receive_inventory(inventory_instance)
 
-func create_combat_environment(nm: String, sts: Combat_Stats):
+func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
 	_batt = battle_scene.instantiate()
 	_user_interface.get_child(0).add_child(_batt)
 	#add_child(_batt)
 	if !_batt.has_method("set_up_player"):
 		print_debug("Battle does not have the ability for the player to be setup!")
 		return
+	if !_batt.has_signal("engagement_ended"):
+		print_debug("Battle does not have the ability to end!")
+		return
+	_batt.engagement_ended.connect(_end_combat_env)
 	_batt.set_up_player(nm,sts)
 	print_debug("Player was setup with name: %s and stats %s" % [nm,str(sts)])
 	_batt.hide()
 
-func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats):
+func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats) -> void:
 	print_debug("The combat begins for %s and %s" % ["player", nm])
 	if _batt == null:
 		print_debug("Battle does not exist")
@@ -348,3 +361,8 @@ func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats):
 	_batt.show()
 	_batt.setup_combat_second(spr,nm,sts)
 	player_camera_changeability.emit(false)
+
+func _end_combat_env() -> void:
+	print_debug("The combat ends!")
+	_batt.hide()
+	player_camera_changeability.emit(true)

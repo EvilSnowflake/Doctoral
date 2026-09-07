@@ -6,6 +6,7 @@ extends Node2D
 ## This signal gives the entity an item to hold so that it knows what to give
 ## to the player
 signal assign_item_contained(it: Item)
+signal give_item_to_player(it: Item)
 
 ## This variable contains the interactable component that check when the player
 ## collides or interacts with us
@@ -65,10 +66,8 @@ func _on_player_left_interactable() -> void:
 ## This function should be connected with the interactable component when the
 ## user begins interacting with it. We just add the item we hold to the player
 ## and then dissapear
-func _on_player_interacted(player: CharacterBody2D) -> void:
-	#print_debug("Player picked item with id: " + str(item_id))
-	if player.has_signal("add_item"):
-		player.emit_signal("add_item",item_contained)
+func _on_player_interacted(_player: CharacterBody2D) -> void:
+	give_item_to_player.emit(item_contained)
 	self.queue_free()
 
 ## This function should be called when we want to give this entity an item

@@ -3,9 +3,6 @@ extends CharacterBody2D
 #This script should be assigned to the user's character and functions as a
 #character controller, animator and interacting entity
 
-## This signal should be emitted to give the player an Item to add to their
-## inventory
-signal add_item(item: Item)
 ## This signal should be emitted when we need to stop the user from moving
 ## or make them start moving again
 signal adjust_moving(ability: bool)
@@ -130,7 +127,7 @@ func _ready():
 	#appropriate signals
 	current_state = _default_state
 	update_animation()
-	add_item.connect(_add_item_to_inventory)
+	#add_item.connect(_add_item_to_inventory)
 	adjust_moving.connect(change_moveability)
 
 ## This function is currently unused but can be if we have issues with input
@@ -165,6 +162,18 @@ func _physics_process(_delta):
 	#If the player then presses the interact function we call the iteract
 	if Input.is_action_just_pressed("Interact"):
 		_interact()
+
+## This function is called when the user presses the Interact button, if we are
+## not moving and we have the ability to move then we check if we collided with
+## an item or an npc and we emit a signal to them signifying that the user wants
+## to interact with it
+func _interact() -> void:
+	if _moving or !_moveability:
+		return
+	if _last_entity_collided != null:
+		#When interacting, give the player as an argument
+		if _last_entity_collided.has_signal("interacted"):
+			_last_entity_collided.emit_signal("interacted",self)
 
 ## This function is used to modify the users position when they press a key.
 func move(dir: String) -> void:
@@ -215,20 +224,8 @@ func move(dir: String) -> void:
 			if _last_entity_collided.has_signal("player_collided"):
 				_last_entity_collided.emit_signal("player_collided")
 
-## This function is called when the user presses the Interact button, if we are
-## not moving and we have the ability to move then we check if we collided with
-## an item or an npc and we emit a signal to them signifying that the user wants
-## to interact with it
-func _interact() -> void:
-	if _moving or !_moveability:
-		return
-	if _last_entity_collided != null:
-		#When interacting, give the player as an argument
-		if _last_entity_collided.has_signal("interacted"):
-			_last_entity_collided.emit_signal("interacted",self)
-
-## Funciton to add an item to the ivnentory
-func _add_item_to_inventory(item: Item) -> void:
+## Funciton to add an item to the inventory
+func add_item_to_inventory(item: Item) -> void:
 	inventory_list.add_item(item)
 	#print_debug("User picked up an item, has inventory: " + str(inventory_list))
 
@@ -256,6 +253,8 @@ func give_item(item_id: String) -> bool:
 ######NEW SCRIPT
 func receive_combat_stats(com_stats: Combat_Stats) -> void:
 	user_combat_stats = com_stats
+	user_combat_stats.living_died.connect(game_end)
+	user_combat_stats.char_run.connect(_run_from_encounter)
 
 func get_combat_stats() -> Combat_Stats:
 	return user_combat_stats
@@ -265,8 +264,15 @@ func get_character_name() -> String:
 
 func change_camera_ability(ability: bool) -> void:
 	if _player_camera != null:
-		print_debug("Change camera's ability to %s" % [str(ability)])
+		#print_debug("Change camera's ability to %s" % [str(ability)])
 		_player_camera.enabled = ability
+
+func game_end() -> void:
+	get_tree().quit()
+
+func _run_from_encounter() -> void:
+	change_camera_ability(true)
+	change_moveability(true)
 ######NEW SCRIPT
 ## Function to change our current animation to our state. There is no input
 ## because we first need to update the current state variable and depending on
@@ -274,15 +280,13 @@ func change_camera_ability(ability: bool) -> void:
 func update_animation() -> void:
 	if TweenItems.is_empty() or State.is_empty():
 		return
-		
+	
 	match current_state:
 		State.IDLE:
 			for key in TweenItems:
 				TweenItems[key].stop()
 			TweenItems.values()[0].play()
-			#an_player.play("idle")
 		State.RUN:
 			for key in TweenItems:
 				TweenItems[key].stop()
 			TweenItems.values()[1].play()
-			#an_player.play("run")
