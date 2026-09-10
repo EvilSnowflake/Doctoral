@@ -335,6 +335,7 @@ func _spawn_user_interface(ui: PackedScene) -> void:
 	if new_ui.has_method("receive_inventory") and inventory_instance != null:
 		new_ui.receive_inventory(inventory_instance)
 
+#NEW SCRIPT
 func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
 	_batt = battle_scene.instantiate()
 	_user_interface.get_child(0).add_child(_batt)
@@ -350,7 +351,7 @@ func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
 	print_debug("Player was setup with name: %s and stats %s" % [nm,str(sts)])
 	_batt.hide()
 
-func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats) -> void:
+func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats, _tweens: Dictionary = {}) -> void:
 	print_debug("The combat begins for %s and %s" % ["player", nm])
 	if _batt == null:
 		print_debug("Battle does not exist")
@@ -359,10 +360,11 @@ func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats) -> void:
 		print_debug("Battle can't be set up")
 		return
 	_batt.show()
-	_batt.setup_combat_second(spr,nm,sts)
+	_batt.setup_combat_second(spr,nm,sts,_tweens)
 	player_camera_changeability.emit(false)
 
 func _end_combat_env() -> void:
 	print_debug("The combat ends!")
 	_batt.hide()
 	player_camera_changeability.emit(true)
+#NEW SCRIPT

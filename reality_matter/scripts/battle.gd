@@ -21,7 +21,11 @@ signal engagement_ended()
 @onready var enemy_sprite = %EnemySprite
 @onready var animation_player = %AnimationPlayer
 @onready var battle_camera = %BattleCamera
+@onready var game_end_panel = %GameEndPanel
+@onready var end_button = %EndButton
+@onready var text_box_panel = %TextBoxPanel
 
+var TweenItems: Dictionary = {}
 var _size_flag_actions: Variant = Control.SIZE_EXPAND_FILL
 var _button_array_names: Array[String] = ["ATTACK","DEFEND","RUN"]
 var _button_name_behaviour: Dictionary = {
@@ -35,10 +39,31 @@ var _npc_statistics: Combat_Stats
 var _npc_name: String
 var _is_defending: bool = false
 var _can_press_buttons: bool = true
+var _theme: Theme = preload("res://assets/themes/game_theme.tres")
+var _themes_dictionary = {
+	"PANELS" : {
+		"BASE_TYPE" : {
+			"THEME_TYPE" : "Panel",
+			"THEME_NAME" : "panel",
+			"THEME_STYLEBOX_TYPE" : "StyleBoxTexture",
+			"THEME_TEXTURE_PATH" : "res://assets/sprites/uielements/TinySquareBlueButton.png",
+			"THEME_TEXTURE_MARGIN" : [25.0,25.0,25.0,25.0]},
+		"PANEL_2" : {
+			"THEME_TYPE" : "Panel",
+			"THEME_NAME" : "panel",
+			"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+			"THEME_BG_COLOR" : "DARK_GREEN",
+			"THEME_BG_ALPHA" : 0.75,
+			"THEME_BORDER_WIDTH" : [0,0,0,0],
+			"THEME_BORDER_COLOR" : "DARK_GREEN",
+			"UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]}
+	}
+}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	text_box_container.hide()
+	game_end_panel.hide()
 	engagement_text_hidden.connect(_show_actions_panel)
 	#set_up_player(player_name_default, player_stats_default)
 	for stri in _button_array_names:
@@ -48,6 +73,37 @@ func _ready():
 		act_button.size_flags_horizontal = _size_flag_actions
 		act_button.pressed.connect(_on_button_pressed.bind(act_button.text))
 	#setup_combat_second(enemy_sprite_default, enemy_name_default, enemy_combat_stats_default)
+	#_theme.add_type("Panel")
+	#_theme.set_stylebox()
+	#print_debug(_theme.get_button_type_list()[0])
+	
+	#_theme.add_type("Panel_2")
+	#var act_panel: Panel = find_child("ActionsPanel")
+	#act_panel.theme = _theme
+	#act_panel.theme_type_variation = "Panel_2"
+	_set_up_theme(_themes_dictionary["PANELS"], _theme)
+	#_theme.set_type_variation("Panel_2", "Panel")
+	#var styleboxf2: StyleBoxFlat = StyleBoxFlat.new()
+	#styleboxf2.bg_color = Color.AQUA
+	#_theme.set_stylebox("panel", "Panel_2",styleboxf2)
+	
+	
+	#var styleboxf: StyleBoxTexture = StyleBoxTexture.new()
+	#styleboxf.texture = TINY_SQUARE_BLUE_BUTTON
+	#styleboxf.set_texture_margin_all(25.0)
+	#_theme.set_stylebox("panel", "Panel",styleboxf)
+	#$ActionsPanelContainer/ActionsPanel.add_theme_stylebox_override("panel",styleboxf)
+	#_theme.set_type_variation("Panel_2", "Panel")
+	#var normalstyle = _theme.get_stylebox("Panel","Panel")
+	#print_debug(normalstyle.bg_color)
+	#print_debug(_theme.has_stylebox("Panel","Panel"))
+	#_theme.set_stylebox("Panel", "Panel",styleboxf)
+	#_theme.set_type_variation("NewPanel", "Panel")
+	
+	#print_debug(_theme.get_type_variation_list("Panel"))
+	
+	#$ActionsPanelContainer/ActionsPanel.theme_type_variation = "NewPanel"
+	#print_debug(_theme.get_stylebox_type_list())
 
 func _input(_event):
 	if !text_box_container.is_visible_in_tree():
@@ -83,17 +139,16 @@ func set_up_player(user_name: String, player_stats: Combat_Stats) -> void:
 	_user_name = user_name
 	player_name.text = _user_name
 	_user_statistics = player_stats
-	#_set_bar_value(player_health_bar,player_stats.max_health,player_stats.health)
-	#print_debug("Player setup!")
 
 func setup_combat(charac: StaticBody2D) -> void:
 	if !charac.has_method("get_sprite") or !charac.has_method("get_character_name") or !charac.has_method("get_npc_combat"):
 		print_debug("NPC does not have a get sprite method or get name or get combat")
 		return
 
-func setup_combat_second(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats):
+func setup_combat_second(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats, _tweens: Dictionary = {}):
 	_set_bar_value(player_health_bar, _user_statistics.max_health, _user_statistics.health)
-	enemy_sprite.texture = char_sprite
+	#enemy_sprite.texture = char_sprite
+	#enemy_sprite.get_parent().add_child(char_sprite)
 	_npc_statistics = char_stats
 	enemy_sprite.texture = char_sprite.texture
 	enemy_sprite.hframes = char_sprite.hframes
@@ -101,6 +156,15 @@ func setup_combat_second(char_sprite: Sprite2D, char_name: String, char_stats: C
 	_set_bar_value(enemy_health_bar, _npc_statistics.max_health, _npc_statistics.health)
 	_npc_name = char_name
 	battle_camera.enabled = true
+	for i in range(_tweens["TWEEN_NAMES"].size()):
+		var tween = get_tree().create_tween()
+		tween.tween_property(enemy_sprite,_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
+		tween.set_loops()
+		tween.stop()
+		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
+	
+	if TweenItems.size() == 1:
+		TweenItems[_tweens["TWEEN_NAMES"][0]].play()
 	_display_text("A wild " + _npc_name + " appears!")
 
 func _on_button_pressed(button_name: String) -> void:
@@ -125,6 +189,7 @@ func _disengage_combat(amount: int) -> void:
 	await_timer.start()
 	await await_timer.timeout
 	_user_statistics.char_run.emit()
+	_npc_statistics.char_run.emit()
 	_end_combat()
 
 func _synthesize_attack(amount: int) -> void:
@@ -149,8 +214,6 @@ func _set_bar_value(bar: ProgressBar, max_val: int, curr_val: int):
 	bar_text.text = "HP: " + str(curr_val) + "/" + str(max_val)
 
 func _deal_damage_to(amount: int, person: Combat_Stats, charname: String):
-	#_display_text("Person " + charname + " was dealt : " + str(amount))
-	#print_debug("Person " + charname + " was dealt : " + str(amount))
 	var remaining_hp = person.deal_damage(amount)
 	if charname == player_name.text:
 		_set_bar_value(player_health_bar, person.max_health, remaining_hp)
@@ -158,6 +221,8 @@ func _deal_damage_to(amount: int, person: Combat_Stats, charname: String):
 		await animation_player.animation_finished
 		_display_text(_npc_name + " dealt : " + str(amount) + " damage")
 		await engagement_text_hidden
+		if person.health == 0:
+			_end_combat(true)
 	else:
 		_set_bar_value(enemy_health_bar, person.max_health, remaining_hp)
 		animation_player.play("enemy_damaged")
@@ -172,13 +237,84 @@ func _deal_damage_to(amount: int, person: Combat_Stats, charname: String):
 			_can_press_buttons = true
 			_end_combat()
 			return
-		
 		_can_press_buttons = true
 		_enemy_turn()
 
-func _end_combat():
-	battle_camera.enabled = false
+func _end_combat(pl_died: bool = false):
 	_can_press_buttons = true
+	if !TweenItems.keys().is_empty():
+		for twen: Tween in TweenItems.values():
+			twen.kill()
+	TweenItems.clear()
+	if pl_died:
+		game_end_panel.show()
+		animation_player.play("pl_death_animation")
+		await animation_player.animation_finished
+		await end_button.pressed
+		get_tree().quit()
+	battle_camera.enabled = false
 	engagement_ended.emit()
-	#Here we need to add what we will give the player character!
-	
+
+#WE NEED TO MAKE A FUNCTION THAT DEPENDING ON THE DICTIONARY WE EDIT THE THEME
+#PROVIDED TO HAVE THE CHARACTERISTICS INSIDE THE DICTIONARY
+#THIS SHOULD BE ABLE TO SETUP UI ELEMENTS TO HAVE SPECIFIC STYLES ACROSS ALL
+#GAME. RIGHT NOW IT ONLY RECOGNISES HOW TO SETUP A PANEL WITH A TEXTURE FROM A
+#PATH.
+#IT NOW ALSO RECOGNISES A PANEL WITH A STYLEBOXFLAT THAT JUST HAS A COLOR
+func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme) -> void:
+	for key in theme_dictionary.keys():
+		if key == "BASE_TYPE":
+			var base_theme_dictionary = theme_dictionary[key]
+			var thm_type: String = base_theme_dictionary["THEME_TYPE"]
+			var thm_name: String = base_theme_dictionary["THEME_NAME"]
+			if thm_name == "panel" and thm_type == "Panel":
+				var thm_panel_stylebox_type: String = base_theme_dictionary["THEME_STYLEBOX_TYPE"]
+				if thm_panel_stylebox_type == "StyleBoxTexture":
+					_setup_stylebox_texture(base_theme_dictionary, theme_source, thm_name, thm_type)
+				if thm_panel_stylebox_type == "StyleBoxFlat":
+					_setup_stylebox_flat(base_theme_dictionary, theme_source, thm_name, thm_type)
+		else:
+			var variation_theme_dictionary = theme_dictionary[key]
+			theme_source.add_type(key)
+			var thm_type: String = variation_theme_dictionary["THEME_TYPE"]
+			var thm_name: String = variation_theme_dictionary["THEME_NAME"]
+			theme_source.set_type_variation(key, thm_type)
+			if thm_name == "panel" and thm_type == "Panel":
+				var thm_panel_stylebox_type: String = variation_theme_dictionary["THEME_STYLEBOX_TYPE"]
+				if thm_panel_stylebox_type == "StyleBoxTexture":
+					_setup_stylebox_texture(variation_theme_dictionary, theme_source, thm_name, key)
+				if thm_panel_stylebox_type == "StyleBoxFlat":
+					_setup_stylebox_flat(variation_theme_dictionary, theme_source, thm_name, key)
+			if variation_theme_dictionary.has("UI_ELEMENTS"):
+				for var_name in variation_theme_dictionary["UI_ELEMENTS"]:
+					var element = find_child(var_name)
+					element.theme_type_variation = key
+
+func _setup_stylebox_texture(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
+	print_debug(theme_dictionary)
+	var thm_texture_path: String = theme_dictionary["THEME_TEXTURE_PATH"]
+	var thm_texture_margin: Array = theme_dictionary["THEME_TEXTURE_MARGIN"]
+	var stylebox_theme: StyleBoxTexture = StyleBoxTexture.new()
+	stylebox_theme.texture = load(thm_texture_path)
+	stylebox_theme.set_texture_margin(SIDE_LEFT, thm_texture_margin[0])
+	stylebox_theme.set_texture_margin(SIDE_BOTTOM, thm_texture_margin[1])
+	stylebox_theme.set_texture_margin(SIDE_RIGHT, thm_texture_margin[2])
+	stylebox_theme.set_texture_margin(SIDE_BOTTOM, thm_texture_margin[3])
+	print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
+	theme_source.set_stylebox(theme_name, theme_type, stylebox_theme)
+
+func _setup_stylebox_flat(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
+	print_debug(theme_dictionary)
+	var thm_bg_alpha: float = theme_dictionary["THEME_BG_ALPHA"]
+	var thm_bg_color: Color = Color(theme_dictionary["THEME_BG_COLOR"],thm_bg_alpha)
+	var thm_border_width: Array = theme_dictionary["THEME_BORDER_WIDTH"]
+	var thm_border_color: Color = Color(theme_dictionary["THEME_BORDER_COLOR"])
+	var stylebox_theme: StyleBoxFlat = StyleBoxFlat.new()
+	stylebox_theme.bg_color = thm_bg_color
+	stylebox_theme.border_width_left = thm_border_width[0]
+	stylebox_theme.border_width_top = thm_border_width[1]
+	stylebox_theme.border_width_right = thm_border_width[2]
+	stylebox_theme.border_width_bottom = thm_border_width[3]
+	stylebox_theme.border_color = thm_border_color
+	print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
+	theme_source.set_stylebox(theme_name, theme_type,stylebox_theme)

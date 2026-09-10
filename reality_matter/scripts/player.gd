@@ -85,18 +85,16 @@ var vFrames: int = 8
 var texturePath: Resource
 ## This variable shows the direction the user is currently facing after movement
 var facing: Vector2
-## This array contains the names of the animations of the character
-var tweenNames: Array[String] = ["IdleTween", "RunTween"]
-## This array contains what type of component the animation file is contained in
-## the player's scene
-var tweenComps: Array[String] = ["Sprite2D", "Sprite2D"]
-## This array contains the properties of each animation the character has
-var tweenProps: Array[String] = ["frame", "frame"]
-## This array contains the beginning and end of each animation's frames
-var tweenChanges: Array[Vector2i] = [Vector2i(0,5), Vector2i(6,11)]
-## This array contains the time in seconds each animation should require to
-## finish
-var tweenDurations: Array[float] = [0.4, 0.4]
+
+#NEW SCRIPT
+var _tweens: Dictionary = {
+	"TWEEN_NAMES" : ["IdleTween", "RunTween"],
+	"TWEEN_COMPS" : ["Sprite2D", "Sprite2D"],
+	"TWEEN_PROPS" : ["frame", "frame"],
+	"TWEEN_CHANGES" : [Vector2i(0,5), Vector2i(6,11)],
+	"TWEEN_DURATIONS" : [0.4, 0.4]
+}
+#NEW SCRIPT
 
 func _ready():
 	#Here we check if the sprite variable is empty and if it is we try to find
@@ -117,12 +115,13 @@ func _ready():
 	
 	#Here we create all the characters animations based on the variables we have
 	#created
-	for i in range(tweenNames.size()):
+	for i in range(_tweens["TWEEN_NAMES"].size()):
 		var tween = get_tree().create_tween()
-		tween.tween_property(get_node(tweenComps[i]),tweenProps[i], tweenChanges[i][1], tweenDurations[i]).from(tweenChanges[i][0])
+		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
 		tween.set_loops()
 		tween.stop()
-		TweenItems[tweenNames[i]] = tween
+		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
+	
 	#We set the current character state to its default one and connect the
 	#appropriate signals
 	current_state = _default_state
@@ -253,7 +252,7 @@ func give_item(item_id: String) -> bool:
 ######NEW SCRIPT
 func receive_combat_stats(com_stats: Combat_Stats) -> void:
 	user_combat_stats = com_stats
-	user_combat_stats.living_died.connect(game_end)
+	#user_combat_stats.living_died.connect(game_end)
 	user_combat_stats.char_run.connect(_run_from_encounter)
 
 func get_combat_stats() -> Combat_Stats:

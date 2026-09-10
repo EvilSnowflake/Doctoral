@@ -69,12 +69,12 @@ func _process(_delta):
 func connect_player_adding_item(player: CharacterBody2D) -> void:
 	if !player.has_signal("add_item"):
 		return
-	player.add_item.connect(_make_item_appear_on_onventory)
+	player.add_item.connect(_make_item_appear_on_inventory)
 
 #Here we should have the function that adds the graphic of an item to the
 #inventory
 #NOT CURRENTLY MADE
-func _make_item_appear_on_onventory(item_instance: Item) -> void:
+func _make_item_appear_on_inventory(item_instance: Item) -> void:
 	print_debug("Item " + str(item_instance.name) + " added to inventory")
 
 ## Here the interface connects to an npc's needed signals that: initiate a dialog

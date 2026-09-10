@@ -43,7 +43,7 @@ signal await_user_input()
 ## so that it can then move on to the next peice of dialogue
 signal continue_dialogue()
 ######NEW SCRIPT
-signal engage_battle(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats)
+signal engage_battle(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats, _tweens: Dictionary)
 signal adjust_player_movement(ability: bool)
 signal give_item_to_player(itm: Item)
 ######NEW SCRIPT
@@ -88,17 +88,7 @@ var hFrames: int = 7
 var vFrames: int = 5
 ## This variable shows how big each tile on the world is
 var tilesize: int = 64
-## This array should contain the name of each animation
-var tweenNames: Array[String] = ["IdleTween"]
-## This array should contain the type of the animation component
-var tweenComps: Array[String] = ["Sprite2D"]
-## This array should contain the property type of each animation
-var tweenProps: Array[String] = ["frame"]
-## This array should hold the starting and ending frame of each
-## animation in a vector2i
-var tweenChanges: Array[Vector2i] = [Vector2i(0,6)]
-## This array should hold the duration for each animation
-var tweenDurations: Array[float] = [0.7]
+
 ## This variable should contain the number for the option chosen
 ## for the dialogue when the user presses one
 var option_chosen: int
@@ -116,7 +106,15 @@ var _dialogues_num: int
 ## the user they can move on to the next dialogue if it has more
 var _move_on_dialogue: bool = true
 ########NEW SCRIPT
+var _tweens: Dictionary = {
+	"TWEEN_NAMES" : ["IdleTween"],
+	"TWEEN_COMPS" : ["Sprite2D"],
+	"TWEEN_PROPS" : ["frame"],
+	"TWEEN_CHANGES" : [Vector2i(0,6)],
+	"TWEEN_DURATIONS" : [0.7]
+}
 var _can_battle_text: String = "Press key to begin battle"
+var _player_run_amount: int = 0
 ########NEW SCRIPT
 
 # Called when the node enters the scene tree for the first time.
@@ -133,15 +131,15 @@ func _ready():
 		sprite.hframes = hFrames
 		sprite.vframes = vFrames
 		#Create animations
-	for i in range(tweenNames.size()):
+	for i in range(_tweens["TWEEN_NAMES"].size()):
 		var tween = get_tree().create_tween()
-		tween.tween_property(get_node(tweenComps[i]),tweenProps[i], tweenChanges[i][1], tweenDurations[i]).from(tweenChanges[i][0])
+		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
 		tween.set_loops()
 		tween.stop()
-		TweenItems[tweenNames[i]] = tween
+		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
 	
-	if TweenItems.size() == 1:
-		TweenItems[tweenNames[0]].play()
+	if TweenItems.size() >= 1:
+		TweenItems[_tweens["TWEEN_NAMES"][0]].play()
 	
 	if dialogue_label == null:
 		dialogue_label = find_child("DialogueLabel")
@@ -187,6 +185,7 @@ func set_npc_combat(com_stat: Combat_Stats, combability: bool) -> void:
 	character_stats = com_stat
 	can_combat = combability
 	character_stats.living_died.connect(_die)
+	character_stats.char_run.connect(_player_disengaged)
 
 func get_npc_combat() -> Combat_Stats:
 	if !can_combat:
@@ -221,7 +220,7 @@ func _on_assign_item_to_give(item: Item):
 func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
 	print_debug("Player interacted with me")
 	if can_combat:
-		engage_battle.emit(sprite, character_name, character_stats)
+		engage_battle.emit(sprite, character_name, character_stats, _tweens)
 		adjust_player_movement.emit(false)
 	else:
 		_on_player_start_conversing(player_character)
@@ -334,6 +333,10 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 func _on_dialogue_continue(option: int = 0) -> void:
 	if option != 0:
 		option_chosen = option
+
+func _player_disengaged() -> void:
+	_player_run_amount += 1
+	print_debug("The player run %s times" % [_player_run_amount])
 
 func _die() -> void:
 	print_debug("I died")

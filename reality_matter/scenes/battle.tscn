@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d1jhva1a44v24" path="res://scenes/actions_button.tscn" id="2_a12nh"]
 [ext_resource type="Texture2D" uid="uid://blbdj06vikgkp" path="res://assets/sprites/characters/Torch_Blue.png" id="2_p1qf1"]
 [ext_resource type="Script" uid="uid://c8670nkn1e3ym" path="res://scripts/combat_stats.gd" id="3_lpir7"]
+[ext_resource type="Theme" uid="uid://cg086027rtnh0" path="res://assets/themes/game_theme.tres" id="5_6vh42"]
 
 [sub_resource type="Resource" id="Resource_a12nh"]
 script = ExtResource("3_lpir7")
@@ -23,9 +24,6 @@ attack_power = 10
 speed = 2
 metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1qf1"]
-bg_color = Color(0.003921569, 0.003921569, 0.003921569, 0.6745098)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_th188"]
 bg_color = Color(1, 0, 0, 1)
 border_width_left = 2
@@ -41,9 +39,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a12nh"]
-bg_color = Color(0.3137255, 0.3137255, 0.3137255, 0.81960785)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_co48d"]
 bg_color = Color(0.003921569, 0.003921569, 0.003921569, 1)
@@ -90,6 +85,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("GameEndPanel:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_6vh42"]
@@ -151,6 +158,22 @@ tracks/1/keys = {
 "values": [Vector2(0, 0), Vector2(5, 5), Vector2(-5, 0), Vector2(-5, -5), Vector2(0, -5), Vector2(0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_v7i3o"]
+resource_name = "pl_death_animation"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GameEndPanel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_4k1nj"]
 resource_name = "shake"
 length = 0.5
@@ -185,8 +208,15 @@ _data = {
 &"enemy_damaged": SubResource("Animation_6vh42"),
 &"enemy_died": SubResource("Animation_yahae"),
 &"mini_shake": SubResource("Animation_f4pi3"),
+&"pl_death_animation": SubResource("Animation_v7i3o"),
 &"shake": SubResource("Animation_4k1nj")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aev6k"]
+bg_color = Color(0, 0, 0, 0.9254902)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0tec"]
+bg_color = Color(0.87329835, 0.87329847, 0.87329817, 1)
 
 [node name="Battle" type="Control" unique_id=1499474918 node_paths=PackedStringArray("enemy_sprite_default")]
 layout_mode = 3
@@ -227,7 +257,7 @@ alignment = 2
 custom_maximum_size = Vector2(-1, 90)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_p1qf1")
+theme = ExtResource("5_6vh42")
 
 [node name="PlayerData" type="HBoxContainer" parent="PlayerPanelContainer/PlayerPanel" unique_id=2103434622]
 layout_mode = 1
@@ -295,18 +325,25 @@ grow_vertical = 2
 custom_maximum_size = Vector2(-1, 90)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_a12nh")
+theme = ExtResource("5_6vh42")
 
-[node name="ActionsDataV" type="VBoxContainer" parent="ActionsPanelContainer/ActionsPanel" unique_id=2013614985]
+[node name="ActionsMarginContainer" type="MarginContainer" parent="ActionsPanelContainer/ActionsPanel" unique_id=480980834]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="ActionsDataV" type="VBoxContainer" parent="ActionsPanelContainer/ActionsPanel/ActionsMarginContainer" unique_id=2013614985]
+layout_mode = 2
 alignment = 1
 
-[node name="ActionsDataH" type="HBoxContainer" parent="ActionsPanelContainer/ActionsPanel/ActionsDataV" unique_id=49171901]
+[node name="ActionsDataH" type="HBoxContainer" parent="ActionsPanelContainer/ActionsPanel/ActionsMarginContainer/ActionsDataV" unique_id=49171901]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
@@ -382,12 +419,13 @@ custom_maximum_size = Vector2(-1, 150)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TextBox" type="Panel" parent="MarginContainer/TextBoxContainer" unique_id=1218830538]
+[node name="TextBoxPanel" type="Panel" parent="MarginContainer/TextBoxContainer" unique_id=1218830538]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_co48d")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TextBoxContainer/TextBox" unique_id=98207970]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TextBoxContainer/TextBoxPanel" unique_id=98207970]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -399,23 +437,23 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="EngagementLabel" type="Label" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer" unique_id=1655289132]
+[node name="EngagementLabel" type="Label" parent="MarginContainer/TextBoxContainer/TextBoxPanel/MarginContainer" unique_id=1655289132]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 32
 text = "A [name] appears!"
 
-[node name="TickerContainerH" type="HBoxContainer" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer" unique_id=343485755]
+[node name="TickerContainerH" type="HBoxContainer" parent="MarginContainer/TextBoxContainer/TextBoxPanel/MarginContainer" unique_id=343485755]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="TickerContainerV" type="VBoxContainer" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer/TickerContainerH" unique_id=1853532414]
+[node name="TickerContainerV" type="VBoxContainer" parent="MarginContainer/TextBoxContainer/TextBoxPanel/MarginContainer/TickerContainerH" unique_id=1853532414]
 layout_mode = 2
 alignment = 2
 
-[node name="Ticker" type="Label" parent="MarginContainer/TextBoxContainer/TextBox/MarginContainer/TickerContainerH/TickerContainerV" unique_id=804926881]
+[node name="Ticker" type="Label" parent="MarginContainer/TextBoxContainer/TextBoxPanel/MarginContainer/TickerContainerH/TickerContainerV" unique_id=804926881]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = ">"
@@ -440,3 +478,54 @@ libraries/ = SubResource("AnimationLibrary_4k1nj")
 unique_name_in_owner = true
 anchor_mode = 0
 enabled = false
+
+[node name="GameEndPanel" type="Panel" parent="." unique_id=131003801]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_aev6k")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameEndPanel" unique_id=927793985]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="EndLabel" type="Label" parent="GameEndPanel/VBoxContainer" unique_id=1257216306]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 32
+text = "GAME OVER"
+
+[node name="Control" type="Control" parent="GameEndPanel/VBoxContainer" unique_id=951835983]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="GameEndPanel/VBoxContainer" unique_id=289645246]
+layout_mode = 2
+
+[node name="Control3" type="Control" parent="GameEndPanel/VBoxContainer" unique_id=506753636]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameEndPanel/VBoxContainer" unique_id=434366114]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+alignment = 1
+
+[node name="EndButton" type="Button" parent="GameEndPanel/VBoxContainer/HBoxContainer" unique_id=1443284441]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
+text = "End Game"
