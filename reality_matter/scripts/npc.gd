@@ -11,9 +11,11 @@ signal player_collided
 ## character after the interactable component has noticed them
 ## moving towards it
 signal player_left
-######NEW SCRIPT
+## interacted is emitted by the player when the user presses the appropriate
+## button while close to the character. Depending of the npc it starts a
+## conversation or a combat encounter
 signal interacted(player: CharacterBody2D)
-######NEW SCRIPT
+
 ## This signal is used to give an item to the npc to hold so that
 ## they can then give it to the player
 signal assign_item_to_give(item: Item)
@@ -42,9 +44,16 @@ signal await_user_input()
 ## waits for the interface to emit the continue_dialogue signal
 ## so that it can then move on to the next peice of dialogue
 signal continue_dialogue()
-######NEW SCRIPT
+## This signal is used by the npc to inform the battle scene of the character's
+## name, sprite, stats and animations
 signal engage_battle(char_sprite: Sprite2D, char_name: String, char_stats: Combat_Stats, _tweens: Dictionary)
+## This signal is used when we want to limit the player's movement. This is
+## useful when the user starts conversing or a battle begins and we don't want
+## the user to be able to just walk away. After ending the conversation or
+## this signal is emitted again to let the user move again
 signal adjust_player_movement(ability: bool)
+## Using give_item_to_player() the npc can automatiaclly add an item to the
+## user's inventory without having access to the inventory
 signal give_item_to_player(itm: Item)
 ######NEW SCRIPT
 
@@ -64,12 +73,19 @@ var TweenItems: Dictionary = {}
 ## DIALOGUE key and the dialogue ends in ENDING DIALOGUE, GIVE ITEM, TAKE ITEM
 var CharacterDialogue: Dictionary = {}
 
-#######NEW SCRIPT
 @export_category("Stats")
+## This is the npc's name. Currently used during combat encounters to show the
+## user who is fighting them
 @export var character_name: String = "Default"
+## Here the npc's combat statistics are stored in a Combat_Stats resource. It is
+## used during combat encounters to calculate how much damage the character can
+## withstand and how much damage they can deal in return
 @export var character_stats: Combat_Stats
+## With this variable we can check if the caracter should be able to fight the
+## user. If it is true the instead of conversing with the user during the
+## interaction, the battle scene appears and the user and character engage in
+## combat
 @export var can_combat: bool = false
-#######NEW SCRIPT
 @export_category("Components")
 ## This variable should hold a reference to the sprite of the npc
 @export var sprite: Sprite2D
@@ -105,7 +121,10 @@ var _dialogues_num: int
 ## This variable informs the character that after conversing with
 ## the user they can move on to the next dialogue if it has more
 var _move_on_dialogue: bool = true
-########NEW SCRIPT
+## The _tweens variable is a dictionary that contains all the characters
+## animations in tween format. It should have the animation name, animation
+## component, animation property, animation change and animation duration which
+## when used create an appropriate number of tweens that play during the game
 var _tweens: Dictionary = {
 	"TWEEN_NAMES" : ["IdleTween"],
 	"TWEEN_COMPS" : ["Sprite2D"],
@@ -113,9 +132,12 @@ var _tweens: Dictionary = {
 	"TWEEN_CHANGES" : [Vector2i(0,6)],
 	"TWEEN_DURATIONS" : [0.7]
 }
+## This string is used instead of the can interact text to signify if the npc
+## will battle the user
 var _can_battle_text: String = "Press key to begin battle"
+## This variable is not currently used extensively but it tracks how many
+## times the user has disengaged a combat encounter with thi character
 var _player_run_amount: int = 0
-########NEW SCRIPT
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -130,17 +152,17 @@ func _ready():
 		add_sprite(_texturePath, sprite)
 		sprite.hframes = hFrames
 		sprite.vframes = vFrames
-		#Create animations
+	#Create animations
 	for i in range(_tweens["TWEEN_NAMES"].size()):
 		var tween = get_tree().create_tween()
 		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
 		tween.set_loops()
 		tween.stop()
 		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
-	
+	#If there are animations then start playing the first one. It should be the
+	#idle one
 	if TweenItems.size() >= 1:
 		TweenItems[_tweens["TWEEN_NAMES"][0]].play()
-	
 	if dialogue_label == null:
 		dialogue_label = find_child("DialogueLabel")
 	
@@ -165,6 +187,7 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 	if spritePath != null and sprite_comp != null:
 		sprite_comp.texture = spritePath
 
+## With this function other scripts can acquire the npc's sprite
 func get_sprite() -> Sprite2D:
 	return sprite
 
@@ -175,18 +198,22 @@ func add_dialogue(dial: Dictionary) -> void:
 	CharacterDialogue = dial
 	_dialogues_num = CharacterDialogue.keys().size()
 
+## Used to modify the npc's name by other scripts
 func set_char_name(nm: String) -> void:
 	character_name = nm
-
+## Used by other scripts to receive the character's name
 func get_character_name() -> String:
 	return character_name
 
+## With set_npc_combat other script can give the npc the ability to fight the
+## player and inform them how capable they will be at fighting
 func set_npc_combat(com_stat: Combat_Stats, combability: bool) -> void:
 	character_stats = com_stat
 	can_combat = combability
 	character_stats.living_died.connect(_die)
 	character_stats.char_run.connect(_player_disengaged)
 
+## Used by other scripts to learn the npc's fighting capabilities 
 func get_npc_combat() -> Combat_Stats:
 	if !can_combat:
 		print_debug("This character cannot combat")
@@ -194,14 +221,12 @@ func get_npc_combat() -> Combat_Stats:
 	return character_stats
 
 ## This function should be connected to the instance of the player colliding
-## with the interactable component of the character
+## with the interactable component of the character. Depending on if the npc
+## can fight or not the user gets the appropriate message
 func _on_player_collided_with_char() -> void:
-	#print_debug("Colliding player")
-	#############NEW SCRIPT
 	if can_combat:
 		dialogue_label.text= _can_battle_text
 		return
-	#############NEW SCRIPT
 	dialogue_label.text = _can_interact_text
 
 ## This function should be connected to the instance of the player leaving the
@@ -216,15 +241,16 @@ func _on_assign_item_to_give(item: Item):
 	if item != null:
 		item_to_give = item
 
-############NEW SCRIPT
+## This function is called when the user attempts to interact with the npc.
+## If the character can fight then the battle scene appears otherwise the
+## dialogue graphic shows up.
 func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
-	print_debug("Player interacted with me")
+	#print_debug("Player interacted with me")
 	if can_combat:
 		engage_battle.emit(sprite, character_name, character_stats, _tweens)
 		adjust_player_movement.emit(false)
 	else:
 		_on_player_start_conversing(player_character)
-##############NEW SCRIPT
 
 ## This function is called when the player starts interaction with the character
 ## For this type of npcs the interaction involves conversing with the user
@@ -334,10 +360,16 @@ func _on_dialogue_continue(option: int = 0) -> void:
 	if option != 0:
 		option_chosen = option
 
+## This function is used to increment the player_run variable when the user
+## runs from an encounter with this npc
 func _player_disengaged() -> void:
 	_player_run_amount += 1
 	print_debug("The player run %s times" % [_player_run_amount])
 
+## This function contains the logic for the character's end of life. When their
+## health reaches 0 this function is called and should give the user an
+## item if able, it stops any animations created for the character and enables
+## the user to move again
 func _die() -> void:
 	print_debug("I died")
 	if item_to_give != null:
@@ -347,6 +379,4 @@ func _die() -> void:
 	for itm: Tween in TweenItems.values():
 		itm.stop()
 	adjust_player_movement.emit(true)
-	#if player_character.has_signal("adjust_moving"):
-	#	player_character.emit_signal("adjust_moving",true)
 	queue_free()

@@ -24,30 +24,6 @@ attack_power = 10
 speed = 2
 metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_th188"]
-bg_color = Color(1, 0, 0, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ggspc"]
-bg_color = Color(0, 1, 0, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_co48d"]
-bg_color = Color(0.003921569, 0.003921569, 0.003921569, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
-
 [sub_resource type="Animation" id="Animation_lpir7"]
 length = 0.001
 tracks/0/type = "value"
@@ -212,12 +188,6 @@ _data = {
 &"shake": SubResource("Animation_4k1nj")
 }
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aev6k"]
-bg_color = Color(0, 0, 0, 0.9254902)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0tec"]
-bg_color = Color(0.87329835, 0.87329847, 0.87329817, 1)
-
 [node name="Battle" type="Control" unique_id=1499474918 node_paths=PackedStringArray("enemy_sprite_default")]
 layout_mode = 3
 anchors_preset = 15
@@ -293,21 +263,19 @@ custom_maximum_size = Vector2(-1, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 16
-theme_override_styles/background = SubResource("StyleBoxFlat_th188")
-theme_override_styles/fill = SubResource("StyleBoxFlat_ggspc")
+theme = ExtResource("5_6vh42")
 step = 1.0
 value = 50.0
 show_percentage = false
 
-[node name="HealthValue" type="Label" parent="PlayerPanelContainer/PlayerPanel/PlayerData/HealthMargin/PlayerHealthBar" unique_id=1460681064]
+[node name="PlayerHealthValue" type="Label" parent="PlayerPanelContainer/PlayerPanel/PlayerData/HealthMargin/PlayerHealthBar" unique_id=1460681064]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme = ExtResource("5_6vh42")
 text = "HP : 25/50	"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -381,22 +349,19 @@ unique_name_in_owner = true
 custom_maximum_size = Vector2(-1, 30)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
-theme_override_styles/background = SubResource("StyleBoxFlat_th188")
-theme_override_styles/fill = SubResource("StyleBoxFlat_ggspc")
+theme = ExtResource("5_6vh42")
 step = 1.0
 value = 50.0
 show_percentage = false
 
-[node name="HealthValue" type="Label" parent="MarginContainer/EnemyHContainer/EnemyVContainer/EnemyHealthBar" unique_id=1379329406]
+[node name="EnemyHealthValue" type="Label" parent="MarginContainer/EnemyHContainer/EnemyVContainer/EnemyHealthBar" unique_id=1379329406]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 12
+theme = ExtResource("5_6vh42")
 text = "HP : 25/50	"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -423,7 +388,7 @@ mouse_filter = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_co48d")
+theme = ExtResource("5_6vh42")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TextBoxContainer/TextBoxPanel" unique_id=98207970]
 layout_mode = 1
@@ -489,7 +454,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_aev6k")
+theme = ExtResource("5_6vh42")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GameEndPanel" unique_id=927793985]
 layout_mode = 1
@@ -526,6 +491,5 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
+theme = ExtResource("5_6vh42")
 text = "End Game"

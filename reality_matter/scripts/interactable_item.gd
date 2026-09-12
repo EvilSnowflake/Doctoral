@@ -6,6 +6,7 @@ extends Node2D
 ## This signal gives the entity an item to hold so that it knows what to give
 ## to the player
 signal assign_item_contained(it: Item)
+## This signal adds an item to the user's inventory automaticaly
 signal give_item_to_player(it: Item)
 
 ## This variable contains the interactable component that check when the player

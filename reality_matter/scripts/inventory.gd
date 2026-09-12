@@ -94,26 +94,25 @@ func add_item(new_item: Item, amount: int = 1) -> int:
 ## than what the user was carrying we return false.
 func remove_item(target_item, amount: int = 1) -> bool:
 	var remaining: int = amount
+	var found_item: bool = false
 	
 	for slot in slots:
+		found_item = false
 		if remaining <= 0:
 			break
 		if target_item is String and slot.item != null:
 			if slot.item.id == target_item:
-				var to_remove: int = mini(remaining, slot.quantity)
-				slot.quantity -= to_remove
-				remaining -= to_remove
-				if slot.quantity <= 0:
-					slot.item = null
-					slot.quantity = 0
+				found_item = true
 		elif target_item is Item:
 			if slot.item == target_item:
-				var to_remove: int = mini(remaining, slot.quantity)
-				slot.quantity -= to_remove
-				remaining -= to_remove
-				if slot.quantity <= 0:
-					slot.item = null
-					slot.quantity = 0
-	
+				found_item = true
+		if found_item:
+			var to_remove: int = mini(remaining, slot.quantity)
+			slot.quantity -= to_remove
+			remaining -= to_remove
+			if slot.quantity <= 0:
+				slot.item = null
+				slot.quantity = 0
+		
 	inventory_changed.emit()
 	return remaining <= 0 #true if we removed everything requested

@@ -41,22 +41,111 @@ var _is_defending: bool = false
 var _can_press_buttons: bool = true
 var _theme: Theme = preload("res://assets/themes/game_theme.tres")
 var _themes_dictionary = {
-	"PANELS" : {
+	"Panel" : {
 		"BASE_TYPE" : {
-			"THEME_TYPE" : "Panel",
-			"THEME_NAME" : "panel",
+			"panel" : {
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 0.9,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "GRAY"
+					}
+				},
+		"PANEL_2" : {
+			"panel" : {
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "DARK_GREEN",
+				"THEME_BG_ALPHA" : 0.75,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "DARK_GREEN"
+				},
+			"UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]
+			},
+		"PANEL_TEXTBOX": {
+			"panel": {
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "WHITE"
+					},
+			"UI_ELEMENTS" : ["TextBoxPanel"]
+			},
+		"PANEL_TEXTURE": {
+			"panel" : {
 			"THEME_STYLEBOX_TYPE" : "StyleBoxTexture",
 			"THEME_TEXTURE_PATH" : "res://assets/sprites/uielements/TinySquareBlueButton.png",
-			"THEME_TEXTURE_MARGIN" : [25.0,25.0,25.0,25.0]},
-		"PANEL_2" : {
-			"THEME_TYPE" : "Panel",
-			"THEME_NAME" : "panel",
-			"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-			"THEME_BG_COLOR" : "DARK_GREEN",
-			"THEME_BG_ALPHA" : 0.75,
-			"THEME_BORDER_WIDTH" : [0,0,0,0],
-			"THEME_BORDER_COLOR" : "DARK_GREEN",
-			"UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]}
+			"THEME_TEXTURE_MARGIN" : [25.0,25.0,25.0,25.0]
+			}
+		}
+	},
+	"Button":{
+		"BASE_TYPE" : {
+			"font_color":{
+				"THEME_COLOR" : "WHITE"
+			},
+			"font_pressed_color":{
+				"THEME_COLOR" : "GRAY"
+			},
+			"font_hover_color": {
+				"THEME_COLOR" : "BLACK"
+			},
+			"normal" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "WHITE"
+			},
+			"pressed" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "WHITE",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "WHITE"
+			},
+			"hover" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "FLORAL_WHITE",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "WHITE"
+			}
+		}
+	},
+	"ProgressBar":{
+		"BASE_TYPE":{
+			"font_size":{
+				"SIZE" : 16
+			},
+			"background":{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "RED",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "BLACK"
+			},
+			"fill":{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "GREEN",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "BLACK"
+			}
+		}
+	},
+	"Label":{
+		"BASE_TYPE" : {
+			"font_color":{
+				"THEME_COLOR" : "WHITE"
+			}
+		},
+		"SHADOW_LABELS":{
+			"font_shadow_color":{
+				"THEME_COLOR" : "BLACK"
+			},
+			"UI_ELEMENTS" : ["PlayerHealthValue","EnemyHealthValue"]
+		}
 	}
 }
 
@@ -73,37 +162,8 @@ func _ready():
 		act_button.size_flags_horizontal = _size_flag_actions
 		act_button.pressed.connect(_on_button_pressed.bind(act_button.text))
 	#setup_combat_second(enemy_sprite_default, enemy_name_default, enemy_combat_stats_default)
-	#_theme.add_type("Panel")
-	#_theme.set_stylebox()
-	#print_debug(_theme.get_button_type_list()[0])
-	
-	#_theme.add_type("Panel_2")
-	#var act_panel: Panel = find_child("ActionsPanel")
-	#act_panel.theme = _theme
-	#act_panel.theme_type_variation = "Panel_2"
-	_set_up_theme(_themes_dictionary["PANELS"], _theme)
-	#_theme.set_type_variation("Panel_2", "Panel")
-	#var styleboxf2: StyleBoxFlat = StyleBoxFlat.new()
-	#styleboxf2.bg_color = Color.AQUA
-	#_theme.set_stylebox("panel", "Panel_2",styleboxf2)
-	
-	
-	#var styleboxf: StyleBoxTexture = StyleBoxTexture.new()
-	#styleboxf.texture = TINY_SQUARE_BLUE_BUTTON
-	#styleboxf.set_texture_margin_all(25.0)
-	#_theme.set_stylebox("panel", "Panel",styleboxf)
-	#$ActionsPanelContainer/ActionsPanel.add_theme_stylebox_override("panel",styleboxf)
-	#_theme.set_type_variation("Panel_2", "Panel")
-	#var normalstyle = _theme.get_stylebox("Panel","Panel")
-	#print_debug(normalstyle.bg_color)
-	#print_debug(_theme.has_stylebox("Panel","Panel"))
-	#_theme.set_stylebox("Panel", "Panel",styleboxf)
-	#_theme.set_type_variation("NewPanel", "Panel")
-	
-	#print_debug(_theme.get_type_variation_list("Panel"))
-	
-	#$ActionsPanelContainer/ActionsPanel.theme_type_variation = "NewPanel"
-	#print_debug(_theme.get_stylebox_type_list())
+	for key in _themes_dictionary.keys():
+		_set_up_theme(_themes_dictionary[key], _theme, key)
 
 func _input(_event):
 	if !text_box_container.is_visible_in_tree():
@@ -261,37 +321,42 @@ func _end_combat(pl_died: bool = false):
 #GAME. RIGHT NOW IT ONLY RECOGNISES HOW TO SETUP A PANEL WITH A TEXTURE FROM A
 #PATH.
 #IT NOW ALSO RECOGNISES A PANEL WITH A STYLEBOXFLAT THAT JUST HAS A COLOR
-func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme) -> void:
-	for key in theme_dictionary.keys():
-		if key == "BASE_TYPE":
-			var base_theme_dictionary = theme_dictionary[key]
-			var thm_type: String = base_theme_dictionary["THEME_TYPE"]
-			var thm_name: String = base_theme_dictionary["THEME_NAME"]
-			if thm_name == "panel" and thm_type == "Panel":
-				var thm_panel_stylebox_type: String = base_theme_dictionary["THEME_STYLEBOX_TYPE"]
-				if thm_panel_stylebox_type == "StyleBoxTexture":
-					_setup_stylebox_texture(base_theme_dictionary, theme_source, thm_name, thm_type)
-				if thm_panel_stylebox_type == "StyleBoxFlat":
-					_setup_stylebox_flat(base_theme_dictionary, theme_source, thm_name, thm_type)
+#NOW IT IS ALSO ABLE TO CHANGE MORE THEME NAMES THAN 1 THAT WAS CAPABLE BEFORE.
+#NOW IT RECOGNISES DEPENDING ON WHAT WE WANT TO CHANGE INSTEAD OF PANEL/BUTTON
+#/ETC. IT ALSO NOW ONLY DIFERENCIATES BETWEEN BASE TYPE AND VARIATION SO THAT
+#CODE IS CLEARER
+#NOW THE UIELEMENTS THAT WERE CONTAINED ON THE THEME NAME ARE CONTAINED IN THE
+#THEME VARIATION SO THAT IT IS CLEARER WHAT UI ELEMENTS SHOULD BE GIVEN THE
+#THEME VARIATION.
+func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme, current_theme_type: String) -> void:
+	for theme_type_key in theme_dictionary.keys():
+		var shared_theme_dictionary: Dictionary = theme_dictionary[theme_type_key]
+		var shared_theme_type: String = ""
+		if theme_type_key != "BASE_TYPE":
+			theme_source.add_type(theme_type_key)
+			theme_source.set_type_variation(theme_type_key, current_theme_type)
+			shared_theme_type = theme_type_key
 		else:
-			var variation_theme_dictionary = theme_dictionary[key]
-			theme_source.add_type(key)
-			var thm_type: String = variation_theme_dictionary["THEME_TYPE"]
-			var thm_name: String = variation_theme_dictionary["THEME_NAME"]
-			theme_source.set_type_variation(key, thm_type)
-			if thm_name == "panel" and thm_type == "Panel":
-				var thm_panel_stylebox_type: String = variation_theme_dictionary["THEME_STYLEBOX_TYPE"]
-				if thm_panel_stylebox_type == "StyleBoxTexture":
-					_setup_stylebox_texture(variation_theme_dictionary, theme_source, thm_name, key)
-				if thm_panel_stylebox_type == "StyleBoxFlat":
-					_setup_stylebox_flat(variation_theme_dictionary, theme_source, thm_name, key)
-			if variation_theme_dictionary.has("UI_ELEMENTS"):
-				for var_name in variation_theme_dictionary["UI_ELEMENTS"]:
+			shared_theme_type = current_theme_type
+		for theme_name_key in shared_theme_dictionary.keys():
+			var theme_name_dictionary = shared_theme_dictionary[theme_name_key]
+			if theme_name_dictionary.has("THEME_COLOR"):
+				var theme_color: Color = Color(theme_name_dictionary["THEME_COLOR"])
+				theme_source.set_color(theme_name_key, shared_theme_type, theme_color)
+			elif theme_name_dictionary.has("THEME_STYLEBOX_TYPE"):
+				var thm_stylebox_type: String = theme_name_dictionary["THEME_STYLEBOX_TYPE"]
+				if thm_stylebox_type == "StyleBoxTexture":
+					_setup_stylebox_texture(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
+				if thm_stylebox_type == "StyleBoxFlat":
+					_setup_stylebox_flat(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
+			if shared_theme_dictionary.has("UI_ELEMENTS"):
+				for var_name in shared_theme_dictionary["UI_ELEMENTS"]:
 					var element = find_child(var_name)
-					element.theme_type_variation = key
+					#print_debug(element)
+					element.theme_type_variation = theme_type_key
 
 func _setup_stylebox_texture(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
-	print_debug(theme_dictionary)
+	#print_debug(theme_dictionary)
 	var thm_texture_path: String = theme_dictionary["THEME_TEXTURE_PATH"]
 	var thm_texture_margin: Array = theme_dictionary["THEME_TEXTURE_MARGIN"]
 	var stylebox_theme: StyleBoxTexture = StyleBoxTexture.new()
@@ -300,11 +365,11 @@ func _setup_stylebox_texture(theme_dictionary: Dictionary, theme_source: Theme, 
 	stylebox_theme.set_texture_margin(SIDE_BOTTOM, thm_texture_margin[1])
 	stylebox_theme.set_texture_margin(SIDE_RIGHT, thm_texture_margin[2])
 	stylebox_theme.set_texture_margin(SIDE_BOTTOM, thm_texture_margin[3])
-	print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
+	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
 	theme_source.set_stylebox(theme_name, theme_type, stylebox_theme)
 
 func _setup_stylebox_flat(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
-	print_debug(theme_dictionary)
+	#print_debug(theme_dictionary)
 	var thm_bg_alpha: float = theme_dictionary["THEME_BG_ALPHA"]
 	var thm_bg_color: Color = Color(theme_dictionary["THEME_BG_COLOR"],thm_bg_alpha)
 	var thm_border_width: Array = theme_dictionary["THEME_BORDER_WIDTH"]
@@ -316,5 +381,5 @@ func _setup_stylebox_flat(theme_dictionary: Dictionary, theme_source: Theme, the
 	stylebox_theme.border_width_right = thm_border_width[2]
 	stylebox_theme.border_width_bottom = thm_border_width[3]
 	stylebox_theme.border_color = thm_border_color
-	print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
+	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
 	theme_source.set_stylebox(theme_name, theme_type,stylebox_theme)

@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://cdhgl6y06d038"]
 
+[ext_resource type="Theme" uid="uid://cg086027rtnh0" path="res://assets/themes/game_theme.tres" id="1_3ob2s"]
+
 [node name="OptionButton" type="Button" unique_id=456776233]
 offset_right = 8.0
 offset_bottom = 8.0
+theme = ExtResource("1_3ob2s")
 theme_override_font_sizes/font_size = 24

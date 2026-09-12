@@ -22,7 +22,7 @@ metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
 [sub_resource type="Resource" id="Resource_st0q7"]
 script = ExtResource("6_1hwpr")
 max_health = 100
-health = 100
+health = 5
 attack_power = 10
 defense = 5
 metadata/_custom_type_script = "uid://c8670nkn1e3ym"
