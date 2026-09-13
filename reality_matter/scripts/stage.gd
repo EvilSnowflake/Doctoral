@@ -262,6 +262,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
+	#if Input.is_action_just_pressed("Interact"):
+	#	print_debug(find_child("PlayerPanel",true,false))
 
 ## This function is used to spawn the player on the current scene. It requires a
 ## player scene to instantiate and a position. After setting the player's
@@ -348,8 +350,9 @@ func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
 		return
 	_batt.engagement_ended.connect(_end_combat_env)
 	_batt.set_up_player(nm,sts)
-	print_debug("Player was setup with name: %s and stats %s" % [nm,str(sts)])
+	#print_debug("Player was setup with name: %s and stats %s" % [nm,str(sts)])
 	_batt.hide()
+	
 
 func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats, _tweens: Dictionary = {}) -> void:
 	print_debug("The combat begins for %s and %s" % ["player", nm])

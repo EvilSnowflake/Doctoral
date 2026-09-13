@@ -77,9 +77,6 @@ func add_item(new_item: Item, amount: int = 1) -> int:
 	inventory_changed.emit()
 	return remaining #returns whatever didn't manage to get in the inventory
 
-#THIS FUNCTION CURRENTLY TAKES ITEMS EVEN IF WE ASK FOR MORE THAN IT HAS
-#THEREFORE IF A QUESTS ASKS FOR 5 ITEM AND WE HAVE 3 IT TAKES ALL 3
-#BUT IT WILL RETURN FALSE BECAUSE REMAINING WILL BE MORE THAN 0
 ## This function operates as a way to take an item out of the inventory.
 ## Such a thing could happen when another character needs to check if the
 ## user holds a specific item for a quest or if the user wants to take an item
@@ -107,6 +104,9 @@ func remove_item(target_item, amount: int = 1) -> bool:
 			if slot.item == target_item:
 				found_item = true
 		if found_item:
+			if remaining > slot.quantity:
+				print_debug("User has less item quantity than asked so we return nothing")
+				return false
 			var to_remove: int = mini(remaining, slot.quantity)
 			slot.quantity -= to_remove
 			remaining -= to_remove
