@@ -258,6 +258,8 @@ func _ready():
 	tilemapl_el.set_cell(Vector2i(1,4), tileSet.get_source_id(0), Vector2i(3,5))
 	tilemapl_el.set_cell(Vector2i(0,2), tileSet.get_source_id(0), Vector2i(3,4))
 	tilemapl_el.set_cell(Vector2i(0,3), tileSet.get_source_id(0), Vector2i(3,5))
+	
+	#print_debug(ItemManager.find_item_by_id("1").name)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):

@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+ItemManager="*uid://qny1bm6787gs"
 QuestManager="*uid://ty1rqs3r84cl"
 
 [display]
