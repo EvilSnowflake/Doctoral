@@ -1,82 +1,13 @@
 [gd_scene format=3 uid="uid://bpgu6kb6jhg3q"]
 
-[ext_resource type="PackedScene" uid="uid://caf4v58mohetg" path="res://scenes/player.tscn" id="1_8rem4"]
 [ext_resource type="Script" uid="uid://cmm34oiqwaxsb" path="res://scripts/stage.gd" id="1_gi7kc"]
-[ext_resource type="PackedScene" uid="uid://brx3qhbs2mlxk" path="res://scenes/interactable_item.tscn" id="3_kewym"]
-[ext_resource type="PackedScene" uid="uid://d72q57iowsw8" path="res://scenes/npc.tscn" id="4_6c5u0"]
-[ext_resource type="Script" uid="uid://d3tlecq5q3cl4" path="res://scripts/item.gd" id="4_st0q7"]
-[ext_resource type="Texture2D" uid="uid://da4yjjcpixbf0" path="res://assets/sprites/items/14.png" id="5_1hwpr"]
 [ext_resource type="PackedScene" uid="uid://d4ghxn1adm0of" path="res://scenes/user_interface_node.tscn" id="5_vcsse"]
-[ext_resource type="Script" uid="uid://c8670nkn1e3ym" path="res://scripts/combat_stats.gd" id="6_1hwpr"]
 [ext_resource type="PackedScene" uid="uid://bbqiv41j337r" path="res://scenes/battle.tscn" id="9_dexii"]
-
-[sub_resource type="Resource" id="Resource_vcsse"]
-script = ExtResource("4_st0q7")
-id = "1"
-name = "Bone"
-description = "This is a bone"
-icon = ExtResource("5_1hwpr")
-max_stack = 5
-metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
-
-[sub_resource type="Resource" id="Resource_st0q7"]
-script = ExtResource("6_1hwpr")
-max_health = 100
-health = 5
-attack_power = 10
-defense = 5
-metadata/_custom_type_script = "uid://c8670nkn1e3ym"
-
-[sub_resource type="Resource" id="Resource_dexii"]
-script = ExtResource("4_st0q7")
-id = "1"
-name = "Bone"
-description = "This is a bone"
-icon = ExtResource("5_1hwpr")
-max_stack = 5
-metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
-
-[sub_resource type="Resource" id="Resource_jl6nj"]
-script = ExtResource("4_st0q7")
-id = "1"
-name = "Bone"
-description = "This is a bone"
-icon = ExtResource("5_1hwpr")
-max_stack = 5
-metadata/_custom_type_script = "uid://d3tlecq5q3cl4"
-
-[sub_resource type="Resource" id="Resource_1hwpr"]
-script = ExtResource("6_1hwpr")
-metadata/_custom_type_script = "uid://c8670nkn1e3ym"
-
-[sub_resource type="Resource" id="Resource_yd2gm"]
-script = ExtResource("6_1hwpr")
-metadata/_custom_type_script = "uid://c8670nkn1e3ym"
-
-[sub_resource type="Resource" id="Resource_0hg5s"]
-script = ExtResource("6_1hwpr")
-max_health = 20
-health = 20
-attack_power = 5
-defense = 5
-metadata/_custom_type_script = "uid://c8670nkn1e3ym"
 
 [node name="Stage" type="Node2D" unique_id=1704407866]
 z_as_relative = false
 y_sort_enabled = true
 script = ExtResource("1_gi7kc")
-player_component = ExtResource("1_8rem4")
-item_list = Array[PackedScene]([ExtResource("3_kewym")])
-item_resources_list = Array[ExtResource("4_st0q7")]([SubResource("Resource_vcsse")])
-item_positions = Array[Vector2]([Vector2(352, 96)])
-playerPosition = Vector2(96, 96)
-playerStats = SubResource("Resource_st0q7")
-characters_list = Array[PackedScene]([ExtResource("4_6c5u0"), ExtResource("4_6c5u0"), ExtResource("4_6c5u0")])
-characters_positions = Array[Vector2]([Vector2(416, 96), Vector2(416, 160), Vector2(416, 224)])
-character_items_to_give = Array[ExtResource("4_st0q7")]([SubResource("Resource_dexii"), null, SubResource("Resource_jl6nj")])
-character_names = Array[String](["Bill", "Frank", "Greg"])
-npc_stats = Array[ExtResource("6_1hwpr")]([SubResource("Resource_1hwpr"), SubResource("Resource_yd2gm"), SubResource("Resource_0hg5s")])
-npc_combatability = Array[bool]([false, false, true])
 user_interface_component = ExtResource("5_vcsse")
 inventory_spaces = 5
 battle_scene = ExtResource("9_dexii")

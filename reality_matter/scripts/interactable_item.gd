@@ -20,6 +20,7 @@ signal give_item_to_player(it: Item)
 @export var sprite: Sprite2D
 ## This variable contains the entity's item
 @export var item_contained: Item
+@export var _item_quest_give: Dictionary
 
 ## This variable contains the text that we show the user when they collide with
 ## us
@@ -85,3 +86,6 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D) -> void:
 		return
 	if spritePath != null and sprite_comp != null:
 		sprite_comp.texture = spritePath
+
+func set_quest_to_give(_quest: Dictionary) -> void:
+	_item_quest_give = _quest

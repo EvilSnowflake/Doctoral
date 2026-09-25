@@ -131,7 +131,11 @@ func _ready():
 
 ## This function is currently unused but can be if we have issues with input
 func _unhandled_input(_event: InputEvent) -> void:
-	pass
+	if _event.is_action_pressed("test"):
+		#print_debug(QuestManager.find_quest(QuestManager.quests[0]))
+		#print_debug(QuestManager.find_quest_by_title("short quest"))
+		print_debug(QuestManager.get_quest_index_by_title("long quest"))
+		print_debug(QuestManager.get_quest_index_by_title("Recover Lost Magical Flute"))
 
 func _physics_process(_delta):
 	#If we are currently moving, the user can't engage with the controller

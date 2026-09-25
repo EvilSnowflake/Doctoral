@@ -12,89 +12,95 @@ extends Node2D
 ## camera
 signal player_camera_changeability(ability: bool)
 
-## This variable contains a reference to the player character scene used to
-## instantiate the player character
-@export var player_component: PackedScene
-## This variable contains an array of item scenes. Those items are going to be
-## instantiated during the start of the game based on the item positions list
-@export var item_list: Array[PackedScene]
-## This varaible contains a list of the items that will be assigned on the 
-## previously named item list instances, based on what the item will be in this
-## list, that item will be shown on the overworld
-@export var item_resources_list: Array[Item]
-## This variable holds an array of vector2 positions that informs the items
-## where they will be deployed
-@export var item_positions: Array[Vector2]
-## This variable contains the vector2 position the player will be standing on
-## when entering a scene
-@export var playerPosition: Vector2
-#########NEW SCRIPT
-@export var playerStats: Combat_Stats
-#########NEW SCRIPT
-## This variable holds an array with the non player character scenes that will
-## be instantiated on to the environment
-@export var characters_list: Array[PackedScene]
-## This variable contains a list with the positions of the non player characters
-## that will be deployed on to the stage
-@export var characters_positions: Array[Vector2]
-## This variable contains an array that will dictate what items each npc will
-## give the user, if we don't need to give any items to them, just add a null
-## value
-@export var character_items_to_give: Array[Item]
-## This variable should contain each and every npc dialogue in a row
-@export var character_dialogues_to_say: Dictionary =  {
-	"NPC_1":{
-		"Dialogue_2":{
-			"STARTING_CONVERSATION" :
-				{"Hello#1": 
-					{"OPTION_1": "Hi there#1",
-					"OPTION_2": "Hello to you too!#1"
-					}
-				},
-			"Hi there#1":
-				{"Here' an item for you#2":
-					{"OPTION_1": "Thanks#2",
-					"OPTION_2": "Bye#2"
-					}
-				},
-			"Hello to you too!#1":
-				{"Goodbye#2":
-					{"OPTION_1": "Bye#2",
-					"OPTION_2": "Sure#2"
-					}
-				},
-			"Bye#2":"ENDING_CONVERSATION",
-			"Goodbye#2": "ENDING_CONVERSATION",
-			"Sure#2": "ENDING_CONVERSATION",
-			"Thanks#2": "GIVE_ITEM"
-		},
-		"Dialogue_1":{
-			"STARTING_CONVERSATION" : "I already said hi go away#1",
-			"I already said hi go away#1": "ENDING_CONVERSATION"
-			}
-	},
-	"NPC_2":{
-		"Dialogue_2":{
-			"STARTING_CONVERSATION" : "Do you perhaps have a bone item on you?#1",
-			"Do you perhaps have a bone item on you?#1":
-				{"If you do please give it to me#2":
-					{"OPTION_1": "Sure#2",
-					"OPTION_2": "No#2"}
-					},
-			"Sure#2":"TAKE_ITEM_1",
-			"No#2":"NOT_TAKE_ITEM"
-		},
-		"Dialogue_1":{
-			"STARTING_CONVERSATION" : "Thank you for the item#1",
-			"Thank you for the item#1": "ENDING_CONVERSATION"
-			
-		}
-	},
-	"NPC_3":{}
+var item_creation_dictionary: Dictionary = {
+	"ITEM_SPAWN_1": {
+		"ITEM_SCENE" : "res://scenes/interactable_item.tscn",
+		"ITEM_RESOURCE" : "1",
+		"ITEM_POSITION" : [352.0,96.0],
+		"ITEM_QUEST_TO_GIVE": {title = "long quest", is_complete = false, completed_steps = [""]}
+	}
 }
-@export var character_names: Array[String]
-@export var npc_stats: Array[Combat_Stats]
-@export var npc_combatability: Array[bool]
+var player_creation_dictionary: Dictionary = {
+	"PLAYER_SCENE" : "res://scenes/player.tscn",
+	"PLAYER_POSITION" : [96.0,96.0],
+	"PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1}
+}
+var npc_creation_dictionary: Dictionary = {
+	"CHARACTER_SPAWN_1": {
+		"NPC_SCENE" : "res://scenes/npc.tscn",
+		"NPC_POSITION" : [416.0,96.0],
+		"NPC_ITEM_ID" : "1",
+		"NPC_DIALOGUE" : {
+			"Dialogue_2":{
+				"STARTING_CONVERSATION" :
+					{"Hello#1": 
+						{"OPTION_1": "Hi there#1",
+						"OPTION_2": "Hello to you too!#1"
+						}
+					},
+				"Hi there#1":
+					{"Here' an item for you#2":
+						{"OPTION_1": "Thanks#2",
+						"OPTION_2": "Bye#2"
+						}
+					},
+				"Hello to you too!#1":
+					{"Goodbye#2":
+						{"OPTION_1": "Bye#2",
+						"OPTION_2": "Sure#2"
+						}
+					},
+				"Bye#2":"ENDING_CONVERSATION",
+				"Goodbye#2": "ENDING_CONVERSATION",
+				"Sure#2": "ENDING_CONVERSATION",
+				"Thanks#2": "GIVE_ITEM"
+			},
+			"Dialogue_1":{
+				"STARTING_CONVERSATION" : "I already said hi go away#1",
+				"I already said hi go away#1": "ENDING_CONVERSATION"
+				}
+		},
+		"NPC_NAME" : "Bill",
+		"NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
+		"NPC_COMBATABILITY" : false,
+		"NPC_QUEST": {}
+	},
+	"CHARACTER_SPAWN_2": {
+		"NPC_SCENE" : "res://scenes/npc.tscn",
+		"NPC_POSITION" : [416.0,160.0],
+		"NPC_ITEM_ID" : "",
+		"NPC_DIALOGUE" : {
+			"Dialogue_2":{
+				"STARTING_CONVERSATION" : "Do you perhaps have a bone item on you?#1",
+				"Do you perhaps have a bone item on you?#1":
+					{"If you do please give it to me#2":
+						{"OPTION_1": "Sure#2",
+						"OPTION_2": "No#2"}
+						},
+				"Sure#2":"TAKE_ITEM_1",
+				"No#2":"NOT_TAKE_ITEM"
+			},
+			"Dialogue_1":{
+				"STARTING_CONVERSATION" : "Thank you for the item#1",
+				"Thank you for the item#1": "ENDING_CONVERSATION"
+			}
+		},
+		"NPC_NAME" : "Frank",
+		"NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
+		"NPC_COMBATABILITY" : false,
+		"NPC_QUEST": {}
+	},
+	"CHARACTER_SPAWN_3": {
+		"NPC_SCENE" : "res://scenes/npc.tscn",
+		"NPC_POSITION" : [416.0,224.0],
+		"NPC_ITEM_ID" : "1",
+		"NPC_DIALOGUE" : {},
+		"NPC_NAME" : "Greg",
+		"NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
+		"NPC_COMBATABILITY" : true,
+		"NPC_QUEST": {}
+	}
+}
 ## This variable should contain a reference to the user interface scene to
 ## instantiate
 @export var user_interface_component: PackedScene
@@ -103,7 +109,6 @@ signal player_camera_changeability(ability: bool)
 @export var inventory_spaces: int
 ## The scene all battles happen on
 @export var battle_scene: PackedScene
-
 
 #var tweenNames: Array[String] = ["IdleTween", "RunTween"]
 #var tweenComps: Array[String] = ["Sprite2D", "Sprite2D"]
@@ -123,9 +128,46 @@ var inventory_instance: Inventory
 var _user_interface: Control
 var _batt: Control
 var _player: CharacterBody2D
+var _items_dictionary : Dictionary = {
+	"ITEM_1" : {
+		"ID" : "1",
+		"NAME" : "Bone",
+		"ICON" : "res://assets/sprites/items/14.png",
+		"MAX_STACK" : 5,
+		"ITEM_TYPE" : "KEY_ITEM"
+	}
+}
+var quests_dict: Dictionary = {
+	"QUEST_1" : {
+		"TITLE" : "Short Quest",
+		"DESCRIPTION" : "An example short quest with only one step required to complete it",
+		"STEPS" : ["Complete Quest"],
+		"REWARD_XP" : 10,
+		"REWARD_ITEMS" : [],
+		"REWARD_ITEM_QUANTITY" : []
+		},
+	"QUEST_2" : {
+		"TITLE" : "Long Quest",
+		"DESCRIPTION" : "A long quest with multiple steps.",
+		"STEPS" : ["Step 1","Step 2","Step 3","Step 4","Step 5"],
+		"REWARD_XP" : 50,
+		"REWARD_ITEMS" : ["1"],
+		"REWARD_ITEM_QUANTITY" : [2]
+		},
+	"QUEST_3" : {
+		"TITLE" : "Recover Lost Magical Flute",
+		"DESCRIPTION" : "Bill has tasked you with retreiving his lost magical flute from the dark dungeon.",
+		"STEPS" : ["Find the Magical Flute","Return Magical Flute to Bill"],
+		"REWARD_XP" : 100,
+		"REWARD_ITEMS" : ["1"],
+		"REWARD_ITEM_QUANTITY" : [3]
+		}
+	}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	ItemManager.set_items(_items_dictionary)
+	QuestManager.gather_quests(quests_dict)
 	#During startup we need to create an instance of the user's inventory
 	inventory_instance = Inventory.new()
 	#Then we try to modify the inventory's max item slots
@@ -135,17 +177,14 @@ func _ready():
 	if user_interface_component != null:
 		_spawn_user_interface(user_interface_component)
 	#And then spawn the player's character
-	if player_component != null && playerPosition != null:
-		_spawn_player(player_component,playerPosition, playerStats)
+	_spawn_player(player_creation_dictionary)
 	#After we check the items array and spawn each of them in the position set
 	#by the item position list and then assign an item to it
-	if item_list.size() == item_positions.size() && item_positions.size() == item_resources_list.size():
-		for i in range(item_list.size()):
-			_spawn_item(item_list[i],item_positions[i], item_resources_list[i])
+	for item_list_key in item_creation_dictionary.keys():
+		_spawn_item(item_creation_dictionary[item_list_key])
 	#After that we do the same but for non player characters
-	if characters_list.size() == characters_positions.size() and characters_positions.size() == character_items_to_give.size() and character_items_to_give.size() == character_names.size() and npc_stats.size() == npc_combatability.size():
-		for i in range(characters_list.size()):
-			_spawn_non_players(characters_list[i],characters_positions[i], character_dialogues_to_say["NPC_"+str(i+1)], character_names[i], npc_stats[i], npc_combatability[i] ,character_items_to_give[i])
+	for npcs_list_key in npc_creation_dictionary.keys():
+		_spawn_non_players(npc_creation_dictionary[npcs_list_key])
 	#Having completed the spawning of characters and items i then move on to the
 	#tileset of the environment
 	#We first have to load the water tileset and then create a new tilemap layer
@@ -270,11 +309,20 @@ func _process(_delta):
 ## This function is used to spawn the player on the current scene. It requires a
 ## player scene to instantiate and a position. After setting the player's
 ## position we then add a reference to the user's inventory on that character
-func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats: Combat_Stats) -> void:
-	_player = player.instantiate()
+func _spawn_player(_player_create_dict: Dictionary) -> void:
+	var player_component_scene = load(_player_create_dict["PLAYER_SCENE"])
+	_player = player_component_scene.instantiate()
 	add_child(_player)
 	#pl.add_child(_user_interface)
-	_player.position = new_position
+	var player_pos_x: float = _player_create_dict["PLAYER_POSITION"][0]
+	var player_pos_y: float = _player_create_dict["PLAYER_POSITION"][1]
+	_player.position = Vector2(player_pos_x,player_pos_y)
+	var player_combat_variable: Combat_Stats = Combat_Stats.new()
+	var temp_max_hp = _player_create_dict["PLAYER_COMBAT_STATS"]["MAX_HEALTH"]
+	var temp_ap = _player_create_dict["PLAYER_COMBAT_STATS"]["ATTACK_POWER"]
+	var temp_defense = _player_create_dict["PLAYER_COMBAT_STATS"]["DEFENSE"]
+	var temp_speed = _player_create_dict["PLAYER_COMBAT_STATS"]["SPEED"]
+	player_combat_variable.set_statistics(temp_max_hp,temp_ap,temp_defense,temp_speed)
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_player_adding_item"):
@@ -282,7 +330,7 @@ func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats
 	if _player.has_method("receive_inventory") and inventory_instance != null:
 		_player.receive_inventory(inventory_instance)
 	if _player.has_method("receive_combat_stats"):
-		_player.receive_combat_stats(user_combat_stats)
+		_player.receive_combat_stats(player_combat_variable)
 	if _player.has_method("get_combat_stats") and _player.has_method("get_character_name"):
 		create_combat_environment(_player.get_character_name(), _player.get_combat_stats())
 	if _player.has_method("change_camera_ability"):
@@ -291,13 +339,17 @@ func _spawn_player(player: PackedScene, new_position: Vector2, user_combat_stats
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
 ## to have and what item is going to be
-func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item) -> void:
-	var it = item.instantiate()
+func _spawn_item(_item_details: Dictionary) -> void:
+	var item_scene = load(_item_details["ITEM_SCENE"])
+	var it = item_scene.instantiate()
 	add_child(it)
-	it.position = new_position
-	print_debug(item_resource.description)
+	var vect_two_pos_x: float = _item_details["ITEM_POSITION"][0]
+	var vect_two_pos_y: float = _item_details["ITEM_POSITION"][1]
+	it.position = Vector2(vect_two_pos_x,vect_two_pos_y)
+	#print_debug(item_resource.description)
 	if it.has_signal("assign_item_contained"):
-		it.emit_signal("assign_item_contained",item_resource)
+		var item_contained: Item = ItemManager.find_item_by_id(_item_details["ITEM_RESOURCE"])
+		it.emit_signal("assign_item_contained",item_contained)
 	if _player == null:
 		return
 	if it.has_signal("give_item_to_player") and _player.has_method("add_item_to_inventory"):
@@ -307,18 +359,32 @@ func _spawn_item(item: PackedScene, new_position: Vector2, item_resource: Item) 
 ## than the player character. We require the character's scene, their position
 ## on the environemnt, their dialogue and what item (if any) they can give the
 ## player character.
-func _spawn_non_players(npc: PackedScene, new_position: Vector2, dial: Dictionary, new_name: String, npc_combat_stats: Combat_Stats, npc_can_fight: bool ,item_to_give: Item = null) -> void:
-	var new_npc = npc.instantiate()
+func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
+	var npc_scene_component: PackedScene = load(_npc_dictionary["NPC_SCENE"])
+	var new_npc = npc_scene_component.instantiate()
 	add_child(new_npc)
-	new_npc.position = new_position
-	if item_to_give != null and new_npc.has_signal("assign_item_to_give"):
+	var new_npc_position_x: float = _npc_dictionary["NPC_POSITION"][0]
+	var new_npc_position_y: float = _npc_dictionary["NPC_POSITION"][1]
+	new_npc.position = Vector2(new_npc_position_x,new_npc_position_y)
+	if _npc_dictionary["NPC_ITEM_ID"] != "" and new_npc.has_signal("assign_item_to_give"):
+		var item_to_give: Item = ItemManager.find_item_by_id(_npc_dictionary["NPC_ITEM_ID"])
 		new_npc.emit_signal("assign_item_to_give", item_to_give)
 	if new_npc.has_method("add_dialogue"):
-		new_npc.add_dialogue(dial)
+		var new_npc_dialogue: Dictionary = _npc_dictionary["NPC_DIALOGUE"]
+		new_npc.add_dialogue(new_npc_dialogue)
 	if new_npc.has_method("set_char_name"):
-		new_npc.set_char_name(new_name)
+		var new_npc_name: String = _npc_dictionary["NPC_NAME"]
+		new_npc.set_char_name(new_npc_name)
 	if new_npc.has_method("set_npc_combat"):
-		new_npc.set_npc_combat(npc_combat_stats, npc_can_fight)
+		var npc_combat_variable: Combat_Stats = Combat_Stats.new()
+		var temp_max_hp = _npc_dictionary["NPC_STATS"]["MAX_HEALTH"]
+		var temp_ap = _npc_dictionary["NPC_STATS"]["ATTACK_POWER"]
+		var temp_defense = _npc_dictionary["NPC_STATS"]["DEFENSE"]
+		var temp_speed = _npc_dictionary["NPC_STATS"]["SPEED"]
+		npc_combat_variable.set_statistics(temp_max_hp,temp_ap,temp_defense,temp_speed)
+		var new_npc_stats: Combat_Stats = npc_combat_variable
+		var new_npc_combability: bool = _npc_dictionary["NPC_COMBATABILITY"]
+		new_npc.set_npc_combat(new_npc_stats, new_npc_combability)
 	if new_npc.has_signal("engage_battle"):
 		new_npc.engage_battle.connect(_start_combat_env)
 	if new_npc.has_signal("adjust_player_movement") and _player.has_method("change_moveability"):

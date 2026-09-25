@@ -95,6 +95,7 @@ var CharacterDialogue: Dictionary = {}
 ## This variable should hold the item the character gives to the
 ## user 
 @export var item_to_give: Item
+@export var _quest_to_give: Dictionary
 
 ## This variable along with vframes informs the animation and sprite
 ## how many frames the character sprite file contains
@@ -220,6 +221,9 @@ func get_npc_combat() -> Combat_Stats:
 		return null
 	return character_stats
 
+func set_quest_to_give(_quest_dets: Dictionary) -> void:
+	_quest_to_give = _quest_dets
+
 ## This function should be connected to the instance of the player colliding
 ## with the interactable component of the character. Depending on if the npc
 ## can fight or not the user gets the appropriate message
@@ -237,7 +241,7 @@ func _on_player_left_char() -> void:
 
 ## This function can be used to give the character an item that they can then
 ## pass it on to the player
-func _on_assign_item_to_give(item: Item):
+func _on_assign_item_to_give(item: Item) -> void:
 	if item != null:
 		item_to_give = item
 

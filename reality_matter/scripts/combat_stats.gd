@@ -7,6 +7,7 @@ extends Resource
 ## they have just died. Used by the user to end the game and the npcs to delete
 ## themselves
 signal living_died()
+@warning_ignore("unused_signal")
 ## This signal is emitted the moment the user attempta to disengage combat. It's
 ## used by the player character to return the user to the main menu and by the
 ## npc to give control back to the user 
