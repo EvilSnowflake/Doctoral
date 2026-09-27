@@ -12,6 +12,10 @@ extends Node2D
 ## camera
 signal player_camera_changeability(ability: bool)
 
+## This variable contains the dictionary to place items on the environemnt for the player to collect
+## For each key inside an item will be created and placed and it requires the path to the item scene
+## along with what item id it will have, its position on the world and what quest step it will
+## complete if any.
 var item_creation_dictionary: Dictionary = {
 	"ITEM_SPAWN_1": {
 		"ITEM_SCENE" : "res://scenes/interactable_item.tscn",
@@ -20,11 +24,22 @@ var item_creation_dictionary: Dictionary = {
 		"ITEM_QUEST_TO_GIVE": {title = "long quest", is_complete = false, completed_steps = [""]}
 	}
 }
+## This variable contains the dictionary to spawn a player character on the game scene. Inside it
+## requires a path to the player scene, a position in a 2 element array and a combat stats
+## dictionary. That dictionary requires a MAX_HEALTH int element, an ATTACK_POWER int element,
+## a DEFENSE int element and a SPEED int element
 var player_creation_dictionary: Dictionary = {
 	"PLAYER_SCENE" : "res://scenes/player.tscn",
 	"PLAYER_POSITION" : [96.0,96.0],
 	"PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1}
 }
+## This variable contains the dictionary to spawn non player characters on the environment. For each
+## key inside this dictionary, a new character will be spawned with the specifications inside. Each
+## character requires a path to the NPC_SCENE, a 2 element float array with the NPC_POSITION,
+## an NPC_ITEM_ID string in order for the character to give the player an item during their fall or
+## conversation, a dictionary containing their NPC_DIALOGUE, their NPC_NAME in a string,
+## their NPC_STATS for combat in a dictionary, their NPC_COMBATABILITY in oder for them to be able
+## to fight or not in a bool and a dictionary for what NPC_QUEST they progress.
 var npc_creation_dictionary: Dictionary = {
 	"CHARACTER_SPAWN_1": {
 		"NPC_SCENE" : "res://scenes/npc.tscn",
@@ -126,8 +141,14 @@ var inventory_instance: Inventory
 
 ## This variable should contain the user interface instance
 var _user_interface: Control
+## This variable should contain the battle scene where the user and a npc can engage in combat
 var _batt: Control
+## This variable contains a reference to the player character inside the scene
 var _player: CharacterBody2D
+## This dictionary contains all the items the game is going to contain. Each key in this dictionary
+## is going to create a new item with these specifications. Each item requires an ID String that is
+## going to be unique, a NAME String, an ICON path String, the item's MAX_STACK as an int and a
+## String signifying its ITEM_TYPE
 var _items_dictionary : Dictionary = {
 	"ITEM_1" : {
 		"ID" : "1",
@@ -162,7 +183,9 @@ var quests_dict: Dictionary = {
 		"REWARD_ITEMS" : ["1"],
 		"REWARD_ITEM_QUANTITY" : [3]
 		}
-	}
+}
+var _tile_size_dictionary: Dictionary = {"SIZE" : [64,64]}
+var _tilesize: Vector2i
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -185,72 +208,78 @@ func _ready():
 	#After that we do the same but for non player characters
 	for npcs_list_key in npc_creation_dictionary.keys():
 		_spawn_non_players(npc_creation_dictionary[npcs_list_key])
-	#Having completed the spawning of characters and items i then move on to the
-	#tileset of the environment
-	#We first have to load the water tileset and then create a new tilemap layer
-	#into which we insert a tileset that contains a tileAtlas with the water
-	#texture. Using some preset values that need to be specified by the person
-	#providing the texture we shape the tileatlas and specify the coordinates
-	#that contain the wanted graphic of water. Then we add the atlas as a
-	#source to the tileset and then change the z_index to be behind the user
-	#by 2 and set its y_sort as enabled so that if the user is under the tile
-	#in height then they will be obscured by it otherwise they will hide it.
-	#We then add the tilemap to the scene as a child and we place it in a big
-	#30x30 radius to simulate a big body of water
-	var water: Resource = load("res://assets/tiles/Water.png")
-	var tile_size = Vector2i(64,64)
-	var tilemapl: TileMapLayer = TileMapLayer.new()
-	var tileSet: TileSet = TileSet.new()
-	var tileAtlas = TileSetAtlasSource.new()
-	tileSet.tile_size = tile_size
-	tileSet.tile_shape = TileSet.TILE_SHAPE_SQUARE
-	tileAtlas.texture = water
-	tileAtlas.create_tile(Vector2i(0,0),Vector2i(1,1))
-	tileAtlas.texture_region_size = tile_size
-	tileSet.add_source(tileAtlas)
-	tilemapl.tile_set = tileSet
-	tilemapl.z_index = -2
-	tilemapl.y_sort_enabled = true
-	add_child(tilemapl)
-	for i in range(30):
-		for j in range(30):
-			tilemapl.set_cell(Vector2i(i-15,j-15), tileSet.get_source_id(0), Vector2i(0,0))
-	#After putting the water at the bottom we then add another tilemaplayer
-	#that will contain a grassy terrain so that they user can have ground to
-	#stand on. I created an array of vector2i's to tell where i place which
-	#grass tile because contrary to water tile, the grass tiles contain many
-	#more than 1 tile and thus i have to create a shape that makes sense on the
-	#world
-	var tilemap_flat: Resource = load("res://assets/tiles/Tilemap_Flat.png")
-	var tilemapl2: TileMapLayer = TileMapLayer.new()
-	var tileSet2: TileSet = TileSet.new()
-	var tileAtlas2 = TileSetAtlasSource.new()
-	var up_left : Vector2i = Vector2i(0,0)
-	var up_middle : Vector2i = Vector2i(1,0)
-	var up_right : Vector2i = Vector2i(2,0)
-	var middle_left : Vector2i = Vector2i(0,1)
-	var middle_middle : Vector2i = Vector2i(1,1)
-	var middle_right : Vector2i = Vector2i(2,1)
-	var down_left : Vector2i = Vector2i(0,2)
-	var down_middle : Vector2i = Vector2i(1,2)
-	var down_right : Vector2i = Vector2i(2,2)
-	var grassMap: Array[Vector2i] = [up_left, up_middle, up_middle, up_middle, up_middle, up_middle, up_right, middle_left, middle_middle, middle_middle, middle_middle, middle_middle, middle_middle, middle_right, middle_left, middle_middle, middle_middle, middle_middle, middle_middle, middle_middle, middle_right, middle_left, middle_middle, middle_middle, middle_middle, middle_middle, middle_middle, middle_right, middle_left, middle_middle, middle_middle, middle_middle, middle_middle, middle_middle, middle_right, middle_left, middle_middle, middle_middle, middle_middle, middle_middle, middle_middle, middle_right, down_left, down_middle, down_middle, down_middle, down_middle, down_middle, down_right]
-	var grassMapSize: Vector2i = Vector2i(7,7)
-	tileSet2.tile_size = tile_size
-	tileSet2.tile_shape = TileSet.TILE_SHAPE_SQUARE
-	tileAtlas2.texture = tilemap_flat
-	for i in range(3):
-		for j in range(3):
-			tileAtlas2.create_tile(Vector2i(i,j),Vector2i(1,1))
-	tileAtlas2.texture_region_size = tile_size
-	tileSet2.add_source(tileAtlas2)
-	tilemapl2.tile_set = tileSet2
-	tilemapl2.z_index = -1
-	tilemapl2.y_sort_enabled = true
-	add_child(tilemapl2)
-	for i in range(grassMapSize[0]):
-		for j in range(grassMapSize[1]):
-			tilemapl2.set_cell(Vector2i(j,i),tileSet2.get_source_id(0), grassMap[i + (i*(grassMapSize[0]-1)) + j])
+	_tilesize = Vector2i(_tile_size_dictionary["SIZE"][0],_tile_size_dictionary["SIZE"][1])
+	var tile_dictionary: Dictionary = {
+		#Having completed the spawning of characters and items i then move on to the
+		#tileset of the environment
+		#We first have to load the water tileset and then create a new tilemap layer
+		#into which we insert a tileset that contains a tileAtlas with the water
+		#texture. Using some preset values that need to be specified by the person
+		#providing the texture we shape the tileatlas and specify the coordinates
+		#that contain the wanted graphic of water. Then we add the atlas as a
+		#source to the tileset and then change the z_index to be behind the user
+		#by 2 and set its y_sort as enabled so that if the user is under the tile
+		#in height then they will be obscured by it otherwise they will hide it.
+		#We then add the tilemap to the scene as a child and we place it in a big
+		#30x30 radius to simulate a big body of water
+		"WATER":{
+			"PATH" : "res://assets/tiles/Water.png",
+			"TILE_CREATION" : [[0,0]],
+			"Z_INDEX" : -2,
+			"Y_SORT" : true,
+			"CELLS_BLOCK" : [[[-15,-15],0,[0,0]],[[15,15],0,[0,0]]]
+		},
+		#After putting the water at the bottom we then add another tilemaplayer
+		#that will contain a grassy terrain so that they user can have ground to
+		#stand on. I created an array of vector2i's to tell where i place which
+		#grass tile because contrary to water tile, the grass tiles contain many
+		#more than 1 tile and thus i have to create a shape that makes sense on the
+		#world
+		"FLAT":{
+			"PATH" : "res://assets/tiles/Tilemap_Flat.png",
+			"TILE_CREATION" : [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]],
+			"Z_INDEX" : -1,
+			"Y_SORT" : true,
+			"CELLS" : [[[0,0],0,[0,0]],[[0,1],0,[0,1]],[[0,2],0,[0,1]],[[0,3],0,[0,1]],[[0,4],0,[0,1]],[[0,5],0,[0,1]],[[0,6],0,[0,2]],[[1,0],0,[1,0]],[[1,1],0,[1,1]],[[1,2],0,[1,1]],[[1,3],0,[1,1]],[[1,4],0,[1,1]],[[1,5],0,[1,1]],[[1,6],0,[1,2]],[[2,0],0,[1,0]],[[2,1],0,[1,1]],[[2,2],0,[1,1]],[[2,3],0,[1,1]],[[2,4],0,[1,1]],[[2,5],0,[1,1]],[[2,6],0,[1,2]],[[3,0],0,[1,0]],[[3,1],0,[1,1]],[[3,2],0,[1,1]],[[3,3],0,[1,1]],[[3,4],0,[1,1]],[[3,5],0,[1,1]],[[3,6],0,[1,2]],[[4,0],0,[1,0]],[[4,1],0,[1,1]],[[4,2],0,[1,1]],[[4,3],0,[1,1]],[[4,4],0,[1,1]],[[4,5],0,[1,1]],[[4,6],0,[1,2]],[[5,0],0,[1,0]],[[5,1],0,[1,1]],[[5,2],0,[1,1]],[[5,3],0,[1,1]],[[5,4],0,[1,1]],[[5,5],0,[1,1]],[[5,6],0,[1,2]],[[6,0],0,[2,0]],[[6,1],0,[2,1]],[[6,2],0,[2,1]],[[6,3],0,[2,1]],[[6,4],0,[2,1]],[[6,5],0,[2,1]],[[6,6],0,[2,2]]]
+		}
+	}
+	var tile_path: Resource = null
+	var tilemapLayer: TileMapLayer = null
+	var tileSetTemp: TileSet = null
+	var tileAtlasTemp : TileSetAtlasSource = null
+	for tile_spec in tile_dictionary.values():
+		tile_path = load(tile_spec["PATH"])
+		tilemapLayer = TileMapLayer.new()
+		tileSetTemp = TileSet.new()
+		tileAtlasTemp = TileSetAtlasSource.new()
+		tileSetTemp.tile_size = _tilesize
+		tileSetTemp.tile_shape = TileSet.TILE_SHAPE_SQUARE
+		tileAtlasTemp.texture = tile_path
+		for tl_create in tile_spec["TILE_CREATION"]:
+			tileAtlasTemp.create_tile(Vector2i(tl_create[0],tl_create[1]),Vector2i(1,1))
+		tileAtlasTemp.texture_region_size = _tilesize
+		tileSetTemp.add_source(tileAtlasTemp)
+		tilemapLayer.tile_set = tileSetTemp
+		tilemapLayer.z_index = tile_spec["Z_INDEX"]
+		tilemapLayer.y_sort_enabled = tile_spec["Y_SORT"]
+		add_child(tilemapLayer)
+		if tile_spec.has("CELLS_BLOCK"):
+			var x_num: Array = [tile_spec["CELLS_BLOCK"][0][0][0],tile_spec["CELLS_BLOCK"][1][0][0]]
+			var y_num: Array = [tile_spec["CELLS_BLOCK"][0][0][1],tile_spec["CELLS_BLOCK"][1][0][1]]
+			var at_coords: Vector2i = Vector2i(tile_spec["CELLS_BLOCK"][0][2][0],tile_spec["CELLS_BLOCK"][0][2][1])
+			var x_amount: int = x_num[1] - x_num[0]
+			var y_amount: int = y_num[1] - y_num[0]
+			for i in range(x_amount):
+				for j in range(y_amount):
+					tilemapLayer.set_cell(Vector2i(x_num[0]+i,y_num[0]+j),tileSetTemp.get_source_id(0),at_coords)
+		elif tile_spec.has("CELLS"):
+			for coor_dets in tile_spec["CELLS"]:
+				var coor: Vector2i = Vector2i(coor_dets[0][0],coor_dets[0][1])
+				var s_id: int = coor_dets[1]
+				var at_coor: Vector2i = Vector2i(coor_dets[2][0],coor_dets[2][1])
+				tilemapLayer.set_cell(coor,s_id, at_coor)
+	
+
 	#The next tilemap layer i made contains elevated ground which is what stops
 	#the user from advancing to specific location. Other than following the
 	#previous steps from before i also create a physics layer which is the
@@ -262,12 +291,12 @@ func _ready():
 	var tilemapl_el: TileMapLayer = TileMapLayer.new()
 	var tileSet_el: TileSet = TileSet.new()
 	var tileAtlas_el = TileSetAtlasSource.new()
-	tileSet_el.tile_size = tile_size
+	tileSet_el.tile_size = _tilesize
 	tileSet_el.tile_shape = TileSet.TILE_SHAPE_SQUARE
 	tileAtlas_el.texture = tilemap_Elevation
 	tileAtlas_el.create_tile(Vector2i(3,4),Vector2i(1,1))
 	tileAtlas_el.create_tile(Vector2i(3,5),Vector2i(1,1))
-	tileAtlas_el.texture_region_size = tile_size
+	tileAtlas_el.texture_region_size = _tilesize
 	tileSet_el.add_source(tileAtlas_el)
 	tilemapl_el.tile_set = tileSet_el
 	tilemapl_el.z_index = 0
@@ -277,28 +306,30 @@ func _ready():
 	tile_data_el_2.add_collision_polygon(0)
 	tile_data_el_2.set_collision_polygon_points(0, 0, PackedVector2Array([Vector2(-1, -1),Vector2(-1, 1),Vector2(1, 1),Vector2(1, -1)]))
 	add_child(tilemapl_el)
-	tilemapl_el.set_cell(Vector2i(0,0), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(0,1), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(1,-1), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(1,0), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(2,-1), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(2,0), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(3,-1), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(3,0), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(4,0), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(4,1), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(4,2), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(4,3), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(3,3), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(3,4), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(2,3), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(2,4), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(1,3), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(1,4), tileSet.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(0,2), tileSet.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(0,3), tileSet.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(0,0), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(0,1), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(1,-1), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(1,0), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(2,-1), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(2,0), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(3,-1), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(3,0), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(4,0), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(4,1), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(4,2), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(4,3), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(3,3), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(3,4), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(2,3), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(2,4), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(1,3), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(1,4), tileSet_el.get_source_id(0), Vector2i(3,5))
+	tilemapl_el.set_cell(Vector2i(0,2), tileSet_el.get_source_id(0), Vector2i(3,4))
+	tilemapl_el.set_cell(Vector2i(0,3), tileSet_el.get_source_id(0), Vector2i(3,5))
 	
 	#print_debug(ItemManager.find_item_by_id("1").name)
+	var testarray: Array = [[2,1],[2,2]]
+	print_debug(testarray[0])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -309,6 +340,7 @@ func _process(_delta):
 ## This function is used to spawn the player on the current scene. It requires a
 ## player scene to instantiate and a position. After setting the player's
 ## position we then add a reference to the user's inventory on that character
+## All those information should be inside a dictionary
 func _spawn_player(_player_create_dict: Dictionary) -> void:
 	var player_component_scene = load(_player_create_dict["PLAYER_SCENE"])
 	_player = player_component_scene.instantiate()
@@ -338,7 +370,7 @@ func _spawn_player(_player_create_dict: Dictionary) -> void:
 
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
-## to have and what item is going to be
+## to have and what item is going to be. All those information should be inside a dictionary
 func _spawn_item(_item_details: Dictionary) -> void:
 	var item_scene = load(_item_details["ITEM_SCENE"])
 	var it = item_scene.instantiate()
@@ -350,6 +382,8 @@ func _spawn_item(_item_details: Dictionary) -> void:
 	if it.has_signal("assign_item_contained"):
 		var item_contained: Item = ItemManager.find_item_by_id(_item_details["ITEM_RESOURCE"])
 		it.emit_signal("assign_item_contained",item_contained)
+	if it.has_method("set_quest_to_give"):
+		it.set_quest_to_give(_item_details["ITEM_QUEST_TO_GIVE"])
 	if _player == null:
 		return
 	if it.has_signal("give_item_to_player") and _player.has_method("add_item_to_inventory"):
@@ -358,7 +392,7 @@ func _spawn_item(_item_details: Dictionary) -> void:
 ## This function is used to spawn the characters that populate the scene other
 ## than the player character. We require the character's scene, their position
 ## on the environemnt, their dialogue and what item (if any) they can give the
-## player character.
+## player character. All those information should be inside a dictionary
 func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 	var npc_scene_component: PackedScene = load(_npc_dictionary["NPC_SCENE"])
 	var new_npc = npc_scene_component.instantiate()

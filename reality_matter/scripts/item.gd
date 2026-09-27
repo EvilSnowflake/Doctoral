@@ -23,5 +23,5 @@ extends Resource
 ## and if the number of the max_stack is more than 1 it can
 @export var max_stack: int = 1
 ## The item_type variable can be used if we want to differentiate
-## between items for quests or consumable items but is not yet used
+## between items for quests or consumable items
 @export var item_type: String = "KEY_ITEM"

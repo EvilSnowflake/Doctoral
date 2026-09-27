@@ -55,7 +55,6 @@ signal adjust_player_movement(ability: bool)
 ## Using give_item_to_player() the npc can automatiaclly add an item to the
 ## user's inventory without having access to the inventory
 signal give_item_to_player(itm: Item)
-######NEW SCRIPT
 
 ## This variable contains the animations for the character as a
 ## dictionary. It gets filled with tweens that when played should

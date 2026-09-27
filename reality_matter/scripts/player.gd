@@ -227,7 +227,7 @@ func move(dir: String) -> void:
 			if _last_entity_collided.has_signal("player_collided"):
 				_last_entity_collided.emit_signal("player_collided")
 
-## Funciton to add an item to the inventory
+## Function to add an item to the inventory
 func add_item_to_inventory(item: Item) -> void:
 	inventory_list.add_item(item)
 	#print_debug("User picked up an item, has inventory: " + str(inventory_list))
@@ -253,37 +253,48 @@ func receive_inventory(inventory_instance: Inventory):
 ## specified item id given then it returns true
 func give_item(item_id: String) -> bool:
 	return inventory_list.remove_item(item_id)
-######NEW SCRIPT
+
+## This function is used to give the player their combat stats in order for combat to be able to
+## initiate. It requires a combat_stats resource to be given
 func receive_combat_stats(com_stats: Combat_Stats) -> void:
 	user_combat_stats = com_stats
 	#user_combat_stats.living_died.connect(game_end)
 	user_combat_stats.char_run.connect(_run_from_encounter)
 
+## This function is used by other scripts to receive the user's combat statistics, usually for any
+## current battles going on.
 func get_combat_stats() -> Combat_Stats:
 	return user_combat_stats
 
+## This function returns the player's current name
 func get_character_name() -> String:
 	return character_name
 
+## This function is used to enable or disable the camera following the user during gameplay.
+## Typically used by the battle scene becaue it already contains another camera that has animations
+## in it that should be played during actions.
 func change_camera_ability(ability: bool) -> void:
 	if _player_camera != null:
 		#print_debug("Change camera's ability to %s" % [str(ability)])
 		_player_camera.enabled = ability
 
+## This function is used to exit out of the game after the user has no health left and chose to
+## close the application. Can be changed so that something else occurs after defeat.
 func game_end() -> void:
 	get_tree().quit()
 
+## This function determines what happens when the user chooses to disengage from combat. Currently
+## enables the user's camera and their ability to move in the environment
 func _run_from_encounter() -> void:
 	change_camera_ability(true)
 	change_moveability(true)
-######NEW SCRIPT
+
 ## Function to change our current animation to our state. There is no input
 ## because we first need to update the current state variable and depending on
 ## its integer we invoke the appropriate tween item
 func update_animation() -> void:
 	if TweenItems.is_empty() or State.is_empty():
 		return
-	
 	match current_state:
 		State.IDLE:
 			for key in TweenItems:

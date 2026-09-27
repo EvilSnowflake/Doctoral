@@ -1,14 +1,19 @@
 ## QUEST MANAGER - GLOBAL SCRIPT
 extends Node
 
+#This script is a global solution to the quest functionality. By calling this script, another entity
+#can add new quests to the total using a dictionary, search for a quest using the quest itself,
+#a title, or get its index using that title. It also holds the player's current quests in an array
+#while showing on what step they are along with whether or not its complete.
+
 @warning_ignore("unused_signal")
+## This signal should be emitted when the player continues a step in a quest
 signal quest_updated(q: Quest)
 
 var quests: Array[Quest]
 var current_quests : Array = []
 
 func _ready() -> void:
-	#gather_quests(quests_dict_test)
 	pass
 
 func gather_quests(_quest_dictionary: Dictionary) -> void:
