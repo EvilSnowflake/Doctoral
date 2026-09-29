@@ -158,14 +158,22 @@ var _items_dictionary : Dictionary = {
 		"ITEM_TYPE" : "KEY_ITEM"
 	}
 }
+## This variable has a dictionary with all quests that will exist on the game. Each keyword inside 
+## will create a different quest and is going to require the following details to manifest. Firstly
+## it needs a TITLE string, that will be the primary way to differentiate it from other quests,
+## a DESCRIPTION string which will give the user hints of what they need to do to complete the
+## quest, a STEPS array of strings that will be given on the npcs and items that will further the
+## quest for the user, a REWARD_XP int and a REWARD_ITEMS Item array that will be given to the user
+## after completion and a REWARD_ITEM_QUANTITY int array that will inform the quest of how many of
+## each item will be distributed.
 var quests_dict: Dictionary = {
 	"QUEST_1" : {
 		"TITLE" : "Short Quest",
 		"DESCRIPTION" : "An example short quest with only one step required to complete it",
 		"STEPS" : ["Complete Quest"],
 		"REWARD_XP" : 10,
-		"REWARD_ITEMS" : [],
-		"REWARD_ITEM_QUANTITY" : []
+		"REWARD_ITEMS" : ["1"],
+		"REWARD_ITEM_QUANTITY" : [1]
 		},
 	"QUEST_2" : {
 		"TITLE" : "Long Quest",
@@ -184,7 +192,10 @@ var quests_dict: Dictionary = {
 		"REWARD_ITEM_QUANTITY" : [3]
 		}
 }
+## This variable is a dictionary that will only contain a 2 element array that will be converted
+## to a Vector2i variable for the tile size of the whole game
 var _tile_size_dictionary: Dictionary = {"SIZE" : [64,64]}
+## This variable will inform the whole game of the size each tile will take in the grid of the game
 var _tilesize: Vector2i
 
 # Called when the node enters the scene tree for the first time.
@@ -241,6 +252,28 @@ func _ready():
 			"Z_INDEX" : -1,
 			"Y_SORT" : true,
 			"CELLS" : [[[0,0],0,[0,0]],[[0,1],0,[0,1]],[[0,2],0,[0,1]],[[0,3],0,[0,1]],[[0,4],0,[0,1]],[[0,5],0,[0,1]],[[0,6],0,[0,2]],[[1,0],0,[1,0]],[[1,1],0,[1,1]],[[1,2],0,[1,1]],[[1,3],0,[1,1]],[[1,4],0,[1,1]],[[1,5],0,[1,1]],[[1,6],0,[1,2]],[[2,0],0,[1,0]],[[2,1],0,[1,1]],[[2,2],0,[1,1]],[[2,3],0,[1,1]],[[2,4],0,[1,1]],[[2,5],0,[1,1]],[[2,6],0,[1,2]],[[3,0],0,[1,0]],[[3,1],0,[1,1]],[[3,2],0,[1,1]],[[3,3],0,[1,1]],[[3,4],0,[1,1]],[[3,5],0,[1,1]],[[3,6],0,[1,2]],[[4,0],0,[1,0]],[[4,1],0,[1,1]],[[4,2],0,[1,1]],[[4,3],0,[1,1]],[[4,4],0,[1,1]],[[4,5],0,[1,1]],[[4,6],0,[1,2]],[[5,0],0,[1,0]],[[5,1],0,[1,1]],[[5,2],0,[1,1]],[[5,3],0,[1,1]],[[5,4],0,[1,1]],[[5,5],0,[1,1]],[[5,6],0,[1,2]],[[6,0],0,[2,0]],[[6,1],0,[2,1]],[[6,2],0,[2,1]],[[6,3],0,[2,1]],[[6,4],0,[2,1]],[[6,5],0,[2,1]],[[6,6],0,[2,2]]]
+		},
+		#The next tilemap layer i made contains elevated ground which is what stops
+		#the user from advancing to specific location. Other than following the
+		#previous steps from before i also create a physics layer which is the
+		#same as the user's collision layer. Then we create a collision polygon on
+		#the tilemap's tiledata, we set the polygon's shape so that it covers all
+		#the tile's corners and thus we have given the elevated tilemap layer 
+		#collision
+		"ELEVATION":{
+			"PATH" : "res://assets/tiles/Tilemap_Elevation.png",
+			"TILE_CREATION" : [[3,4],[3,5]],
+			"Z_INDEX" : 0,
+			"Y_SORT" : true,
+			"CELLS" : [[[0,0],0,[3,4]],[[0,1],0,[3,5]],[[1,-1],0,[3,4]],[[1,0],0,[3,5]],[[2,-1],0,[3,4]],[[2,0],0,[3,5]],[[2,0],0,[3,5]],[[3,-1],0,[3,4]],[[3,0],0,[3,5]],[[4,0],0,[3,4]],[[4,1],0,[3,5]],[[4,2],0,[3,4]],[[4,3],0,[3,5]],[[3,3],0,[3,4]],[[3,4],0,[3,5]],[[2,3],0,[3,4]],[[2,4],0,[3,5]],[[1,3],0,[3,4]],[[1,4],0,[3,5]],[[0,2],0,[3,4]],[[0,3],0,[3,5]]],
+			"COLLISION":{
+				"PHYSICS_LAYER" : 0,
+				"ATLAS_COORDS" : [3,5],
+				"ALTERNATIVE_TILE" : 0,
+				"LAYER_ID" : 0,
+				"POLYGON_INDEX" : 0,
+				"POLYGON" : [[-1,-1],[-1,1],[1,1],[1,-1]]
+			}
 		}
 	}
 	var tile_path: Resource = null
@@ -262,6 +295,12 @@ func _ready():
 		tilemapLayer.tile_set = tileSetTemp
 		tilemapLayer.z_index = tile_spec["Z_INDEX"]
 		tilemapLayer.y_sort_enabled = tile_spec["Y_SORT"]
+		if tile_spec.has("COLLISION"):
+			var tile_collision: Dictionary = tile_spec["COLLISION"]
+			tileSetTemp.add_physics_layer(tile_collision["PHYSICS_LAYER"])
+			var tile_data_temp: TileData = tileAtlasTemp.get_tile_data(Vector2i(tile_collision["ATLAS_COORDS"][0],tile_collision["ATLAS_COORDS"][1]),tile_collision["ALTERNATIVE_TILE"])
+			tile_data_temp.add_collision_polygon(tile_collision["LAYER_ID"])
+			tile_data_temp.set_collision_polygon_points(tile_collision["LAYER_ID"], tile_collision["POLYGON_INDEX"], PackedVector2Array([Vector2(tile_collision["POLYGON"][0][0], tile_collision["POLYGON"][0][1]),Vector2(tile_collision["POLYGON"][1][0], tile_collision["POLYGON"][1][1]),Vector2(tile_collision["POLYGON"][2][0], tile_collision["POLYGON"][2][1]),Vector2(tile_collision["POLYGON"][3][0], tile_collision["POLYGON"][3][1])]))
 		add_child(tilemapLayer)
 		if tile_spec.has("CELLS_BLOCK"):
 			var x_num: Array = [tile_spec["CELLS_BLOCK"][0][0][0],tile_spec["CELLS_BLOCK"][1][0][0]]
@@ -278,54 +317,6 @@ func _ready():
 				var s_id: int = coor_dets[1]
 				var at_coor: Vector2i = Vector2i(coor_dets[2][0],coor_dets[2][1])
 				tilemapLayer.set_cell(coor,s_id, at_coor)
-	
-
-	#The next tilemap layer i made contains elevated ground which is what stops
-	#the user from advancing to specific location. Other than following the
-	#previous steps from before i also create a physics layer which is the
-	#same as the user's collision layer. Then we create a collision polygon on
-	#the tilemap's tiledata, we set the polygon's shape so that it covers all
-	#the tile's corners and thus we have given the elevated tilemap layer 
-	#collision
-	var tilemap_Elevation: Resource = load("res://assets/tiles/Tilemap_Elevation.png")
-	var tilemapl_el: TileMapLayer = TileMapLayer.new()
-	var tileSet_el: TileSet = TileSet.new()
-	var tileAtlas_el = TileSetAtlasSource.new()
-	tileSet_el.tile_size = _tilesize
-	tileSet_el.tile_shape = TileSet.TILE_SHAPE_SQUARE
-	tileAtlas_el.texture = tilemap_Elevation
-	tileAtlas_el.create_tile(Vector2i(3,4),Vector2i(1,1))
-	tileAtlas_el.create_tile(Vector2i(3,5),Vector2i(1,1))
-	tileAtlas_el.texture_region_size = _tilesize
-	tileSet_el.add_source(tileAtlas_el)
-	tilemapl_el.tile_set = tileSet_el
-	tilemapl_el.z_index = 0
-	tilemapl_el.y_sort_enabled = true
-	tileSet_el.add_physics_layer(0)
-	var tile_data_el_2 :TileData = tileAtlas_el.get_tile_data(Vector2i(3,5),0)
-	tile_data_el_2.add_collision_polygon(0)
-	tile_data_el_2.set_collision_polygon_points(0, 0, PackedVector2Array([Vector2(-1, -1),Vector2(-1, 1),Vector2(1, 1),Vector2(1, -1)]))
-	add_child(tilemapl_el)
-	tilemapl_el.set_cell(Vector2i(0,0), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(0,1), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(1,-1), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(1,0), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(2,-1), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(2,0), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(3,-1), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(3,0), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(4,0), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(4,1), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(4,2), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(4,3), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(3,3), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(3,4), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(2,3), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(2,4), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(1,3), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(1,4), tileSet_el.get_source_id(0), Vector2i(3,5))
-	tilemapl_el.set_cell(Vector2i(0,2), tileSet_el.get_source_id(0), Vector2i(3,4))
-	tilemapl_el.set_cell(Vector2i(0,3), tileSet_el.get_source_id(0), Vector2i(3,5))
 	
 	#print_debug(ItemManager.find_item_by_id("1").name)
 	var testarray: Array = [[2,1],[2,2]]

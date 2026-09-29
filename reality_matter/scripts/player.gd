@@ -134,8 +134,14 @@ func _unhandled_input(_event: InputEvent) -> void:
 	if _event.is_action_pressed("test"):
 		#print_debug(QuestManager.find_quest(QuestManager.quests[0]))
 		#print_debug(QuestManager.find_quest_by_title("short quest"))
-		print_debug(QuestManager.get_quest_index_by_title("long quest"))
-		print_debug(QuestManager.get_quest_index_by_title("Recover Lost Magical Flute"))
+		#print_debug(QuestManager.get_quest_index_by_title("long quest"))
+		#print_debug(QuestManager.get_quest_index_by_title("Recover Lost Magical Flute"))
+		print_debug("BEFORE : %s" %[str(QuestManager.current_quests)])
+		QuestManager.update_quest("short quest")
+		QuestManager.update_quest("Recover Lost Magical Flute", "Find the Magical Flute")
+		QuestManager.update_quest("Recover Lost Magical Flute", "Return Magical Flute to Bill", true)
+		QuestManager.update_quest("long quest", "", true)
+		print_debug("AFTER : %s" %[str(QuestManager.current_quests)])
 
 func _physics_process(_delta):
 	#If we are currently moving, the user can't engage with the controller
@@ -260,6 +266,7 @@ func receive_combat_stats(com_stats: Combat_Stats) -> void:
 	user_combat_stats = com_stats
 	#user_combat_stats.living_died.connect(game_end)
 	user_combat_stats.char_run.connect(_run_from_encounter)
+	QuestManager.receive_player_requirements(com_stats, inventory_list)
 
 ## This function is used by other scripts to receive the user's combat statistics, usually for any
 ## current battles going on.

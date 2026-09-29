@@ -69,8 +69,10 @@ func deal_damage(amount: int) -> int:
 ## the user this is called automaticly in order for the user to increase its
 ## level
 func _levelup():
+	print_debug("LEVEL UP")
 	_level += 1
-	health += 5
+	max_health += 5
+	health = max_health
 	attack_power += 1
 	defense += 1
 	speed += 1
