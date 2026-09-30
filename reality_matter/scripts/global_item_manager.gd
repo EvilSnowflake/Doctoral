@@ -21,6 +21,8 @@ func set_items(_items: Dictionary) -> void:
 			continue
 		var new_item: Item = Item.new()
 		new_item.id = _items[item_keys]["ID"]
+		if _items[item_keys].has("DESCRIPTION"):
+			new_item.description = _items[item_keys]["DESCRIPTION"]
 		new_item.name = _items[item_keys]["NAME"]
 		new_item.icon = load(_items[item_keys]["ICON"])
 		new_item.max_stack = _items[item_keys]["MAX_STACK"]

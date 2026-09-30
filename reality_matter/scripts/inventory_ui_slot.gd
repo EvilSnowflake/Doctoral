@@ -2,12 +2,17 @@ extends PanelContainer
 
 #This script contains the logic for the item slots in the user interface.
 
+var _currently_held_item: Item
+
 ## The varible icon points to the texture that shows what item is contained
 ## in the scene tree during the ready function.
 @onready var icon: TextureRect = $Icon
 ## This variable references the label showing how many of the item presented
 ## are contained in this slot after the ready function.
 @onready var quantity_label: Label = $QuantityLabel
+
+func _ready() -> void:
+	pass
 
 ## This function sets what item the slot contains, changing the icon and the
 ## quantity if its more than 1
@@ -21,6 +26,7 @@ func set_slot_data(slot: InventorySlot) -> void:
 	else:
 		icon.texture = slot.item.icon
 		quantity_label.text = str(slot.quantity) if slot.quantity > 1 else ""
+		_currently_held_item = slot.item
 
 ## This function can be called if we need to change how big the slot is
 func set_custom_min_max_size(x: float, y: float):

@@ -153,6 +153,7 @@ var _items_dictionary : Dictionary = {
 	"ITEM_1" : {
 		"ID" : "1",
 		"NAME" : "Bone",
+		"DESCRIPTION" : "This is a Bone",
 		"ICON" : "res://assets/sprites/items/14.png",
 		"MAX_STACK" : 5,
 		"ITEM_TYPE" : "KEY_ITEM"
@@ -197,6 +198,122 @@ var quests_dict: Dictionary = {
 var _tile_size_dictionary: Dictionary = {"SIZE" : [64,64]}
 ## This variable will inform the whole game of the size each tile will take in the grid of the game
 var _tilesize: Vector2i
+## This variable points to the theme file that is used by some of the Interface
+## elements. Will be modified depending on the contents of the theme dictionary
+var _theme: Theme = preload("res://assets/themes/game_theme.tres")
+## The theme dictionary should contain any changes we want to make to the theme
+## file in the game. As keys there should be the type of element we want to
+## change and in the value there should be keys of the base type and/or variants
+## In these base type/variants there should be the name of the characteristic
+## we want to change along with the values we want
+var _themes_dictionary = {
+	"Panel" : {
+		"BASE_TYPE" : {
+			"panel" : {
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 0.9,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "GRAY"
+					}
+				},
+		"PANEL_2" : {
+			"panel" : {
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "DARK_GREEN",
+				"THEME_BG_ALPHA" : 0.75,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "DARK_GREEN"
+				},
+			"UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]
+			},
+		"PANEL_TEXTBOX": {
+			"panel": {
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "WHITE"
+					},
+			"UI_ELEMENTS" : ["TextBoxPanel"]
+			},
+		"PANEL_TEXTURE": {
+			"panel" : {
+			"THEME_STYLEBOX_TYPE" : "StyleBoxTexture",
+			"THEME_TEXTURE_PATH" : "res://assets/sprites/uielements/TinySquareBlueButton.png",
+			"THEME_TEXTURE_MARGIN" : [25.0,25.0,25.0,25.0]
+			}
+		}
+	},
+	"Button":{
+		"BASE_TYPE" : {
+			"font_color":{
+				"THEME_COLOR" : "WHITE"
+			},
+			"font_pressed_color":{
+				"THEME_COLOR" : "GRAY"
+			},
+			"font_hover_color": {
+				"THEME_COLOR" : "BLACK"
+			},
+			"normal" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "WHITE"
+			},
+			"pressed" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "WHITE",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "WHITE"
+			},
+			"hover" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "FLORAL_WHITE",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "WHITE"
+			}
+		}
+	},
+	"ProgressBar":{
+		"BASE_TYPE":{
+			"font_size":{
+				"SIZE" : 16
+			},
+			"background":{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "RED",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "BLACK"
+			},
+			"fill":{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "GREEN",
+				"THEME_BG_ALPHA" : 1.0,
+				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_COLOR" : "BLACK"
+			}
+		}
+	},
+	"Label":{
+		"BASE_TYPE" : {
+			"font_color":{
+				"THEME_COLOR" : "WHITE"
+			}
+		},
+		"SHADOW_LABELS":{
+			"font_shadow_color":{
+				"THEME_COLOR" : "BLACK"
+			},
+			"UI_ELEMENTS" : ["PlayerHealthValue","EnemyHealthValue"]
+		}
+	}
+}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -318,9 +435,9 @@ func _ready():
 				var at_coor: Vector2i = Vector2i(coor_dets[2][0],coor_dets[2][1])
 				tilemapLayer.set_cell(coor,s_id, at_coor)
 	
-	#print_debug(ItemManager.find_item_by_id("1").name)
-	var testarray: Array = [[2,1],[2,2]]
-	print_debug(testarray[0])
+	#Then we read the theme dictionary in order to set up the modifications specified inside
+	for key in _themes_dictionary.keys():
+		_set_up_theme(_themes_dictionary[key], _theme, key)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -432,6 +549,7 @@ func _spawn_user_interface(ui: PackedScene) -> void:
 
 #NEW SCRIPT
 func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
+	#return
 	_batt = battle_scene.instantiate()
 	_user_interface.get_child(0).add_child(_batt)
 	#add_child(_batt)
@@ -463,4 +581,78 @@ func _end_combat_env() -> void:
 	print_debug("The combat ends!")
 	_batt.hide()
 	player_camera_changeability.emit(true)
+
+## This function is responsible for changing the central theme for the game. The theme itself does
+## not have any overrides to the User Interface elements but if we provide this function with a
+## dictionary containing any changes to the theme we want along with the theme and what type of
+## element we want to modify, the function then reads the type of change we want to occur and
+## does the appropriate action. The typical structure of the dictionary we need to provide is the
+## name of the variant we want to create and which elements should get that variant or if we want to
+## change the base one we just write BASE TYPE and inside we write what we want to change inside
+## like the color, font size etc.
+func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme, current_theme_type: String) -> void:
+	for theme_type_key in theme_dictionary.keys():
+		var shared_theme_dictionary: Dictionary = theme_dictionary[theme_type_key]
+		var shared_theme_type: String = ""
+		if theme_type_key != "BASE_TYPE":
+			theme_source.add_type(theme_type_key)
+			theme_source.set_type_variation(theme_type_key, current_theme_type)
+			shared_theme_type = theme_type_key
+		else:
+			shared_theme_type = current_theme_type
+		for theme_name_key in shared_theme_dictionary.keys():
+			var theme_name_dictionary = shared_theme_dictionary[theme_name_key]
+			if theme_name_dictionary.has("THEME_COLOR"):
+				var theme_color: Color = Color(theme_name_dictionary["THEME_COLOR"])
+				theme_source.set_color(theme_name_key, shared_theme_type, theme_color)
+			elif theme_name_dictionary.has("THEME_STYLEBOX_TYPE"):
+				var thm_stylebox_type: String = theme_name_dictionary["THEME_STYLEBOX_TYPE"]
+				if thm_stylebox_type == "StyleBoxTexture":
+					_setup_stylebox_texture(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
+				if thm_stylebox_type == "StyleBoxFlat":
+					_setup_stylebox_flat(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
+			if shared_theme_dictionary.has("UI_ELEMENTS"):
+				for var_name in shared_theme_dictionary["UI_ELEMENTS"]:
+					var element = find_child(var_name,true,false)
+					#print_debug(element)
+					element.theme_type_variation = theme_type_key
+
+## This function is used by the set up theme function and is specifically responsible for modifying
+## the stylebox texture of a theme element. It requires the theme dictionary, the theme to change,
+## the theme name and what type of element it is we change. The dictionary needs a path to the
+## texture we want to apply along with its texture margins. The margin value requires an array with
+## 4 elements like: [LEFT,TOP,RIGHT,BOTTOM]
+func _setup_stylebox_texture(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
+	var thm_texture_path: String = theme_dictionary["THEME_TEXTURE_PATH"]
+	var thm_texture_margin: Array = theme_dictionary["THEME_TEXTURE_MARGIN"]
+	var stylebox_theme: StyleBoxTexture = StyleBoxTexture.new()
+	stylebox_theme.texture = load(thm_texture_path)
+	stylebox_theme.set_texture_margin(SIDE_LEFT, thm_texture_margin[0])
+	stylebox_theme.set_texture_margin(SIDE_TOP, thm_texture_margin[1])
+	stylebox_theme.set_texture_margin(SIDE_RIGHT, thm_texture_margin[2])
+	stylebox_theme.set_texture_margin(SIDE_BOTTOM, thm_texture_margin[3])
+	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
+	theme_source.set_stylebox(theme_name, theme_type, stylebox_theme)
+
+## This function is used by the set up theme function and is specifically responsible for modifying
+## the flat stylebox of a theme element. It requires the theme dictionary, the theme to change,
+## the theme name and what type of element it is we change. The dictionary requires a background
+## alpha value, a background color value, a border width value and a border color value. The alpha
+## is just a float, while the colors only require the name of the color as written in the Godot
+## Engine Documentation. The width on the other hand needs an array of 4 elements like: [LEFT,TOP,
+##RIGHT,BOTTOM]
+func _setup_stylebox_flat(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
+	var thm_bg_alpha: float = theme_dictionary["THEME_BG_ALPHA"]
+	var thm_bg_color: Color = Color(theme_dictionary["THEME_BG_COLOR"],thm_bg_alpha)
+	var thm_border_width: Array = theme_dictionary["THEME_BORDER_WIDTH"]
+	var thm_border_color: Color = Color(theme_dictionary["THEME_BORDER_COLOR"])
+	var stylebox_theme: StyleBoxFlat = StyleBoxFlat.new()
+	stylebox_theme.bg_color = thm_bg_color
+	stylebox_theme.border_width_left = thm_border_width[0]
+	stylebox_theme.border_width_top = thm_border_width[1]
+	stylebox_theme.border_width_right = thm_border_width[2]
+	stylebox_theme.border_width_bottom = thm_border_width[3]
+	stylebox_theme.border_color = thm_border_color
+	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
+	theme_source.set_stylebox(theme_name, theme_type,stylebox_theme)
 #NEW SCRIPT

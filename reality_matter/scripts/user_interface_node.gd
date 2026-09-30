@@ -36,6 +36,10 @@ var _slot_graphic: String = "res://assets/sprites/uielements/TinySquareBlueButto
 ## This variable should inform the item slot about the margin that holds the
 ## item's icon
 var _slot_margin: Vector4 = Vector4(8.0,8.0,8.0,8.0)
+var _mLabel: Label
+var _mouse_padding: Vector2 = Vector2(16.0,16.0)
+var _label_follow_mouse: bool = false
+var _tooltip_label: String = "res://scenes/tooltip.tscn"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -49,18 +53,25 @@ func _ready():
 	if item_collection == null:
 		item_collection = find_child("ItemCollection")
 	slot_graphic_resource = load(_slot_graphic)
+	var tooltip_resource = load(_tooltip_label)
+	_mLabel = tooltip_resource.instantiate()
+	get_child(0).add_child(_mLabel)
+	_mLabel.hide()
 
 # Called every frame. '_delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	#While a conversation is ongoing we need to check if an npc awaits the user
 	#to press the interact button to continue the conversation if there are
 	#no buttons to press
+	#$CanvasLayer/TestPanel.position = get_viewport().get_mouse_position()
+
+	if _label_follow_mouse:
+		_mLabel.position = get_viewport().get_mouse_position() + _mouse_padding
 	if !_await_user_input or _current_npc_conversing == null:
 		return
 	if !_current_npc_conversing.has_signal("continue_dialogue") or _has_options:
 		return
 	if Input.is_action_just_pressed("Interact"):
-		print_debug("Pressed continue conversation")
 		_await_user_input = false
 		_current_npc_conversing.emit_signal("continue_dialogue")
 
@@ -159,10 +170,29 @@ func _inventory_modified():
 		child.queue_free()
 	
 	#rebuild
-	for slot in _inventory.slots:
+	for slot: InventorySlot in _inventory.slots:
 		var ui_slot: PanelContainer = slot_scene.instantiate()
 		item_collection.add_child(ui_slot)
 		if !ui_slot.has_method("set_slot_data") or !ui_slot.has_method("set_custom_min_max_size") or !ui_slot.has_method("set_panel_texture"):
 			return
 		ui_slot.set_slot_data(slot)
 		ui_slot.set_panel_texture(slot_graphic_resource,_slot_margin)
+		ui_slot.mouse_entered.connect(set_text_on_mouse.bind(slot.item))
+		ui_slot.mouse_exited.connect(clear_text_on_mouse)
+
+## This function should be connected to each inventory slot so that when the user inserts their
+## their cursor on it, a tooltip appears which contains information about the item inside the
+## element if it exists. It requires an item resource as input to get all the information from
+func set_text_on_mouse(itm: Item) -> void:
+	if itm != null:
+		_mLabel.show()
+		var text_t: String = "ID: %s \nNAME: %s \nDESCRIPTION: %s \nTYPE: %s" %[itm.id, itm.name, itm.description, itm.item_type]
+		_mLabel.text = text_t
+		_label_follow_mouse = true
+
+## This function should be connected to each inventory slot so that when the user exits the element
+## with their cursor then the tooltip which informs the user of the item inside the slot, is hidden
+func clear_text_on_mouse() -> void:
+	_mLabel.text = ""
+	_label_follow_mouse = false
+	_mLabel.hide()
