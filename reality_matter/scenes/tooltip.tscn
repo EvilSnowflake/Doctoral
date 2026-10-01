@@ -2,15 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://cg086027rtnh0" path="res://assets/themes/game_theme.tres" id="1_7dicn"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kewym"]
-bg_color = Color(0, 0, 0, 0.63529414)
-
 [node name="Tooltip" type="Label" unique_id=252880450]
 z_index = 1
 offset_right = 40.0
 offset_bottom = 23.0
 theme = ExtResource("1_7dicn")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_styles/normal = SubResource("StyleBoxFlat_kewym")

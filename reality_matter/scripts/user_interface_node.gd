@@ -36,10 +36,12 @@ var _slot_graphic: String = "res://assets/sprites/uielements/TinySquareBlueButto
 ## This variable should inform the item slot about the margin that holds the
 ## item's icon
 var _slot_margin: Vector4 = Vector4(8.0,8.0,8.0,8.0)
-var _mLabel: Label
 var _mouse_padding: Vector2 = Vector2(16.0,16.0)
 var _label_follow_mouse: bool = false
 var _tooltip_label: String = "res://scenes/tooltip.tscn"
+var _mLabel: Label
+var _pause_menu_scene: String = "res://scenes/pause_menu.tscn"
+var _pause: Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -57,6 +59,7 @@ func _ready():
 	_mLabel = tooltip_resource.instantiate()
 	get_child(0).add_child(_mLabel)
 	_mLabel.hide()
+	
 
 # Called every frame. '_delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -67,6 +70,8 @@ func _process(_delta):
 
 	if _label_follow_mouse:
 		_mLabel.position = get_viewport().get_mouse_position() + _mouse_padding
+	if Input.is_action_just_pressed("Escape"):
+		_perform_pause()
 	if !_await_user_input or _current_npc_conversing == null:
 		return
 	if !_current_npc_conversing.has_signal("continue_dialogue") or _has_options:
@@ -196,3 +201,26 @@ func clear_text_on_mouse() -> void:
 	_mLabel.text = ""
 	_label_follow_mouse = false
 	_mLabel.hide()
+
+## This function instantiates the pause menu and adds it to the canvas layer. It is used by another
+## script so that the pause menu is created last and that way the user can insteract with it
+## wherever they are on the scene
+func add_pause() -> void:
+	var pause_resource = load(_pause_menu_scene)
+	_pause = pause_resource.instantiate()
+	get_child(0).add_child(_pause)
+	_pause.hide()
+	if _pause.has_method("get_resume_button"):
+		var res_button: Button = _pause.get_resume_button()
+		res_button.pressed.connect(_perform_pause)
+
+## This function is responsible for pausing and resuming the game. Depending on the status of the
+## game it either shows the pause menu and stops the appropriate processes or it hides the pause
+## menu and resumes those processes
+func _perform_pause() -> void:
+	if get_tree().paused == false:
+		_pause.show()
+		get_tree().paused = true
+	else:
+		_pause.hide()
+		get_tree().paused = false

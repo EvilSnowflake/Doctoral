@@ -311,6 +311,25 @@ var _themes_dictionary = {
 				"THEME_COLOR" : "BLACK"
 			},
 			"UI_ELEMENTS" : ["PlayerHealthValue","EnemyHealthValue"]
+		},
+		"TOOLTIP_LABEL":{
+			"font_color":{
+				"THEME_COLOR" : "WHITE"
+			},
+			"font_outline_colour":{
+				"THEME_COLOR" : "BLACK"
+			},
+			"outline_size":{
+				"THEME_SIZE" : 5
+			},
+			"normal" :{
+				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+				"THEME_BG_COLOR" : "BLACK",
+				"THEME_BG_ALPHA" : 0.75,
+				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_COLOR" : "WHITE"
+			},
+			"UI_ELEMENTS" : ["Tooltip"]
 		}
 	}
 }
@@ -547,12 +566,15 @@ func _spawn_user_interface(ui: PackedScene) -> void:
 	if new_ui.has_method("receive_inventory") and inventory_instance != null:
 		new_ui.receive_inventory(inventory_instance)
 
-#NEW SCRIPT
+## This function creates the battle scene where combat encounters happen. It requires the
+## user's name and their combat stats resource as input. It instantiates the scene on the
+## canvas layer in order for it to follow the screen of the user.
 func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
 	#return
 	_batt = battle_scene.instantiate()
-	_user_interface.get_child(0).add_child(_batt)
-	#add_child(_batt)
+	var canvas_l: CanvasLayer = get_node(str(_user_interface.get_path())+"/CanvasLayer")
+	canvas_l.add_child(_batt)
+	_user_interface.add_pause()
 	if !_batt.has_method("set_up_player"):
 		print_debug("Battle does not have the ability for the player to be setup!")
 		return
@@ -561,10 +583,12 @@ func create_combat_environment(nm: String, sts: Combat_Stats) -> void:
 		return
 	_batt.engagement_ended.connect(_end_combat_env)
 	_batt.set_up_player(nm,sts)
-	#print_debug("Player was setup with name: %s and stats %s" % [nm,str(sts)])
 	_batt.hide()
-	
 
+## This function initiates the battle between the user and the npc beginning the encounter. It
+## requires the sprite of the character, their name, their CombatStats resource and their tween
+## animations in a dictionary. It's job is to pass the information to the battle scene and show it
+## to the user.
 func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats, _tweens: Dictionary = {}) -> void:
 	print_debug("The combat begins for %s and %s" % ["player", nm])
 	if _batt == null:
@@ -577,8 +601,10 @@ func _start_combat_env(spr: Sprite2D, nm: String, sts: Combat_Stats, _tweens: Di
 	_batt.setup_combat_second(spr,nm,sts,_tweens)
 	player_camera_changeability.emit(false)
 
+## This function is responsible for ending battles. It hides the scene where the battle takes place
+## and enable the player's camera so that we follow the user again.
 func _end_combat_env() -> void:
-	print_debug("The combat ends!")
+	#print_debug("The combat ends!")
 	_batt.hide()
 	player_camera_changeability.emit(true)
 
@@ -611,6 +637,9 @@ func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme, current_th
 					_setup_stylebox_texture(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
 				if thm_stylebox_type == "StyleBoxFlat":
 					_setup_stylebox_flat(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
+			elif theme_name_dictionary.has("THEME_SIZE"):
+				var theme_size: int = theme_name_dictionary["THEME_SIZE"]
+				theme_source.set_constant(theme_name_key,shared_theme_type,theme_size)
 			if shared_theme_dictionary.has("UI_ELEMENTS"):
 				for var_name in shared_theme_dictionary["UI_ELEMENTS"]:
 					var element = find_child(var_name,true,false)
@@ -655,4 +684,3 @@ func _setup_stylebox_flat(theme_dictionary: Dictionary, theme_source: Theme, the
 	stylebox_theme.border_color = thm_border_color
 	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
 	theme_source.set_stylebox(theme_name, theme_type,stylebox_theme)
-#NEW SCRIPT
