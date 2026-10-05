@@ -37,29 +37,40 @@ theme_override_constants/margin_bottom = 50
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer" unique_id=126025110]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/HBoxContainer" unique_id=1162428517]
+[node name="ButtonsVbox" type="VBoxContainer" parent="ColorRect/MarginContainer/HBoxContainer" unique_id=1162428517]
 layout_mode = 2
 theme_override_constants/separation = 40
+alignment = 1
 
-[node name="PauseLabel" type="Label" parent="ColorRect/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1179954298]
+[node name="PauseLabel" type="Label" parent="ColorRect/MarginContainer/HBoxContainer/ButtonsVbox" unique_id=1179954298]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("1_n87rw")
 theme_override_font_sizes/font_size = 80
 text = "PAUSE SCREEN"
 
-[node name="ResumeButton" type="Button" parent="ColorRect/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1885786074]
+[node name="ResumeButton" type="Button" parent="ColorRect/MarginContainer/HBoxContainer/ButtonsVbox" unique_id=1885786074]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_n87rw")
 theme_override_font_sizes/font_size = 32
 text = "RESUME"
 
-[node name="ExitButton" type="Button" parent="ColorRect/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1808925042]
+[node name="ExitButton" type="Button" parent="ColorRect/MarginContainer/HBoxContainer/ButtonsVbox" unique_id=1808925042]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_n87rw")
 theme_override_font_sizes/font_size = 32
 text = "EXIT"
+
+[node name="Seperator" type="Control" parent="ColorRect/MarginContainer/HBoxContainer" unique_id=465377405]
+layout_mode = 2
+
+[node name="QuestVbox" type="VBoxContainer" parent="ColorRect/MarginContainer/HBoxContainer" unique_id=902988682]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1

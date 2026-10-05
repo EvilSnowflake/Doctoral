@@ -81,3 +81,6 @@ func receive_player_requirements(_comb: Combat_Stats, _inv: Inventory):
 	if _comb != null and _inv != null:
 		_player_combat_stats = _comb
 		_player_inventory = _inv
+
+func get_quests() -> Array[Quest]:
+	return quests
