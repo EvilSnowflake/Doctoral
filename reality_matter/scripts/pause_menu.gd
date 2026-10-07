@@ -3,14 +3,24 @@ extends Control
 @onready var resume_button: Button = %ResumeButton
 @onready var exit_button: Button = %ExitButton
 @onready var quest_vbox = %QuestVbox
+@onready var quest_panel = %QuestPanel
+@onready var quest_showcase = %QuestShowcase
+@onready var ex_button = %ExButton
+
+#var quest_showcase_path: String = "res://scenes/quest_showcase.tscn"
+
+#var _quest_showcase_scene: Resource
 
 func _ready() -> void:
-	var quests: Array[Quest] = QuestManager.get_quests()
+	#_quest_showcase_scene = load(quest_showcase_path)
+	ex_button.pressed.connect(_stop_showcase)
+	var quests: Array[String] = QuestManager.get_current_quests()
 	for q in quests:
 		#print_debug(q.title)d
-		var print_label: Button = Button.new()
-		print_label.text = q.title
-		quest_vbox.add_child(print_label)
+		var quest_button: Button = Button.new()
+		quest_button.text = q
+		quest_button.pressed.connect(_showcase_quest.bind(q))
+		quest_vbox.add_child(quest_button)
 		#The buttons should open a tooltip that shows the description and the steps required
 
 func get_resume_button() -> Button:
@@ -19,5 +29,15 @@ func get_resume_button() -> Button:
 func get_exit_button() -> Button:
 	return exit_button
 
-func update_qeust_list() -> void:
+func update_quest_list() -> void:
 	pass
+
+func _showcase_quest(_quest_title: String) -> void:
+	quest_panel.show()
+	var this_quest: Quest = QuestManager.find_quest_by_title(_quest_title)
+	quest_showcase.receive_quest_details(this_quest.title, this_quest.description, this_quest.steps)
+
+func _stop_showcase() -> void:
+	if quest_showcase.has_method("clear_destails"):
+		quest_showcase.clear_destails()
+	quest_panel.hide()

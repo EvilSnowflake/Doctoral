@@ -83,5 +83,8 @@ func receive_player_requirements(_comb: Combat_Stats, _inv: Inventory):
 		_player_combat_stats = _comb
 		_player_inventory = _inv
 
-func get_quests() -> Array[Quest]:
-	return quests
+func get_current_quests() -> Array[String]:
+	var title_array: Array[String] = []
+	for q in current_quests:
+		title_array.append(q.title)
+	return title_array

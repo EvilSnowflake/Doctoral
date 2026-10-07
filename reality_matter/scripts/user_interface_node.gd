@@ -213,6 +213,9 @@ func add_pause() -> void:
 	if _pause.has_method("get_resume_button"):
 		var res_button: Button = _pause.get_resume_button()
 		res_button.pressed.connect(_perform_pause)
+	if _pause.has_method("get_exit_button"):
+		var ex_button: Button = _pause.get_exit_button()
+		ex_button.pressed.connect(close_game)
 
 ## This function is responsible for pausing and resuming the game. Depending on the status of the
 ## game it either shows the pause menu and stops the appropriate processes or it hides the pause
@@ -224,3 +227,6 @@ func _perform_pause() -> void:
 	else:
 		_pause.hide()
 		get_tree().paused = false
+
+func close_game() -> void:
+	get_tree().quit()

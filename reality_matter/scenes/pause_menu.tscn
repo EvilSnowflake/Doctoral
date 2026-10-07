@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cutf8fnio65h" path="res://scripts/pause_menu.gd" id="1_myx47"]
 [ext_resource type="Theme" uid="uid://cg086027rtnh0" path="res://assets/themes/game_theme.tres" id="1_n87rw"]
+[ext_resource type="PackedScene" uid="uid://dmnjnl07fyf0v" path="res://scenes/quest_showcase.tscn" id="3_kukqi"]
 
 [node name="PauseMenu" type="Control" unique_id=611801035]
 process_mode = 3
@@ -74,3 +75,43 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
+
+[node name="QuestLabel" type="Label" parent="ColorRect/MarginContainer/HBoxContainer/QuestVbox" unique_id=466134613]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "QUESTS"
+horizontal_alignment = 1
+
+[node name="QuestPanel" type="Panel" parent="ColorRect/MarginContainer" unique_id=2076618642]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme = ExtResource("1_n87rw")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/QuestPanel" unique_id=702826851]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="QuestVBoxShowcases" type="VBoxContainer" parent="ColorRect/MarginContainer/QuestPanel/HBoxContainer" unique_id=2130432881]
+layout_mode = 2
+alignment = 1
+
+[node name="QuestShowcase" parent="ColorRect/MarginContainer/QuestPanel/HBoxContainer/QuestVBoxShowcases" unique_id=2033591043 instance=ExtResource("3_kukqi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExButton" type="Button" parent="ColorRect/MarginContainer/QuestPanel" unique_id=1823110806]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"
