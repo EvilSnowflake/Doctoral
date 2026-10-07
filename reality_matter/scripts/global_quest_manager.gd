@@ -11,11 +11,11 @@ extends Node
 signal quest_updated(dict: Dictionary)
 
 var quests: Array[Quest]
-var current_quests : Array = [{
-	title = "Recover Lost Magical Flute", is_complete = false, completed_steps = ["Find the Magical Flute"]
+var current_quests : Array[Dictionary] = [{
+	"TITLE" = "Recover Lost Magical Flute", "IS_COMPLETE" = false, "COMPLETED_STEPS" = ["Find the Magical Flute"]
 },
 {
-	title = "Long Quest", is_complete = false, completed_steps = [""]
+	"TITLE" = "Long Quest", "IS_COMPLETE" = false, "COMPLETED_STEPS" = [""]
 }]
 
 var _player_combat_stats: Combat_Stats
@@ -36,19 +36,19 @@ func update_quest(_title : String, _completed_step: String = "", _is_complete: b
 	var quest_index: int = get_quest_index_by_title(_title)
 	print_debug("Quest %s updated to %s, with the step: %s" %[_title, str(_is_complete), _completed_step])
 	if quest_index == -1:
-		var new_quest: Dictionary = {title = _title, is_complete = _is_complete, completed_steps = []}
+		var new_quest: Dictionary = {"TITLE" = _title, "IS_COMPLETE" = _is_complete, "COMPLETED_STEPS" = []}
 		if _completed_step != "":
-			new_quest.completed_steps.append(_completed_step)
+			new_quest["COMPLETED_STEPS"].append(_completed_step)
 		current_quests.append(new_quest)
 		quest_updated.emit(new_quest)
 	else:
 		var q: Dictionary = current_quests[quest_index]
-		if _completed_step != "" and !q.completed_steps.has(_completed_step):
-			q.completed_steps.append(_completed_step)
-		if q.is_complete != _is_complete:
-			q.is_complete = _is_complete
-			if q.is_complete:
-				give_rewards(find_quest_by_title(q.title))
+		if _completed_step != "" and !q["COMPLETED_STEPS"].has(_completed_step):
+			q["COMPLETED_STEPS"].append(_completed_step)
+		if q["IS_COMPLETE"] != _is_complete:
+			q["IS_COMPLETE"] = _is_complete
+			if q["IS_COMPLETE"]:
+				give_rewards(find_quest_by_title(q["TITLE"]))
 		quest_updated.emit(q)
 		
 
@@ -59,9 +59,9 @@ func give_rewards(_q: Quest) -> void:
 
 func find_quest(_quest: Quest) -> Dictionary:
 	for q in current_quests:
-		if q.title.to_upper() == _quest.title.to_upper():
+		if q["TITLE"].to_upper() == _quest.title.to_upper():
 			return q
-	return { title = "not found", is_complete = false, completed_steps = [""] }
+	return { "TITLE" = "not found", "IS_COMPLETE" = false, "COMPLETED_STEPS" = [""] }
 
 func find_quest_by_title(_title: String) -> Quest:
 	for q in quests:
@@ -71,7 +71,7 @@ func find_quest_by_title(_title: String) -> Quest:
 
 func get_quest_index_by_title(_title: String) -> int:
 	for q in range(current_quests.size()):
-		if current_quests[q].title.to_upper() == _title.to_upper():
+		if current_quests[q]["TITLE"].to_upper() == _title.to_upper():
 			return q
 	return -1
 
@@ -83,8 +83,5 @@ func receive_player_requirements(_comb: Combat_Stats, _inv: Inventory):
 		_player_combat_stats = _comb
 		_player_inventory = _inv
 
-func get_current_quests() -> Array[String]:
-	var title_array: Array[String] = []
-	for q in current_quests:
-		title_array.append(q.title)
-	return title_array
+func get_current_quests() -> Array[Dictionary]:
+	return current_quests

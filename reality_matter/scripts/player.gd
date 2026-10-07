@@ -69,7 +69,12 @@ var _moving: bool = false
 ## This variable informs the character if the user can move them, usually set
 ## to false when there is a dialogue in the process
 var _moveability: bool = true
+## This camera is responsible for following the player during exploration and should be disable
+## when an encounter begins
 var _player_camera: Camera2D
+## This timer should be started when the player tries to move to a direction, for that specific
+## timer's wait time the play should not be able to move 
+var _move_timer: Timer
 
 ## This variable tells the character how big each tile is in the environment so
 ## that they know how big each step is going to be
@@ -112,6 +117,10 @@ func _ready():
 	
 	if _player_camera == null:
 		_player_camera = find_child("Camera2D")
+	if _move_timer == null:
+		_move_timer = find_child("MoveTimer")
+		if _tweens != null:
+			_move_timer.wait_time = _tweens["TWEEN_DURATIONS"][0]
 	
 	#Here we create all the characters animations based on the variables we have
 	#created
@@ -145,12 +154,16 @@ func _unhandled_input(_event: InputEvent) -> void:
 
 func _physics_process(_delta):
 	#If we are currently moving, the user can't engage with the controller
-	if _moving or !_moveability:
+	if _moving or !_moveability or !_move_timer.is_stopped():
 		return
 	#For each input we have added in the dictionary, we check if the user is pressing any
 	for dir in inputs.keys():
 		#If something is pressed we go to that direction
-		if Input.is_action_just_pressed(dir):
+		if Input.is_action_pressed(dir):
+			#print_debug("Moved")
+			#We start the move timer so that the character finishes trying to move to the direction
+			#the user inputs and then the user can move to another direction
+			_move_timer.start()
 			#Here we check if there was an item or characeter we had collided
 			#with and we clear it before we start to move in order to then check
 			#if there is a new one in front
@@ -200,6 +213,7 @@ func move(dir: String) -> void:
 		#We update our animations only if the user was idle before and
 		#if we can move
 		if inputs[dir] != Vector2.ZERO and current_state == State.IDLE:
+			#print_debug("Can move")
 			current_state = State.RUN
 			update_animation()
 		#And create a tween that moves the player from starting position to final position
@@ -224,6 +238,10 @@ func move(dir: String) -> void:
 	#If it is colliding then we check if the item we are colliding with is an
 	#area2d (npc) or a staticbody2d (item) and we act accordingly
 	else:
+		if inputs[dir] != Vector2.ZERO and current_state == State.IDLE:
+			current_state = State.RUN
+			update_animation()
+		#print_debug("Cant move")
 		ray.target_position = _vector_position
 		ray.force_raycast_update()
 		if ray.get_collider() == null:

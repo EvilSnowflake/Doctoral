@@ -14,11 +14,11 @@ extends Control
 func _ready() -> void:
 	#_quest_showcase_scene = load(quest_showcase_path)
 	ex_button.pressed.connect(_stop_showcase)
-	var quests: Array[String] = QuestManager.get_current_quests()
+	var quests: Array[Dictionary] = QuestManager.get_current_quests()
 	for q in quests:
 		#print_debug(q.title)d
 		var quest_button: Button = Button.new()
-		quest_button.text = q
+		quest_button.text = q["TITLE"]
 		quest_button.pressed.connect(_showcase_quest.bind(q))
 		quest_vbox.add_child(quest_button)
 		#The buttons should open a tooltip that shows the description and the steps required
@@ -32,10 +32,10 @@ func get_exit_button() -> Button:
 func update_quest_list() -> void:
 	pass
 
-func _showcase_quest(_quest_title: String) -> void:
+func _showcase_quest(_quest: Dictionary) -> void:
 	quest_panel.show()
-	var this_quest: Quest = QuestManager.find_quest_by_title(_quest_title)
-	quest_showcase.receive_quest_details(this_quest.title, this_quest.description, this_quest.steps)
+	var this_quest: Quest = QuestManager.find_quest_by_title(_quest["TITLE"])
+	quest_showcase.receive_quest_details(this_quest.title, this_quest.description, this_quest.steps, _quest["COMPLETED_STEPS"])
 
 func _stop_showcase() -> void:
 	if quest_showcase.has_method("clear_destails"):
