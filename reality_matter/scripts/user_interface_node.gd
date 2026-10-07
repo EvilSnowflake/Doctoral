@@ -225,6 +225,9 @@ func _perform_pause() -> void:
 		_pause.show()
 		get_tree().paused = true
 	else:
+		#Also hides all quest showcased in the menu right now
+		if _pause.has_method("stop_showcase"):
+			_pause.stop_showcase()
 		_pause.hide()
 		get_tree().paused = false
 

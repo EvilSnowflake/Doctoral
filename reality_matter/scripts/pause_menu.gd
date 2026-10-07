@@ -13,7 +13,7 @@ extends Control
 
 func _ready() -> void:
 	#_quest_showcase_scene = load(quest_showcase_path)
-	ex_button.pressed.connect(_stop_showcase)
+	ex_button.pressed.connect(stop_showcase)
 	var quests: Array[Dictionary] = QuestManager.get_current_quests()
 	for q in quests:
 		#print_debug(q.title)d
@@ -35,9 +35,10 @@ func update_quest_list() -> void:
 func _showcase_quest(_quest: Dictionary) -> void:
 	quest_panel.show()
 	var this_quest: Quest = QuestManager.find_quest_by_title(_quest["TITLE"])
-	quest_showcase.receive_quest_details(this_quest.title, this_quest.description, this_quest.steps, _quest["COMPLETED_STEPS"])
+	quest_showcase.receive_quest_details(this_quest.title, this_quest.description,
+	this_quest.steps, _quest["COMPLETED_STEPS"], _quest["IS_COMPLETE"])
 
-func _stop_showcase() -> void:
-	if quest_showcase.has_method("clear_destails"):
-		quest_showcase.clear_destails()
+func stop_showcase() -> void:
+	if quest_showcase.has_method("clear_details"):
+		quest_showcase.clear_details()
 	quest_panel.hide()

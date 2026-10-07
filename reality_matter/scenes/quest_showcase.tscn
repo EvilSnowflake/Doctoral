@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dmnjnl07fyf0v"]
 
 [ext_resource type="Script" uid="uid://cwsiqdndb1fgo" path="res://scripts/quest_showcase.gd" id="1_86ms6"]
+[ext_resource type="Theme" uid="uid://cg086027rtnh0" path="res://assets/themes/game_theme.tres" id="2_pq7ud"]
 
 [node name="QuestShowcase" type="Control" unique_id=2033591043]
 layout_mode = 3
@@ -13,15 +14,16 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_86ms6")
 
-[node name="Panel" type="Panel" parent="." unique_id=837823990]
+[node name="QuestShowcasePanel" type="Panel" parent="." unique_id=837823990]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_pq7ud")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=2128668588]
+[node name="VBoxContainer" type="VBoxContainer" parent="QuestShowcasePanel" unique_id=2128668588]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,13 +32,13 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="QuestTitleLabel" type="Label" parent="Panel/VBoxContainer" unique_id=602699007]
+[node name="QuestTitleLabel" type="Label" parent="QuestShowcasePanel/VBoxContainer" unique_id=602699007]
 layout_mode = 2
 text = "QUEST TITLE"
 
-[node name="QuestDescriptionLabel" type="Label" parent="Panel/VBoxContainer" unique_id=1560178980]
+[node name="QuestDescriptionLabel" type="Label" parent="QuestShowcasePanel/VBoxContainer" unique_id=1560178980]
 layout_mode = 2
 text = "QUEST DESCRIPTION"
 
-[node name="CheckboxHBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer" unique_id=1308687704]
+[node name="CheckboxHBoxContainer" type="HBoxContainer" parent="QuestShowcasePanel/VBoxContainer" unique_id=1308687704]
 layout_mode = 2
