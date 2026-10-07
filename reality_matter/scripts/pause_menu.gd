@@ -7,7 +7,7 @@ extends Control
 func _ready() -> void:
 	var quests: Array[Quest] = QuestManager.get_quests()
 	for q in quests:
-		print_debug(q.title)
+		#print_debug(q.title)d
 		var print_label: Button = Button.new()
 		print_label.text = q.title
 		quest_vbox.add_child(print_label)

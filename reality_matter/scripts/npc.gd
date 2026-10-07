@@ -260,7 +260,6 @@ func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
 ## using the User Interface as a way to show their dialogue. THe dialogue can
 ## involve giving an item, taking items from the user or just showing text
 func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
-	print_debug("Player " + str(player_character) + " started conversation with current dialogue num : " + str(_dialogues_num))
 	initiate_dialogue.emit(self)
 	dialogue_label.text = ""
 	
@@ -283,51 +282,59 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 		#either end the conversation, give him an item and then end the conversation
 		#or we say that word and move on
 		if curr_word is String:
-			if curr_word == "ENDING_CONVERSATION":
-				#If the current word contains an ENDING CONVERSATION inside
-				#we break the conversation
-				print_debug("Conversation Ended!")
-				break
-			elif curr_word == "GIVE_ITEM" and item_to_give != null:
-				give_item_to_player.emit(item_to_give)
-				item_to_give = null
-				break
-			elif curr_word == "GIVE_ITEM" and item_to_give != null:
-				break
-			#Also if the dialogue wants the user to give an item we check if the
-			#user has the ability to give items and then ask for the spesific
-			#item id written in the dialogue. If the user's function returns
-			#false the the user didnt have the asked for ite, and if its true
-			#he did. Depending on the answer we either move on with the dialogue
-			#or we don't
-			elif curr_word.begins_with("TAKE_ITEM") and player_character.has_method("give_item"):
-				var item_to_take: String = curr_word.trim_prefix("TAKE_ITEM_")
-				#print_debug("Item to take: " + item_to_take)
-				_move_on_dialogue = player_character.give_item(item_to_take)
-				#this should try and take the item from the user's interface
-				#and if it takes it we move the conversation, otherwise
-				#we stay in the same conversation
-				break
-			#If the dialogue had the prerequisite that the user give an item
-			#we give the ability for the user to refuse and if he does we
-			#dont continue to the next conversation if we have one
-			elif curr_word == "NOT_TAKE_ITEM":
-				print_debug("I wont take any items from the player")
-				_move_on_dialogue = false
-				#This should not move the conversation to the next dialogue
+			var word_array = curr_word.split("|")
+			var disrupt: bool = true
+			
+			for w in word_array:
+				if w == "ENDING_CONVERSATION":
+					#If the current word contains an ENDING CONVERSATION inside
+					#we break the conversation
+					print_debug("Conversation Ended!")
+				elif w == "GIVE_ITEM" and item_to_give != null:
+					give_item_to_player.emit(item_to_give)
+					item_to_give = null
+				elif w == "GIVE_ITEM" and item_to_give == null:
+					pass
+				#Also if the dialogue wants the user to give an item we check if the
+				#user has the ability to give items and then ask for the spesific
+				#item id written in the dialogue. If the user's function returns
+				#false the the user didnt have the asked for ite, and if its true
+				#he did. Depending on the answer we either move on with the dialogue
+				#or we don't
+				elif w.begins_with("TAKE_ITEM") and player_character.has_method("give_item"):
+					var item_to_take: String = w.trim_prefix("TAKE_ITEM_")
+					#print_debug("Item to take: " + item_to_take)
+					_move_on_dialogue = player_character.give_item(item_to_take)
+					#this should try and take the item from the user's interface
+					#and if it takes it we move the conversation, otherwise
+					#we stay in the same conversation
+				#If the dialogue had the prerequisite that the user give an item
+				#we give the ability for the user to refuse and if he does we
+				#dont continue to the next conversation if we have one
+				elif w == "NOT_TAKE_ITEM":
+					print_debug("I wont take any items from the player")
+					_move_on_dialogue = false
+					#This should not move the conversation to the next dialogue
+				elif w.begins_with("QUEST"):
+					if _move_on_dialogue and _quest_to_give != {}:
+						QuestManager.update_quest(_quest_to_give["TITLE"],
+						_quest_to_give["COMPLETED_STEPS"],
+						_quest_to_give["IS_COMPLETE"])
+				else:
+					#This part is appropriate when the current word spoken has no
+					#options and thus the user just has to press interact to
+					#continue
+					word_to_say = curr_word
+					show_dialogue_text.emit(word_to_say.trim_suffix("#"+str(i+1)))
+					await get_tree().create_timer(0.5).timeout
+					await_user_input.emit()
+					await continue_dialogue
+					word = curr_word
+					disrupt = false
+			if disrupt:
 				break
 			else:
-				#This part is appropriate when the current word spoken has no
-				#options and thus the user just has to press interact to
-				#continue
-				word_to_say = curr_word
-				show_dialogue_text.emit(word_to_say.trim_suffix("#"+str(i+1)))
-				await get_tree().create_timer(0.5).timeout
-				await_user_input.emit()
-				await continue_dialogue
-				word = curr_word
 				continue
-		
 		#if its not just a string we present the options that the word says
 		elif curr_word is not String:
 			word_to_say = curr_word.keys()[0]
@@ -379,6 +386,10 @@ func _die() -> void:
 		print_debug("Can give item to player with id %s" %[str(item_to_give.id)])
 		give_item_to_player.emit(item_to_give)
 		item_to_give = null
+	if _quest_to_give != {}:
+		QuestManager.update_quest(_quest_to_give["TITLE"],
+					_quest_to_give["COMPLETED_STEPS"],
+					_quest_to_give["IS_COMPLETE"])
 	for itm: Tween in TweenItems.values():
 		itm.stop()
 	adjust_player_movement.emit(true)

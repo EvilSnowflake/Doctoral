@@ -34,6 +34,7 @@ func gather_quests(_quest_dictionary: Dictionary) -> void:
 
 func update_quest(_title : String, _completed_step: String = "", _is_complete: bool = false) -> void:
 	var quest_index: int = get_quest_index_by_title(_title)
+	print_debug("Quest %s updated to %s, with the step: %s" %[_title, str(_is_complete), _completed_step])
 	if quest_index == -1:
 		var new_quest: Dictionary = {title = _title, is_complete = _is_complete, completed_steps = []}
 		if _completed_step != "":

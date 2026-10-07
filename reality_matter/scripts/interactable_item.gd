@@ -70,6 +70,10 @@ func _on_player_left_interactable() -> void:
 ## and then dissapear
 func _on_player_interacted(_player: CharacterBody2D) -> void:
 	give_item_to_player.emit(item_contained)
+	if _item_quest_give != {}:
+		QuestManager.update_quest(_item_quest_give["TITLE"],
+					_item_quest_give["COMPLETED_STEPS"],
+					_item_quest_give["IS_COMPLETE"])
 	self.queue_free()
 
 ## This function should be called when we want to give this entity an item

@@ -21,7 +21,7 @@ var item_creation_dictionary: Dictionary = {
 		"ITEM_SCENE" : "res://scenes/interactable_item.tscn",
 		"ITEM_RESOURCE" : "1",
 		"ITEM_POSITION" : [352.0,96.0],
-		"ITEM_QUEST_TO_GIVE": {title = "long quest", is_complete = false, completed_steps = [""]}
+		"ITEM_QUEST_TO_GIVE": {"TITLE" = "long quest", "COMPLETED_STEPS" = "Step 1", "IS_COMPLETE" = false}
 	}
 }
 ## This variable contains the dictionary to spawn a player character on the game scene. Inside it
@@ -92,7 +92,7 @@ var npc_creation_dictionary: Dictionary = {
 						{"OPTION_1": "Sure#2",
 						"OPTION_2": "No#2"}
 						},
-				"Sure#2":"TAKE_ITEM_1",
+				"Sure#2":"TAKE_ITEM_1|QUEST_0",
 				"No#2":"NOT_TAKE_ITEM"
 			},
 			"Dialogue_1":{
@@ -103,7 +103,7 @@ var npc_creation_dictionary: Dictionary = {
 		"NPC_NAME" : "Frank",
 		"NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
 		"NPC_COMBATABILITY" : false,
-		"NPC_QUEST": {}
+		"NPC_QUEST": {"TITLE" = "long quest", "COMPLETED_STEPS" = "Step 2", "IS_COMPLETE" = false}
 	},
 	"CHARACTER_SPAWN_3": {
 		"NPC_SCENE" : "res://scenes/npc.tscn",
@@ -546,6 +546,8 @@ func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 		var new_npc_stats: Combat_Stats = npc_combat_variable
 		var new_npc_combability: bool = _npc_dictionary["NPC_COMBATABILITY"]
 		new_npc.set_npc_combat(new_npc_stats, new_npc_combability)
+	if new_npc.has_method("set_quest_to_give") and _npc_dictionary["NPC_QUEST"] != {}:
+		new_npc.set_quest_to_give(_npc_dictionary["NPC_QUEST"])
 	if new_npc.has_signal("engage_battle"):
 		new_npc.engage_battle.connect(_start_combat_env)
 	if new_npc.has_signal("adjust_player_movement") and _player.has_method("change_moveability"):
