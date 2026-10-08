@@ -15,12 +15,14 @@ func _ready() -> void:
 	#_quest_showcase_scene = load(quest_showcase_path)
 	ex_button.pressed.connect(stop_showcase)
 	var quests: Array[Dictionary] = QuestManager.get_current_quests()
-	for q in quests:
-		#print_debug(q.title)d
-		var quest_button: Button = Button.new()
-		quest_button.text = q["TITLE"]
-		quest_button.pressed.connect(_showcase_quest.bind(q))
-		quest_vbox.add_child(quest_button)
+	_setup_quest_buttons(quests)
+	QuestManager.quest_updated.connect(_setup_quest_buttons)
+	#for q in quests:
+		##print_debug(q.title)d
+		#var quest_button: Button = Button.new()
+		#quest_button.text = q["TITLE"]
+		#quest_button.pressed.connect(_showcase_quest.bind(q))
+		#quest_vbox.add_child(quest_button)
 		#The buttons should open a tooltip that shows the description and the steps required
 
 func get_resume_button() -> Button:
@@ -42,3 +44,17 @@ func stop_showcase() -> void:
 	if quest_showcase.has_method("clear_details"):
 		quest_showcase.clear_details()
 	quest_panel.hide()
+
+func _setup_quest_buttons(_current_quests_dict: Array[Dictionary]) -> void:
+	var vbox_ch: Array[Node] = quest_vbox.get_children()
+	for cq in _current_quests_dict:
+		var found: bool = false
+		for _ch in vbox_ch:
+			if cq["TITLE"].to_lower() == _ch.text.to_lower():
+				found = true
+				break
+		if !found:
+			var quest_button: Button = Button.new()
+			quest_button.text = cq["TITLE"]
+			quest_button.pressed.connect(_showcase_quest.bind(cq))
+			quest_vbox.add_child(quest_button)

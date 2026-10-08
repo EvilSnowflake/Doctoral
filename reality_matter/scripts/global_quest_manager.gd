@@ -8,7 +8,7 @@ extends Node
 
 @warning_ignore("unused_signal")
 ## This signal should be emitted when the player continues a step in a quest
-signal quest_updated(dict: Dictionary)
+signal quest_updated(array_dict: Array[Dictionary])
 
 var quests: Array[Quest]
 var current_quests : Array[Dictionary] = [{
@@ -34,13 +34,15 @@ func gather_quests(_quest_dictionary: Dictionary) -> void:
 
 func update_quest(_title : String, _completed_step: String = "", _is_complete: bool = false) -> void:
 	var quest_index: int = get_quest_index_by_title(_title)
+	var quest_up: Array[Dictionary] = []
 	print_debug("Quest %s updated to %s, with the step: %s" %[_title, str(_is_complete), _completed_step])
 	if quest_index == -1:
 		var new_quest: Dictionary = {"TITLE" = _title, "IS_COMPLETE" = _is_complete, "COMPLETED_STEPS" = []}
 		if _completed_step != "":
 			new_quest["COMPLETED_STEPS"].append(_completed_step)
 		current_quests.append(new_quest)
-		quest_updated.emit(new_quest)
+		quest_up.append(new_quest)
+		#quest_updated.emit([new_quest])
 	else:
 		var q: Dictionary = current_quests[quest_index]
 		if _completed_step != "" and !q["COMPLETED_STEPS"].has(_completed_step):
@@ -49,8 +51,9 @@ func update_quest(_title : String, _completed_step: String = "", _is_complete: b
 			q["IS_COMPLETE"] = _is_complete
 			if q["IS_COMPLETE"]:
 				give_rewards(find_quest_by_title(q["TITLE"]))
-		quest_updated.emit(q)
-		
+		quest_up.append(q)
+		#quest_updated.emit([q])
+	quest_updated.emit(quest_up)
 
 func give_rewards(_q: Quest) -> void:
 	_player_combat_stats.add_experience(_q.reward_xp)
