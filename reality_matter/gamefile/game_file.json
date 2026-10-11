@@ -1,0 +1,286 @@
+{
+ "GAME_DATA" :{
+  "PLAYER_CREATION_DICTIONARY" :{
+   "PLAYER_SCENE" : "res://scenes/player.tscn",
+   "PLAYER_POSITION" : [96.0,96.0],
+   "PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1}
+  },
+  "QUEST_DICTIONARY" :{
+   "QUEST_1" :{
+    "TITLE" : "Short Quest",
+    "DESCRIPTION" : "An example short quest with only one step required to complete it",
+    "STEPS" : ["Complete Quest"],
+    "REWARD_XP" : 10,
+    "REWARD_ITEMS" : ["1"],
+    "REWARD_ITEM_QUANTITY" : [1]
+   },
+   "QUEST_2" :{
+    "TITLE" : "Long Quest",
+    "DESCRIPTION" : "A long quest with multiple steps.",
+    "STEPS" : ["Step 1","Step 2","Step 3","Step 4","Step 5"],
+    "REWARD_XP" : 50,
+    "REWARD_ITEMS" : ["1"],
+    "REWARD_ITEM_QUANTITY" : [2]
+   },
+   "QUEST_3" :{
+    "TITLE" : "Recover Lost Magical Flute",
+    "DESCRIPTION" : "Bill has tasked you with retreiving his lost magical flute from the dark dungeon.",
+    "STEPS" : ["Find the Magical Flute","Return Magical Flute to Bill"],
+    "REWARD_XP" : 100,
+    "REWARD_ITEMS" : ["1"],
+    "REWARD_ITEM_QUANTITY" : [3]
+   }
+  },
+  "THEME_DICTIONARY" :{
+   "Panel" :{
+    "BASE_TYPE" :{
+     "panel" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "BLACK",
+      "THEME_BG_ALPHA" : 0.9,
+      "THEME_BORDER_WIDTH" : [0,0,0,0],
+      "THEME_BORDER_COLOR" : "GRAY"
+     }
+    },
+    "PANEL_2" :{
+     "panel" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "DARK_GREEN",
+      "THEME_BG_ALPHA" : 0.75,
+      "THEME_BORDER_WIDTH" : [0,0,0,0],
+      "THEME_BORDER_COLOR" : "DARK_GREEN"
+     },
+     "UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]
+    },
+    "PANEL_TEXTBOX":{
+     "panel":{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "BLACK",
+      "THEME_BG_ALPHA" : 1.0,
+      "THEME_BORDER_WIDTH" : [2,2,2,2],
+      "THEME_BORDER_COLOR" : "WHITE"
+     },
+     "UI_ELEMENTS" : ["TextBoxPanel"]
+    },
+    "PANEL_TEXTURE":{
+     "panel" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxTexture",
+      "THEME_TEXTURE_PATH" : "res://assets/sprites/uielements/TinySquareBlueButton.png",
+      "THEME_TEXTURE_MARGIN" : [25.0,25.0,25.0,25.0]
+     }
+    }
+   },
+   "Button":{
+    "BASE_TYPE" : {
+     "font_color":{
+      "THEME_COLOR" : "WHITE"
+     },
+     "font_pressed_color":{
+      "THEME_COLOR" : "GRAY"
+     },
+     "font_hover_color": {
+      "THEME_COLOR" : "BLACK"
+     },
+     "normal" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "BLACK",
+      "THEME_BG_ALPHA" : 1.0,
+      "THEME_BORDER_WIDTH" : [2,2,2,2],
+      "THEME_BORDER_COLOR" : "WHITE"
+     },
+     "pressed" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "WHITE",
+      "THEME_BG_ALPHA" : 1.0,
+      "THEME_BORDER_WIDTH" : [0,0,0,0],
+      "THEME_BORDER_COLOR" : "WHITE"
+     },
+     "hover" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "FLORAL_WHITE",
+      "THEME_BG_ALPHA" : 1.0,
+      "THEME_BORDER_WIDTH" : [0,0,0,0],
+      "THEME_BORDER_COLOR" : "WHITE"
+     }
+    }
+   },
+   "ProgressBar":{
+    "BASE_TYPE":{
+     "font_size":{
+      "SIZE" : 16
+     },
+     "background":{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "RED",
+      "THEME_BG_ALPHA" : 1.0,
+      "THEME_BORDER_WIDTH" : [2,2,2,2],
+      "THEME_BORDER_COLOR" : "BLACK"
+     },
+     "fill":{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "GREEN",
+      "THEME_BG_ALPHA" : 1.0,
+      "THEME_BORDER_WIDTH" : [2,2,2,2],
+      "THEME_BORDER_COLOR" : "BLACK"
+     }
+    }
+   },
+   "Label":{
+    "BASE_TYPE" :{
+     "font_color":{
+      "THEME_COLOR" : "WHITE"
+     }
+    },
+    "SHADOW_LABELS":{
+     "font_shadow_color":{
+      "THEME_COLOR" : "BLACK"
+     },
+     "UI_ELEMENTS" : ["PlayerHealthValue","EnemyHealthValue"]
+    },
+    "TOOLTIP_LABEL":{
+     "font_color":{
+      "THEME_COLOR" : "WHITE"
+     },
+     "font_outline_colour":{
+      "THEME_COLOR" : "BLACK"
+     },
+     "outline_size":{
+      "THEME_SIZE" : 5
+     },
+     "normal" :{
+      "THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
+      "THEME_BG_COLOR" : "BLACK",
+      "THEME_BG_ALPHA" : 0.75,
+      "THEME_BORDER_WIDTH" : [0,0,0,0],
+      "THEME_BORDER_COLOR" : "WHITE"
+     },
+     "UI_ELEMENTS" : ["Tooltip"]
+    }
+   }
+  },
+  "STAGES" : {
+   "STAGE_1" : {
+    "ITEM_CREATION_DICTIONARY" : {
+     "ITEM_SPAWN_1": {
+      "ITEM_SCENE" : "res://scenes/interactable_item.tscn",
+      "ITEM_RESOURCE" : "1",
+      "ITEM_POSITION" : [352.0,96.0],
+      "ITEM_QUEST_TO_GIVE": {
+       "TITLE" : "long quest",
+       "COMPLETED_STEPS" : "Step 1",
+       "IS_COMPLETE" : false
+      }
+     }
+    },
+    "NPC_CREATION_DICTIONARY" : {
+     "CHARACTER_SPAWN_1": {
+      "NPC_SCENE" : "res://scenes/npc.tscn",
+      "NPC_POSITION" : [416.0,96.0],
+      "NPC_ITEM_ID" : "1",
+      "NPC_DIALOGUE" : {
+       "Dialogue_2":{
+        "STARTING_CONVERSATION" :{
+	     "Hello#1":{
+          "OPTION_1": "Hi there#1",
+          "OPTION_2": "Hello to you too!#1"
+         }
+        },
+        "Hi there#1":{
+         "Here' an item for you#2":{
+          "OPTION_1": "Thanks#2",
+          "OPTION_2": "Bye#2"
+         }
+        },
+        "Hello to you too!#1":{
+         "Goodbye#2":{
+          "OPTION_1": "Bye#2",
+          "OPTION_2": "Sure#2"
+         }
+        },
+        "Bye#2":"ENDING_CONVERSATION",
+        "Goodbye#2": "ENDING_CONVERSATION",
+        "Sure#2": "ENDING_CONVERSATION",
+        "Thanks#2": "GIVE_ITEM"
+       },
+       "Dialogue_1":{
+        "STARTING_CONVERSATION" : "I already said hi go away#1",
+        "I already said hi go away#1": "ENDING_CONVERSATION"
+       }
+      },
+      "NPC_NAME" : "Bill",
+      "NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
+      "NPC_COMBATABILITY" : false,
+      "NPC_QUEST": {}
+     },
+     "CHARACTER_SPAWN_2": {
+      "NPC_SCENE" : "res://scenes/npc.tscn",
+      "NPC_POSITION" : [416.0,160.0],
+      "NPC_ITEM_ID" : "",
+      "NPC_DIALOGUE" : {
+       "Dialogue_2":{
+        "STARTING_CONVERSATION" : "Do you perhaps have a bone item on you?#1",
+        "Do you perhaps have a bone item on you?#1":{
+         "If you do please give it to me#2":{
+          "OPTION_1": "Sure#2",
+          "OPTION_2": "No#2"
+         }
+        },
+        "Sure#2":"TAKE_ITEM_1|QUEST_0",
+        "No#2":"NOT_TAKE_ITEM"
+       },
+       "Dialogue_1":{
+        "STARTING_CONVERSATION" : "Thank you for the item#1",
+        "Thank you for the item#1": "ENDING_CONVERSATION"
+       }
+      },
+      "NPC_NAME" : "Frank",
+      "NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
+      "NPC_COMBATABILITY" : false,
+      "NPC_QUEST": {"TITLE" : "long quest", "COMPLETED_STEPS" : "Step 2", "IS_COMPLETE" : false}
+     },
+     "CHARACTER_SPAWN_3": {
+      "NPC_SCENE" : "res://scenes/npc.tscn",
+      "NPC_POSITION" : [416.0,224.0],
+      "NPC_ITEM_ID" : "1",
+      "NPC_DIALOGUE" : {},
+      "NPC_NAME" : "Greg",
+      "NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
+      "NPC_COMBATABILITY" : true,
+      "NPC_QUEST": {}
+     }
+    },
+    "TILE_DICTIONARY" : {
+     "WATER":{
+      "PATH" : "res://assets/tiles/Water.png",
+      "TILE_CREATION" : [[0,0]],
+      "Z_INDEX" : -2,
+      "Y_SORT" : true,
+      "CELLS_BLOCK" : [[[-15,-15],0,[0,0]],[[15,15],0,[0,0]]]
+     },
+     "FLAT":{
+      "PATH" : "res://assets/tiles/Tilemap_Flat.png",
+      "TILE_CREATION" : [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]],
+      "Z_INDEX" : -1,
+      "Y_SORT" : true,
+      "CELLS" : [[[0,0],0,[0,0]],[[0,1],0,[0,1]],[[0,2],0,[0,1]],[[0,3],0,[0,1]],[[0,4],0,[0,1]],[[0,5],0,[0,1]],[[0,6],0,[0,2]],[[1,0],0,[1,0]],[[1,1],0,[1,1]],[[1,2],0,[1,1]],[[1,3],0,[1,1]],[[1,4],0,[1,1]],[[1,5],0,[1,1]],[[1,6],0,[1,2]],[[2,0],0,[1,0]],[[2,1],0,[1,1]],[[2,2],0,[1,1]],[[2,3],0,[1,1]],[[2,4],0,[1,1]],[[2,5],0,[1,1]],[[2,6],0,[1,2]],[[3,0],0,[1,0]],[[3,1],0,[1,1]],[[3,2],0,[1,1]],[[3,3],0,[1,1]],[[3,4],0,[1,1]],[[3,5],0,[1,1]],[[3,6],0,[1,2]],[[4,0],0,[1,0]],[[4,1],0,[1,1]],[[4,2],0,[1,1]],[[4,3],0,[1,1]],[[4,4],0,[1,1]],[[4,5],0,[1,1]],[[4,6],0,[1,2]],[[5,0],0,[1,0]],[[5,1],0,[1,1]],[[5,2],0,[1,1]],[[5,3],0,[1,1]],[[5,4],0,[1,1]],[[5,5],0,[1,1]],[[5,6],0,[1,2]],[[6,0],0,[2,0]],[[6,1],0,[2,1]],[[6,2],0,[2,1]],[[6,3],0,[2,1]],[[6,4],0,[2,1]],[[6,5],0,[2,1]],[[6,6],0,[2,2]]]
+     },
+     "ELEVATION":{
+      "PATH" : "res://assets/tiles/Tilemap_Elevation.png",
+      "TILE_CREATION" : [[3,4],[3,5]],
+      "Z_INDEX" : 0,
+      "Y_SORT" : true,
+      "CELLS" : [[[0,0],0,[3,4]],[[0,1],0,[3,5]],[[1,-1],0,[3,4]],[[1,0],0,[3,5]],[[2,-1],0,[3,4]],[[2,0],0,[3,5]],[[2,0],0,[3,5]],[[3,-1],0,[3,4]],[[3,0],0,[3,5]],[[4,0],0,[3,4]],[[4,1],0,[3,5]],[[4,2],0,[3,4]],[[4,3],0,[3,5]],[[3,3],0,[3,4]],[[3,4],0,[3,5]],[[2,3],0,[3,4]],[[2,4],0,[3,5]],[[1,3],0,[3,4]],[[1,4],0,[3,5]],[[0,2],0,[3,4]],[[0,3],0,[3,5]]],
+      "COLLISION":{
+       "PHYSICS_LAYER" : 0,
+       "ATLAS_COORDS" : [3,5],
+       "ALTERNATIVE_TILE" : 0,
+       "LAYER_ID" : 0,
+       "POLYGON_INDEX" : 0,
+       "POLYGON" : [[-1,-1],[-1,1],[1,1],[1,-1]]
+      }
+     }
+    }
+   }
+  }
+ }
+}

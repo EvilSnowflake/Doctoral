@@ -213,7 +213,7 @@ var _themes_dictionary = {
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "BLACK",
 				"THEME_BG_ALPHA" : 0.9,
-				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
 				"THEME_BORDER_COLOR" : "GRAY"
 					}
 				},
@@ -222,7 +222,7 @@ var _themes_dictionary = {
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "DARK_GREEN",
 				"THEME_BG_ALPHA" : 0.75,
-				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
 				"THEME_BORDER_COLOR" : "DARK_GREEN"
 				},
 			"UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]
@@ -232,7 +232,7 @@ var _themes_dictionary = {
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "BLACK",
 				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
 				"THEME_BORDER_COLOR" : "WHITE"
 					},
 			"UI_ELEMENTS" : ["TextBoxPanel"]
@@ -260,21 +260,21 @@ var _themes_dictionary = {
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "BLACK",
 				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
 				"THEME_BORDER_COLOR" : "WHITE"
 			},
 			"pressed" :{
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "WHITE",
 				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
 				"THEME_BORDER_COLOR" : "WHITE"
 			},
 			"hover" :{
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "FLORAL_WHITE",
 				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
 				"THEME_BORDER_COLOR" : "WHITE"
 			}
 		}
@@ -282,20 +282,20 @@ var _themes_dictionary = {
 	"ProgressBar":{
 		"BASE_TYPE":{
 			"font_size":{
-				"SIZE" : 16
+				"SIZE" : 16.0
 			},
 			"background":{
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "RED",
 				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
 				"THEME_BORDER_COLOR" : "BLACK"
 			},
 			"fill":{
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "GREEN",
 				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2,2,2,2],
+				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
 				"THEME_BORDER_COLOR" : "BLACK"
 			}
 		}
@@ -326,7 +326,7 @@ var _themes_dictionary = {
 				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
 				"THEME_BG_COLOR" : "BLACK",
 				"THEME_BG_ALPHA" : 0.75,
-				"THEME_BORDER_WIDTH" : [0,0,0,0],
+				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
 				"THEME_BORDER_COLOR" : "WHITE"
 			},
 			"UI_ELEMENTS" : ["Tooltip"]
