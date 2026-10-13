@@ -141,37 +141,7 @@ var _player_run_amount: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#During the ready function we locate the character's sprite
-	#then we set up the character's animations using tweens and
-	#the connect the character's signals with the appropriate
-	#functions 
-	if sprite == null:
-		sprite = find_child("Sprite2D")
-	if sprite != null:
-		_texturePath =  load("res://assets/sprites/characters/Torch_Blue.png")
-		add_sprite(_texturePath, sprite)
-		sprite.hframes = hFrames
-		sprite.vframes = vFrames
-	#Create animations
-	for i in range(_tweens["TWEEN_NAMES"].size()):
-		var tween = get_tree().create_tween()
-		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
-		tween.set_loops()
-		tween.stop()
-		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
-	#If there are animations then start playing the first one. It should be the
-	#idle one
-	if TweenItems.size() >= 1:
-		TweenItems[_tweens["TWEEN_NAMES"][0]].play()
-	if dialogue_label == null:
-		dialogue_label = find_child("DialogueLabel")
-	
-	player_collided.connect(_on_player_collided_with_char)
-	player_left.connect(_on_player_left_char)
-	interacted.connect(_on_player_interacted_with)
-	assign_item_to_give.connect(_on_assign_item_to_give)
-	continue_dialogue.connect(_on_dialogue_continue)
-	_on_player_left_char()
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -375,6 +345,43 @@ func _on_dialogue_continue(option: int = 0) -> void:
 func _player_disengaged() -> void:
 	_player_run_amount += 1
 	print_debug("The player run %s times" % [_player_run_amount])
+
+func setup_npc_entity(_npc_sprite_path: String, _npc_tween_dictionary: Dictionary) -> void:
+	#During the ready function we locate the character's sprite
+	#then we set up the character's animations using tweens and
+	#the connect the character's signals with the appropriate
+	#functions 
+	if sprite == null:
+		sprite = find_child("Sprite2D")
+	if sprite != null:
+		_texturePath =  load(_npc_sprite_path)
+		add_sprite(_texturePath, sprite)
+		sprite.hframes = hFrames
+		sprite.vframes = vFrames
+	_tweens = _npc_tween_dictionary
+	for i in range (_tweens["TWEEN_CHANGES"].size()):
+		_tweens["TWEEN_CHANGES"][i] = Vector2i(int(_tweens["TWEEN_CHANGES"][i][0]),
+		int(_tweens["TWEEN_CHANGES"][i][1]))
+	#Create animations
+	for i in range(_tweens["TWEEN_NAMES"].size()):
+		var tween = get_tree().create_tween()
+		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
+		tween.set_loops()
+		tween.stop()
+		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
+	#If there are animations then start playing the first one. It should be the
+	#idle one
+	if TweenItems.size() >= 1:
+		TweenItems[_tweens["TWEEN_NAMES"][0]].play()
+	if dialogue_label == null:
+		dialogue_label = find_child("DialogueLabel")
+	
+	player_collided.connect(_on_player_collided_with_char)
+	player_left.connect(_on_player_left_char)
+	interacted.connect(_on_player_interacted_with)
+	assign_item_to_give.connect(_on_assign_item_to_give)
+	continue_dialogue.connect(_on_dialogue_continue)
+	_on_player_left_char()
 
 ## This function contains the logic for the character's end of life. When their
 ## health reaches 0 this function is called and should give the user an

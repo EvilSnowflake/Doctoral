@@ -1,9 +1,27 @@
 {
  "GAME_DATA" :{
+  "TILESIZE" : [64,64],
+  "BATTLE_ACTIONS_DICTIONARY": {
+   "BUTTON_ARRAY_NAMES" : ["ATTACK","DEFEND","RUN"],
+   "BUTTON_NAME_BEHAVIOUR" : {
+    "ATTACK" : "DEAL_DAMAGE1",
+	"DEFEND" : "STOP_DAMAGE1",
+	"RUN" : "DISENGAGE_COMBAT1"
+   }
+  },
   "PLAYER_CREATION_DICTIONARY" :{
    "PLAYER_SCENE" : "res://scenes/player.tscn",
    "PLAYER_POSITION" : [96.0,96.0],
-   "PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1}
+   "PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1},
+   "PLAYER_INVENTORY_SPACES" : 5,
+   "PLAYER_SPRITE_PATH" : "res://assets/sprites/player/Warrior_Blue.png",
+   "PLAYER_TWEENS" : {
+    "TWEEN_NAMES" : ["IdleTween", "RunTween"],
+    "TWEEN_COMPS" : ["Sprite2D", "Sprite2D"],
+    "TWEEN_PROPS" : ["frame", "frame"],
+    "TWEEN_CHANGES" : [[0,5],[6,11]],
+    "TWEEN_DURATIONS" : [0.4, 0.4]
+   }
   },
   "QUEST_DICTIONARY" :{
    "QUEST_1" :{
@@ -29,6 +47,16 @@
     "REWARD_XP" : 100,
     "REWARD_ITEMS" : ["1"],
     "REWARD_ITEM_QUANTITY" : [3]
+   }
+  },
+  "ITEMS_DICTIONARY" : {
+   "ITEM_1" : {
+    "ID" : "1",
+    "NAME" : "Bone",
+    "DESCRIPTION" : "This is a Bone",
+    "ICON" : "res://assets/sprites/items/14.png",
+    "MAX_STACK" : 5,
+    "ITEM_TYPE" : "KEY_ITEM"
    }
   },
   "THEME_DICTIONARY" :{
@@ -210,7 +238,15 @@
       "NPC_NAME" : "Bill",
       "NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
       "NPC_COMBATABILITY" : false,
-      "NPC_QUEST": {}
+      "NPC_QUEST": {},
+      "NPC_SPRITE_PATH" : "res://assets/sprites/characters/Torch_Blue.png",
+      "NPC_TWEENS" : {
+	   "TWEEN_NAMES" : ["IdleTween"],
+	   "TWEEN_COMPS" : ["Sprite2D"],
+	   "TWEEN_PROPS" : ["frame"],
+	   "TWEEN_CHANGES" : [[0,6]],
+	   "TWEEN_DURATIONS" : [0.7]
+      }
      },
      "CHARACTER_SPAWN_2": {
       "NPC_SCENE" : "res://scenes/npc.tscn",
@@ -236,7 +272,15 @@
       "NPC_NAME" : "Frank",
       "NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
       "NPC_COMBATABILITY" : false,
-      "NPC_QUEST": {"TITLE" : "long quest", "COMPLETED_STEPS" : "Step 2", "IS_COMPLETE" : false}
+      "NPC_QUEST": {"TITLE" : "long quest", "COMPLETED_STEPS" : "Step 2", "IS_COMPLETE" : false},
+      "NPC_SPRITE_PATH" : "res://assets/sprites/characters/Torch_Blue.png",
+      "NPC_TWEENS" : {
+	   "TWEEN_NAMES" : ["IdleTween"],
+	   "TWEEN_COMPS" : ["Sprite2D"],
+	   "TWEEN_PROPS" : ["frame"],
+	   "TWEEN_CHANGES" : [[0,6]],
+	   "TWEEN_DURATIONS" : [0.7]
+      }
      },
      "CHARACTER_SPAWN_3": {
       "NPC_SCENE" : "res://scenes/npc.tscn",
@@ -246,7 +290,15 @@
       "NPC_NAME" : "Greg",
       "NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
       "NPC_COMBATABILITY" : true,
-      "NPC_QUEST": {}
+      "NPC_QUEST": {},
+      "NPC_SPRITE_PATH" : "res://assets/sprites/characters/Torch_Blue.png",
+      "NPC_TWEENS" : {
+	   "TWEEN_NAMES" : ["IdleTween"],
+	   "TWEEN_COMPS" : ["Sprite2D"],
+	   "TWEEN_PROPS" : ["frame"],
+	   "TWEEN_CHANGES" : [[0,6]],
+	   "TWEEN_DURATIONS" : [0.7]
+      }
      }
     },
     "TILE_DICTIONARY" : {

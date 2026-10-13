@@ -90,6 +90,7 @@ var vFrames: int = 8
 var texturePath: Resource
 ## This variable shows the direction the user is currently facing after movement
 var facing: Vector2
+#var sprite_path: String
 
 #NEW SCRIPT
 var _tweens: Dictionary = {
@@ -102,41 +103,7 @@ var _tweens: Dictionary = {
 #NEW SCRIPT
 
 func _ready():
-	#Here we check if the sprite variable is empty and if it is we try to find
-	#the sprite component on the scene then we load the character texture and
-	#add it to the sprite component while also breaking it down depending on the
-	#hframes and vframes variables
-	if sprite == null:
-		sprite = find_child("Sprite2D")
-	if sprite != null:
-		texturePath =  load("res://assets/sprites/player/Warrior_Blue.png")
-		sprite.texture = texturePath
-		add_sprite(texturePath, sprite)
-		sprite.hframes = hFrames
-		sprite.vframes = vFrames
-	
-	if _player_camera == null:
-		_player_camera = find_child("Camera2D")
-	if _move_timer == null:
-		_move_timer = find_child("MoveTimer")
-		if _tweens != null:
-			_move_timer.wait_time = _tweens["TWEEN_DURATIONS"][0]
-	
-	#Here we create all the characters animations based on the variables we have
-	#created
-	for i in range(_tweens["TWEEN_NAMES"].size()):
-		var tween = get_tree().create_tween()
-		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
-		tween.set_loops()
-		tween.stop()
-		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
-	
-	#We set the current character state to its default one and connect the
-	#appropriate signals
-	current_state = _default_state
-	update_animation()
-	#add_item.connect(_add_item_to_inventory)
-	adjust_moving.connect(change_moveability)
+	pass
 
 ## This function is currently unused but can be if we have issues with input
 func _unhandled_input(_event: InputEvent) -> void:
@@ -238,9 +205,9 @@ func move(dir: String) -> void:
 	#If it is colliding then we check if the item we are colliding with is an
 	#area2d (npc) or a staticbody2d (item) and we act accordingly
 	else:
-		if inputs[dir] != Vector2.ZERO and current_state == State.IDLE:
-			current_state = State.RUN
-			update_animation()
+		#if inputs[dir] != Vector2.ZERO and current_state == State.IDLE:
+		#	current_state = State.RUN
+		#	update_animation()
 		#print_debug("Cant move")
 		ray.target_position = _vector_position
 		ray.force_raycast_update()
@@ -302,6 +269,48 @@ func change_camera_ability(ability: bool) -> void:
 	if _player_camera != null:
 		#print_debug("Change camera's ability to %s" % [str(ability)])
 		_player_camera.enabled = ability
+
+func setup_player_entity(_player_sprite_path: String, _player_tweens_dictionary: Dictionary) -> void:
+	#Here we check if the sprite variable is empty and if it is we try to find
+	#the sprite component on the scene then we load the character texture and
+	#add it to the sprite component while also breaking it down depending on the
+	#hframes and vframes variables
+	if sprite == null:
+		sprite = find_child("Sprite2D")
+	if sprite != null:
+		texturePath =  load(_player_sprite_path)
+		sprite.texture = texturePath
+		add_sprite(texturePath, sprite)
+		sprite.hframes = hFrames
+		sprite.vframes = vFrames
+	
+	_tweens = _player_tweens_dictionary
+	for i in range (_tweens["TWEEN_CHANGES"].size()):
+		_tweens["TWEEN_CHANGES"][i] = Vector2i(int(_tweens["TWEEN_CHANGES"][i][0]),
+		int(_tweens["TWEEN_CHANGES"][i][1]))
+	
+	if _player_camera == null:
+		_player_camera = find_child("Camera2D")
+	if _move_timer == null:
+		_move_timer = find_child("MoveTimer")
+		if _tweens != null:
+			_move_timer.wait_time = _tweens["TWEEN_DURATIONS"][0]
+	
+	#Here we create all the characters animations based on the variables we have
+	#created
+	for i in range(_tweens["TWEEN_NAMES"].size()):
+		var tween = get_tree().create_tween()
+		tween.tween_property(get_node(_tweens["TWEEN_COMPS"][i]),_tweens["TWEEN_PROPS"][i], _tweens["TWEEN_CHANGES"][i][1], _tweens["TWEEN_DURATIONS"][i]).from(_tweens["TWEEN_CHANGES"][i][0])
+		tween.set_loops()
+		tween.stop()
+		TweenItems[_tweens["TWEEN_NAMES"][i]] = tween
+	
+	#We set the current character state to its default one and connect the
+	#appropriate signals
+	current_state = _default_state
+	update_animation()
+	#add_item.connect(_add_item_to_inventory)
+	adjust_moving.connect(change_moveability)
 
 ## This function is used to exit out of the game after the user has no health left and chose to
 ## close the application. Can be changed so that something else occurs after defeat.

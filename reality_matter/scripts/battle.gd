@@ -80,7 +80,7 @@ var TweenItems: Dictionary = {}
 ## they take up as much space as possible in the panel
 var _size_flag_actions: Variant = Control.SIZE_EXPAND_FILL
 ## This array contains all the names of the action buttons
-var _button_array_names: Array[String] = ["ATTACK","DEFEND","RUN"]
+var _button_array_names: Array = ["ATTACK","DEFEND","RUN"]
 ## This Dictionary has the behaviour of each action button. Currently:
 ## DEAL DAMAGE NUM: causes damage based on the character's attack power with a
 ## modifier to increase the damage further
@@ -111,21 +111,7 @@ var _can_press_buttons: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#During the creation of the scene we have to perform a routine to set the environemnt up for
-	#combat.
-	#First we connect the act of hiding the commentary textbox with the function that shows the
-	#actions panel. Then we create all the action buttons depending on the names added to the
-	#appropriate array variable and connect them to the correct function depending on the number
-	#next to their name
-	text_box_container.hide()
-	game_end_panel.hide()
-	engagement_text_hidden.connect(_show_actions_panel)
-	for stri in _button_array_names:
-		var act_button: Button = actions_button_scene.instantiate()
-		actions_data_h.add_child(act_button)
-		act_button.text = stri
-		act_button.size_flags_horizontal = _size_flag_actions
-		act_button.pressed.connect(_on_button_pressed.bind(act_button.text))
+	pass
 
 #This input function checks for the player's use of the Interact button or the mouse click in order
 #to move on with the commentary textbox's recounting of what happened after their action.
@@ -308,3 +294,22 @@ func _end_combat(pl_died: bool = false):
 		get_tree().quit()
 	battle_camera.enabled = false
 	engagement_ended.emit()
+
+func setup_actions(_names_array: Array, _actions_behaviour: Dictionary) -> void:
+	_button_array_names = _names_array
+	_button_name_behaviour = _actions_behaviour
+	#During the creation of the scene we have to perform a routine to set the environemnt up for
+	#combat.
+	#First we connect the act of hiding the commentary textbox with the function that shows the
+	#actions panel. Then we create all the action buttons depending on the names added to the
+	#appropriate array variable and connect them to the correct function depending on the number
+	#next to their name
+	text_box_container.hide()
+	game_end_panel.hide()
+	engagement_text_hidden.connect(_show_actions_panel)
+	for stri in _button_array_names:
+		var act_button: Button = actions_button_scene.instantiate()
+		actions_data_h.add_child(act_button)
+		act_button.text = stri
+		act_button.size_flags_horizontal = _size_flag_actions
+		act_button.pressed.connect(_on_button_pressed.bind(act_button.text))
