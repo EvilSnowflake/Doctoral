@@ -17,28 +17,18 @@ const BATTLE = preload("res://scenes/battle.tscn")
 ## This signal should be called when we want to enable or disable the player's
 ## camera
 signal player_camera_changeability(ability: bool)
+signal stage_discontinue()
 
 ## This variable contains the dictionary to place items on the environemnt for the player to collect
 ## For each key inside an item will be created and placed and it requires the path to the item scene
 ## along with what item id it will have, its position on the world and what quest step it will
 ## complete if any.
-var item_creation_dictionary: Dictionary = {
-	"ITEM_SPAWN_1": {
-		"ITEM_SCENE" : "res://scenes/interactable_item.tscn",
-		"ITEM_RESOURCE" : "1",
-		"ITEM_POSITION" : [352.0,96.0],
-		"ITEM_QUEST_TO_GIVE": {"TITLE" = "long quest", "COMPLETED_STEPS" = "Step 1", "IS_COMPLETE" = false}
-	}
-}
+var item_creation_dictionary: Dictionary = {}
 ## This variable contains the dictionary to spawn a player character on the game scene. Inside it
 ## requires a path to the player scene, a position in a 2 element array and a combat stats
 ## dictionary. That dictionary requires a MAX_HEALTH int element, an ATTACK_POWER int element,
 ## a DEFENSE int element and a SPEED int element
-var player_creation_dictionary: Dictionary = {
-	"PLAYER_SCENE" : "res://scenes/player.tscn",
-	"PLAYER_POSITION" : [96.0,96.0],
-	"PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1}
-}
+var player_creation_dictionary: Dictionary = {}
 ## This variable contains the dictionary to spawn non player characters on the environment. For each
 ## key inside this dictionary, a new character will be spawned with the specifications inside. Each
 ## character requires a path to the NPC_SCENE, a 2 element float array with the NPC_POSITION,
@@ -46,82 +36,7 @@ var player_creation_dictionary: Dictionary = {
 ## conversation, a dictionary containing their NPC_DIALOGUE, their NPC_NAME in a string,
 ## their NPC_STATS for combat in a dictionary, their NPC_COMBATABILITY in oder for them to be able
 ## to fight or not in a bool and a dictionary for what NPC_QUEST they progress.
-var npc_creation_dictionary: Dictionary = {
-	"CHARACTER_SPAWN_1": {
-		"NPC_SCENE" : "res://scenes/npc.tscn",
-		"NPC_POSITION" : [416.0,96.0],
-		"NPC_ITEM_ID" : "1",
-		"NPC_DIALOGUE" : {
-			"Dialogue_2":{
-				"STARTING_CONVERSATION" :
-					{"Hello#1": 
-						{"OPTION_1": "Hi there#1",
-						"OPTION_2": "Hello to you too!#1"
-						}
-					},
-				"Hi there#1":
-					{"Here' an item for you#2":
-						{"OPTION_1": "Thanks#2",
-						"OPTION_2": "Bye#2"
-						}
-					},
-				"Hello to you too!#1":
-					{"Goodbye#2":
-						{"OPTION_1": "Bye#2",
-						"OPTION_2": "Sure#2"
-						}
-					},
-				"Bye#2":"ENDING_CONVERSATION",
-				"Goodbye#2": "ENDING_CONVERSATION",
-				"Sure#2": "ENDING_CONVERSATION",
-				"Thanks#2": "GIVE_ITEM"
-			},
-			"Dialogue_1":{
-				"STARTING_CONVERSATION" : "I already said hi go away#1",
-				"I already said hi go away#1": "ENDING_CONVERSATION"
-				}
-		},
-		"NPC_NAME" : "Bill",
-		"NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
-		"NPC_COMBATABILITY" : false,
-		"NPC_QUEST": {}
-	},
-	"CHARACTER_SPAWN_2": {
-		"NPC_SCENE" : "res://scenes/npc.tscn",
-		"NPC_POSITION" : [416.0,160.0],
-		"NPC_ITEM_ID" : "",
-		"NPC_DIALOGUE" : {
-			"Dialogue_2":{
-				"STARTING_CONVERSATION" : "Do you perhaps have a bone item on you?#1",
-				"Do you perhaps have a bone item on you?#1":
-					{"If you do please give it to me#2":
-						{"OPTION_1": "Sure#2",
-						"OPTION_2": "No#2"}
-						},
-				"Sure#2":"TAKE_ITEM_1|QUEST_0",
-				"No#2":"NOT_TAKE_ITEM"
-			},
-			"Dialogue_1":{
-				"STARTING_CONVERSATION" : "Thank you for the item#1",
-				"Thank you for the item#1": "ENDING_CONVERSATION"
-			}
-		},
-		"NPC_NAME" : "Frank",
-		"NPC_STATS" : { "MAX_HEALTH" : 10, "ATTACK_POWER" : 1, "DEFENSE" : 1, "SPEED" : 1},
-		"NPC_COMBATABILITY" : false,
-		"NPC_QUEST": {"TITLE" = "long quest", "COMPLETED_STEPS" = "Step 2", "IS_COMPLETE" = false}
-	},
-	"CHARACTER_SPAWN_3": {
-		"NPC_SCENE" : "res://scenes/npc.tscn",
-		"NPC_POSITION" : [416.0,224.0],
-		"NPC_ITEM_ID" : "1",
-		"NPC_DIALOGUE" : {},
-		"NPC_NAME" : "Greg",
-		"NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
-		"NPC_COMBATABILITY" : true,
-		"NPC_QUEST": {}
-	}
-}
+var npc_creation_dictionary: Dictionary = {}
 
 
 ## This variable dictates how many inventory slots the user interface is going
@@ -152,16 +67,7 @@ var _player: CharacterBody2D
 ## is going to create a new item with these specifications. Each item requires an ID String that is
 ## going to be unique, a NAME String, an ICON path String, the item's MAX_STACK as an int and a
 ## String signifying its ITEM_TYPE
-var _items_dictionary : Dictionary = {
-	"ITEM_1" : {
-		"ID" : "1",
-		"NAME" : "Bone",
-		"DESCRIPTION" : "This is a Bone",
-		"ICON" : "res://assets/sprites/items/14.png",
-		"MAX_STACK" : 5,
-		"ITEM_TYPE" : "KEY_ITEM"
-	}
-}
+var _items_dictionary : Dictionary = {}
 ## This variable has a dictionary with all quests that will exist on the game. Each keyword inside 
 ## will create a different quest and is going to require the following details to manifest. Firstly
 ## it needs a TITLE string, that will be the primary way to differentiate it from other quests,
@@ -170,172 +76,19 @@ var _items_dictionary : Dictionary = {
 ## quest for the user, a REWARD_XP int and a REWARD_ITEMS Item array that will be given to the user
 ## after completion and a REWARD_ITEM_QUANTITY int array that will inform the quest of how many of
 ## each item will be distributed.
-var quests_dict: Dictionary = {
-	"QUEST_1" : {
-		"TITLE" : "Short Quest",
-		"DESCRIPTION" : "An example short quest with only one step required to complete it",
-		"STEPS" : ["Complete Quest"],
-		"REWARD_XP" : 10,
-		"REWARD_ITEMS" : ["1"],
-		"REWARD_ITEM_QUANTITY" : [1]
-		},
-	"QUEST_2" : {
-		"TITLE" : "Long Quest",
-		"DESCRIPTION" : "A long quest with multiple steps.",
-		"STEPS" : ["Step 1","Step 2","Step 3","Step 4","Step 5"],
-		"REWARD_XP" : 50,
-		"REWARD_ITEMS" : ["1"],
-		"REWARD_ITEM_QUANTITY" : [2]
-		},
-	"QUEST_3" : {
-		"TITLE" : "Recover Lost Magical Flute",
-		"DESCRIPTION" : "Bill has tasked you with retreiving his lost magical flute from the dark dungeon.",
-		"STEPS" : ["Find the Magical Flute","Return Magical Flute to Bill"],
-		"REWARD_XP" : 100,
-		"REWARD_ITEMS" : ["1"],
-		"REWARD_ITEM_QUANTITY" : [3]
-		}
-}
+var quests_dict: Dictionary = {}
 ## This variable is a dictionary that will only contain a 2 element array that will be converted
 ## to a Vector2i variable for the tile size of the whole game
-var _tile_size_dictionary: Dictionary = {"SIZE" : [64,64]}
+var _tile_size_dictionary: Dictionary = {}
 ## This variable will inform the whole game of the size each tile will take in the grid of the game
 var _tilesize: Vector2i
-## This variable points to the theme file that is used by some of the Interface
-## elements. Will be modified depending on the contents of the theme dictionary
-var _theme: Theme = preload("res://assets/themes/game_theme.tres")
+
 ## The theme dictionary should contain any changes we want to make to the theme
 ## file in the game. As keys there should be the type of element we want to
 ## change and in the value there should be keys of the base type and/or variants
 ## In these base type/variants there should be the name of the characteristic
 ## we want to change along with the values we want
-var _themes_dictionary = {
-	"Panel" : {
-		"BASE_TYPE" : {
-			"panel" : {
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "BLACK",
-				"THEME_BG_ALPHA" : 0.9,
-				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
-				"THEME_BORDER_COLOR" : "GRAY"
-					}
-				},
-		"PANEL_2" : {
-			"panel" : {
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "DARK_GREEN",
-				"THEME_BG_ALPHA" : 0.75,
-				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
-				"THEME_BORDER_COLOR" : "DARK_GREEN"
-				},
-			"UI_ELEMENTS" : ["ActionsPanel", "PlayerPanel"]
-			},
-		"PANEL_TEXTBOX": {
-			"panel": {
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "BLACK",
-				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
-				"THEME_BORDER_COLOR" : "WHITE"
-					},
-			"UI_ELEMENTS" : ["TextBoxPanel"]
-			},
-		"PANEL_TEXTURE": {
-			"panel" : {
-			"THEME_STYLEBOX_TYPE" : "StyleBoxTexture",
-			"THEME_TEXTURE_PATH" : "res://assets/sprites/uielements/TinySquareBlueButton.png",
-			"THEME_TEXTURE_MARGIN" : [25.0,25.0,25.0,25.0]
-			}
-		}
-	},
-	"Button":{
-		"BASE_TYPE" : {
-			"font_color":{
-				"THEME_COLOR" : "WHITE"
-			},
-			"font_pressed_color":{
-				"THEME_COLOR" : "GRAY"
-			},
-			"font_hover_color": {
-				"THEME_COLOR" : "BLACK"
-			},
-			"normal" :{
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "BLACK",
-				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
-				"THEME_BORDER_COLOR" : "WHITE"
-			},
-			"pressed" :{
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "WHITE",
-				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
-				"THEME_BORDER_COLOR" : "WHITE"
-			},
-			"hover" :{
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "FLORAL_WHITE",
-				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
-				"THEME_BORDER_COLOR" : "WHITE"
-			}
-		}
-	},
-	"ProgressBar":{
-		"BASE_TYPE":{
-			"font_size":{
-				"SIZE" : 16.0
-			},
-			"background":{
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "RED",
-				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
-				"THEME_BORDER_COLOR" : "BLACK"
-			},
-			"fill":{
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "GREEN",
-				"THEME_BG_ALPHA" : 1.0,
-				"THEME_BORDER_WIDTH" : [2.0,2.0,2.0,2.0],
-				"THEME_BORDER_COLOR" : "BLACK"
-			}
-		}
-	},
-	"Label":{
-		"BASE_TYPE" : {
-			"font_color":{
-				"THEME_COLOR" : "WHITE"
-			}
-		},
-		"SHADOW_LABELS":{
-			"font_shadow_color":{
-				"THEME_COLOR" : "BLACK"
-			},
-			"UI_ELEMENTS" : ["PlayerHealthValue","EnemyHealthValue"]
-		},
-		"TOOLTIP_LABEL":{
-			"font_color":{
-				"THEME_COLOR" : "WHITE"
-			},
-			"font_outline_colour":{
-				"THEME_COLOR" : "BLACK"
-			},
-			"outline_size":{
-				"THEME_SIZE" : 5
-			},
-			"normal" :{
-				"THEME_STYLEBOX_TYPE" : "StyleBoxFlat",
-				"THEME_BG_COLOR" : "BLACK",
-				"THEME_BG_ALPHA" : 0.75,
-				"THEME_BORDER_WIDTH" : [0.0,0.0,0.0,0.0],
-				"THEME_BORDER_COLOR" : "WHITE"
-			},
-			"UI_ELEMENTS" : ["Tooltip"]
-		}
-	}
-}
+var _themes_dictionary = {}
 var _tile_dictionary: Dictionary = {}
 var  _battle_actions_dictionary: Dictionary = {}
 
@@ -387,6 +140,10 @@ func _spawn_player(_player_create_dict: Dictionary, _battle_actions_dict: Dictio
 		create_combat_environment(_player.get_character_name(), _player.get_combat_stats(), _battle_actions_dict)
 	if _player.has_method("change_camera_ability"):
 		player_camera_changeability.connect(_player.change_camera_ability)
+	if _player.has_signal("player_died"):
+		_player.player_died.connect(_end_stage)
+	if _player.has_method("stop_animations"):
+		stage_discontinue.connect(_player.stop_animations)
 
 ## This function is used to instantiate the required items to the current scene
 ## It requires the interactive item's scene, the position the item is going
@@ -453,6 +210,8 @@ func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 		new_npc.adjust_player_movement.connect(_player.change_moveability)
 	if new_npc.has_signal("give_item_to_player") and _player.has_method("add_item_to_inventory"):
 		new_npc.give_item_to_player.connect(_player.add_item_to_inventory)
+	if new_npc.has_method("stop_npc_animations"):
+		stage_discontinue.connect(new_npc.stop_npc_animations)
 	if _user_interface == null:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):
@@ -466,6 +225,8 @@ func _spawn_user_interface(ui: PackedScene) -> void:
 	_user_interface = new_ui
 	if new_ui.has_method("receive_inventory") and inventory_instance != null:
 		new_ui.receive_inventory(inventory_instance)
+	if new_ui.has_signal("close_stage_instance"):
+		new_ui.close_stage_instance.connect(_end_stage)
 
 ## This function creates the battle scene where combat encounters happen. It requires the
 ## user's name and their combat stats resource as input. It instantiates the scene on the
@@ -513,86 +274,7 @@ func _end_combat_env() -> void:
 	_batt.hide()
 	player_camera_changeability.emit(true)
 
-## This function is responsible for changing the central theme for the game. The theme itself does
-## not have any overrides to the User Interface elements but if we provide this function with a
-## dictionary containing any changes to the theme we want along with the theme and what type of
-## element we want to modify, the function then reads the type of change we want to occur and
-## does the appropriate action. The typical structure of the dictionary we need to provide is the
-## name of the variant we want to create and which elements should get that variant or if we want to
-## change the base one we just write BASE TYPE and inside we write what we want to change inside
-## like the color, font size etc.
-func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme, current_theme_type: String) -> void:
-	for theme_type_key in theme_dictionary.keys():
-		var shared_theme_dictionary: Dictionary = theme_dictionary[theme_type_key]
-		var shared_theme_type: String = ""
-		if theme_type_key != "BASE_TYPE":
-			theme_source.add_type(theme_type_key)
-			theme_source.set_type_variation(theme_type_key, current_theme_type)
-			shared_theme_type = theme_type_key
-		else:
-			shared_theme_type = current_theme_type
-		for theme_name_key in shared_theme_dictionary.keys():
-			var theme_name_dictionary = shared_theme_dictionary[theme_name_key]
-			if theme_name_dictionary.has("THEME_COLOR"):
-				var theme_color: Color = Color(theme_name_dictionary["THEME_COLOR"])
-				theme_source.set_color(theme_name_key, shared_theme_type, theme_color)
-			elif theme_name_dictionary.has("THEME_STYLEBOX_TYPE"):
-				var thm_stylebox_type: String = theme_name_dictionary["THEME_STYLEBOX_TYPE"]
-				if thm_stylebox_type == "StyleBoxTexture":
-					_setup_stylebox_texture(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
-				if thm_stylebox_type == "StyleBoxFlat":
-					_setup_stylebox_flat(theme_name_dictionary, theme_source, theme_name_key, shared_theme_type)
-			elif theme_name_dictionary.has("THEME_SIZE"):
-				var theme_size: int = theme_name_dictionary["THEME_SIZE"]
-				theme_source.set_constant(theme_name_key,shared_theme_type,theme_size)
-			if shared_theme_dictionary.has("UI_ELEMENTS"):
-				for var_name in shared_theme_dictionary["UI_ELEMENTS"]:
-					var element = find_child(var_name,true,false)
-					#print_debug(element)
-					element.theme_type_variation = theme_type_key
-
-## This function is used by the set up theme function and is specifically responsible for modifying
-## the stylebox texture of a theme element. It requires the theme dictionary, the theme to change,
-## the theme name and what type of element it is we change. The dictionary needs a path to the
-## texture we want to apply along with its texture margins. The margin value requires an array with
-## 4 elements like: [LEFT,TOP,RIGHT,BOTTOM]
-func _setup_stylebox_texture(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
-	var thm_texture_path: String = theme_dictionary["THEME_TEXTURE_PATH"]
-	var thm_texture_margin: Array = theme_dictionary["THEME_TEXTURE_MARGIN"]
-	var stylebox_theme: StyleBoxTexture = StyleBoxTexture.new()
-	stylebox_theme.texture = load(thm_texture_path)
-	stylebox_theme.set_texture_margin(SIDE_LEFT, thm_texture_margin[0])
-	stylebox_theme.set_texture_margin(SIDE_TOP, thm_texture_margin[1])
-	stylebox_theme.set_texture_margin(SIDE_RIGHT, thm_texture_margin[2])
-	stylebox_theme.set_texture_margin(SIDE_BOTTOM, thm_texture_margin[3])
-	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
-	theme_source.set_stylebox(theme_name, theme_type, stylebox_theme)
-
-## This function is used by the set up theme function and is specifically responsible for modifying
-## the flat stylebox of a theme element. It requires the theme dictionary, the theme to change,
-## the theme name and what type of element it is we change. The dictionary requires a background
-## alpha value, a background color value, a border width value and a border color value. The alpha
-## is just a float, while the colors only require the name of the color as written in the Godot
-## Engine Documentation. The width on the other hand needs an array of 4 elements like: [LEFT,TOP,
-##RIGHT,BOTTOM]
-func _setup_stylebox_flat(theme_dictionary: Dictionary, theme_source: Theme, theme_name: String, theme_type: String):
-	var thm_bg_alpha: float = theme_dictionary["THEME_BG_ALPHA"]
-	var thm_bg_color: Color = Color(theme_dictionary["THEME_BG_COLOR"],thm_bg_alpha)
-	var thm_border_width: Array = theme_dictionary["THEME_BORDER_WIDTH"]
-	var thm_border_color: Color = Color(theme_dictionary["THEME_BORDER_COLOR"])
-	var stylebox_theme: StyleBoxFlat = StyleBoxFlat.new()
-	stylebox_theme.bg_color = thm_bg_color
-	stylebox_theme.border_width_left = thm_border_width[0]
-	stylebox_theme.border_width_top = thm_border_width[1]
-	stylebox_theme.border_width_right = thm_border_width[2]
-	stylebox_theme.border_width_bottom = thm_border_width[3]
-	stylebox_theme.border_color = thm_border_color
-	#print_debug(" Theme %s of type %s changed stylebox" % [theme_name, theme_type])
-	theme_source.set_stylebox(theme_name, theme_type,stylebox_theme)
-
-func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_info: Dictionary, _theme_dictionary_info: Dictionary, _current_stage_dictionary: Dictionary, _quest_dictionary_info: Dictionary, _item_dictionary_info: Dictionary , _tile_size_info: Array[int]) -> void:
-	ItemManager.set_items(_item_dictionary_info)
-	QuestManager.gather_quests(_quest_dictionary_info)
+func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_info: Dictionary, _current_stage_dictionary: Dictionary, _tile_size_info: Array[int]) -> void:
 	#During startup we need to create an instance of the user's inventory
 	inventory_instance = Inventory.new()
 	#Then we try to modify the inventory's max item slots
@@ -677,7 +359,7 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 				var s_id: int = coor_dets[1]
 				var at_coor: Vector2i = Vector2i(coor_dets[2][0],coor_dets[2][1])
 				tilemapLayer.set_cell(coor,s_id, at_coor)
-	
-	#Then we read the theme dictionary in order to set up the modifications specified inside
-	for key in _themes_dictionary.keys():
-		_set_up_theme(_themes_dictionary[key], _theme, key)
+
+func _end_stage() -> void:
+	stage_discontinue.emit()
+	queue_free()

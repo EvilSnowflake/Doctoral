@@ -15,7 +15,6 @@ signal player_left
 ## button while close to the character. Depending of the npc it starts a
 ## conversation or a combat encounter
 signal interacted(player: CharacterBody2D)
-
 ## This signal is used to give an item to the npc to hold so that
 ## they can then give it to the player
 signal assign_item_to_give(item: Item)
@@ -160,6 +159,13 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D = null) -> void:
 ## With this function other scripts can acquire the npc's sprite
 func get_sprite() -> Sprite2D:
 	return sprite
+
+func stop_npc_animations() -> void:
+	print_debug("Stopped all npc animations")
+	for key in TweenItems:
+		TweenItems[key].stop()
+		TweenItems[key].kill()
+	TweenItems.clear()
 
 ## This function is used by other scripts to give the npc dialogue. When adding
 ## the dialogue we search how many dialogues are contained so that we start with

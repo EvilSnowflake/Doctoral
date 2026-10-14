@@ -5,5 +5,6 @@
 [node name="OptionButton" type="Button" unique_id=456776233]
 offset_right = 8.0
 offset_bottom = 8.0
+focus_behavior_recursive = 1
 theme = ExtResource("1_3ob2s")
 theme_override_font_sizes/font_size = 24

@@ -6,6 +6,7 @@ extends CharacterBody2D
 ## This signal should be emitted when we need to stop the user from moving
 ## or make them start moving again
 signal adjust_moving(ability: bool)
+signal player_died()
 
 ## This Dictionary contains the inputs the user has in order for them to move.
 ## It currently contains the 4 directions: Up, Left, Down, Right
@@ -22,7 +23,8 @@ var State: Dictionary = {
 	"IDLE": 0,
 	"RUN": 1,
 	"ATTACK": 2,
-	"DEAD": 3
+	"DEAD": 3,
+	"NONE" : 4
 }
 
 ## This dictionary should contain all the user's animations and their names as
@@ -315,7 +317,12 @@ func setup_player_entity(_player_sprite_path: String, _player_tweens_dictionary:
 ## This function is used to exit out of the game after the user has no health left and chose to
 ## close the application. Can be changed so that something else occurs after defeat.
 func game_end() -> void:
-	get_tree().quit()
+	player_died.emit()
+
+func stop_animations() -> void:
+	print_debug("Stopped all animations")
+	current_state = State.NONE
+	update_animation()
 
 ## This function determines what happens when the user chooses to disengage from combat. Currently
 ## enables the user's camera and their ability to move in the environment
@@ -338,3 +345,8 @@ func update_animation() -> void:
 			for key in TweenItems:
 				TweenItems[key].stop()
 			TweenItems.values()[1].play()
+		State.NONE:
+			for key in TweenItems:
+				TweenItems[key].stop()
+				TweenItems[key].kill()
+			TweenItems.clear()

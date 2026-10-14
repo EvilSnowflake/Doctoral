@@ -5,6 +5,8 @@ extends Control
 #buttons for any options that dialogue may allow and show the inventory of
 #the user as item slots
 
+signal close_stage_instance()
+
 ## This variable points to the label showing the dialogue currently being said
 @export var dialog_label: Label
 ## This variable should contain a scene for the options the user can press
@@ -232,4 +234,6 @@ func _perform_pause() -> void:
 		get_tree().paused = false
 
 func close_game() -> void:
-	get_tree().quit()
+	#get_tree().quit()
+	_perform_pause()
+	close_stage_instance.emit()
