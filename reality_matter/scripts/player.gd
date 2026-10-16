@@ -130,9 +130,6 @@ func _physics_process(_delta):
 		#If something is pressed we go to that direction
 		if Input.is_action_pressed(dir):
 			#print_debug("Moved")
-			#We start the move timer so that the character finishes trying to move to the direction
-			#the user inputs and then the user can move to another direction
-			_move_timer.start()
 			#Here we check if there was an item or characeter we had collided
 			#with and we clear it before we start to move in order to then check
 			#if there is a new one in front
@@ -185,6 +182,9 @@ func move(dir: String) -> void:
 			#print_debug("Can move")
 			current_state = State.RUN
 			update_animation()
+		#We start the move timer so that the character finishes trying to move to the direction
+		#the user inputs and then the user can move to another direction
+		_move_timer.start()
 		#And create a tween that moves the player from starting position to final position
 		var tween = create_tween()
 		tween.tween_property(self, "position", position + _vector_position, 1.0/animation_speed).set_trans(Tween.TRANS_SINE)
@@ -207,6 +207,10 @@ func move(dir: String) -> void:
 	#If it is colliding then we check if the item we are colliding with is an
 	#area2d (npc) or a staticbody2d (item) and we act accordingly
 	else:
+		#If we find a wall infornt of us we also stop moving
+		if current_state != State.IDLE:
+			current_state = State.IDLE
+			update_animation()
 		#if inputs[dir] != Vector2.ZERO and current_state == State.IDLE:
 		#	current_state = State.RUN
 		#	update_animation()

@@ -63,11 +63,6 @@ var _user_interface: Control
 var _batt: Control
 ## This variable contains a reference to the player character inside the scene
 var _player: CharacterBody2D
-## This dictionary contains all the items the game is going to contain. Each key in this dictionary
-## is going to create a new item with these specifications. Each item requires an ID String that is
-## going to be unique, a NAME String, an ICON path String, the item's MAX_STACK as an int and a
-## String signifying its ITEM_TYPE
-var _items_dictionary : Dictionary = {}
 ## This variable has a dictionary with all quests that will exist on the game. Each keyword inside 
 ## will create a different quest and is going to require the following details to manifest. Firstly
 ## it needs a TITLE string, that will be the primary way to differentiate it from other quests,
@@ -77,21 +72,8 @@ var _items_dictionary : Dictionary = {}
 ## after completion and a REWARD_ITEM_QUANTITY int array that will inform the quest of how many of
 ## each item will be distributed.
 var quests_dict: Dictionary = {}
-## This variable is a dictionary that will only contain a 2 element array that will be converted
-## to a Vector2i variable for the tile size of the whole game
-var _tile_size_dictionary: Dictionary = {}
 ## This variable will inform the whole game of the size each tile will take in the grid of the game
 var _tilesize: Vector2i
-
-## The theme dictionary should contain any changes we want to make to the theme
-## file in the game. As keys there should be the type of element we want to
-## change and in the value there should be keys of the base type and/or variants
-## In these base type/variants there should be the name of the characteristic
-## we want to change along with the values we want
-var _themes_dictionary = {}
-var _tile_dictionary: Dictionary = {}
-var  _battle_actions_dictionary: Dictionary = {}
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -192,6 +174,9 @@ func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 	if new_npc.has_method("set_char_name"):
 		var new_npc_name: String = _npc_dictionary["NPC_NAME"]
 		new_npc.set_char_name(new_npc_name)
+	if new_npc.has_method("set_quest_checks") and _npc_dictionary["QUEST_CHECK"] != {}:
+		var checks: Dictionary = _npc_dictionary["QUEST_CHECK"]
+		new_npc.set_quest_checks(checks)
 	if new_npc.has_method("set_npc_combat"):
 		var npc_combat_variable: Combat_Stats = Combat_Stats.new()
 		var temp_max_hp = _npc_dictionary["NPC_STATS"]["MAX_HEALTH"]
@@ -219,7 +204,7 @@ func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 
 ## This function is used to instantiate the user interface on the scene. It only
 ## requires the interface's scene.
-func _spawn_user_interface(ui: PackedScene) -> void:
+func _spawn_user_interface(ui: PackedScene, _should_show_quests: bool) -> void:
 	var new_ui = ui.instantiate()
 	add_child(new_ui)
 	_user_interface = new_ui
@@ -227,6 +212,8 @@ func _spawn_user_interface(ui: PackedScene) -> void:
 		new_ui.receive_inventory(inventory_instance)
 	if new_ui.has_signal("close_stage_instance"):
 		new_ui.close_stage_instance.connect(_end_stage)
+	if new_ui.has_method("disable_quests_in_pause") and !_should_show_quests:
+		new_ui.disable_quests_in_pause()
 
 ## This function creates the battle scene where combat encounters happen. It requires the
 ## user's name and their combat stats resource as input. It instantiates the scene on the
@@ -274,14 +261,14 @@ func _end_combat_env() -> void:
 	_batt.hide()
 	player_camera_changeability.emit(true)
 
-func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_info: Dictionary, _current_stage_dictionary: Dictionary, _tile_size_info: Array[int]) -> void:
+func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_info: Dictionary, _current_stage_dictionary: Dictionary, _tile_size_info: Array[int], _elements_not_there: Array[Dictionary], _should_show_quests: bool) -> void:
 	#During startup we need to create an instance of the user's inventory
 	inventory_instance = Inventory.new()
 	#Then we try to modify the inventory's max item slots
 	if inventory_instance.has_method("change_max_slots") and inventory_spaces != null:
 		inventory_instance.change_max_slots(int(_player_dictionary_info["PLAYER_INVENTORY_SPACES"]))
 	#Afterwards we try to spawn the user interface
-	_spawn_user_interface(USER_INTERFACE_NODE)
+	_spawn_user_interface(USER_INTERFACE_NODE,_should_show_quests)
 	#And then spawn the player's character
 	_spawn_player(_player_dictionary_info, _battle_actions_info)
 	#After we check the items array and spawn each of them in the position set
@@ -359,6 +346,11 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 				var s_id: int = coor_dets[1]
 				var at_coor: Vector2i = Vector2i(coor_dets[2][0],coor_dets[2][1])
 				tilemapLayer.set_cell(coor,s_id, at_coor)
+	#print_debug(_elements_not_there)
+	for element in _elements_not_there:
+		var nd = find_child(element["ELEMENT"],true,false)
+		if nd != null:
+			nd.theme_type_variation = element["TYPE"]
 
 func _end_stage() -> void:
 	stage_discontinue.emit()

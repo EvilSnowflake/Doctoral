@@ -44,6 +44,7 @@ var _tooltip_label: String = "res://scenes/tooltip.tscn"
 var _mLabel: Label
 var _pause_menu_scene: String = "res://scenes/pause_menu.tscn"
 var _pause: Control
+var _pause_should_quest: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -218,6 +219,8 @@ func add_pause() -> void:
 	if _pause.has_method("get_exit_button"):
 		var ex_button: Button = _pause.get_exit_button()
 		ex_button.pressed.connect(close_game)
+	if _pause.has_method("stop_showing_quests") and !_pause_should_quest:
+		_pause.stop_showing_quests()
 
 ## This function is responsible for pausing and resuming the game. Depending on the status of the
 ## game it either shows the pause menu and stops the appropriate processes or it hides the pause
@@ -237,3 +240,6 @@ func close_game() -> void:
 	#get_tree().quit()
 	_perform_pause()
 	close_stage_instance.emit()
+
+func disable_quests_in_pause() -> void:
+	_pause_should_quest = false

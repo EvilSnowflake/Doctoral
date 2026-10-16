@@ -9,6 +9,7 @@ extends Control
 
 #var quest_showcase_path: String = "res://scenes/quest_showcase.tscn"
 
+var _can_quest_show: bool = true
 #var _quest_showcase_scene: Resource
 
 func _ready() -> void:
@@ -18,7 +19,7 @@ func _ready() -> void:
 	_setup_quest_buttons(quests)
 	QuestManager.quest_updated.connect(_setup_quest_buttons)
 	#for q in quests:
-		##print_debug(q.title)d
+		#print_debug(q.title)d
 		#var quest_button: Button = Button.new()
 		#quest_button.text = q["TITLE"]
 		#quest_button.pressed.connect(_showcase_quest.bind(q))
@@ -31,21 +32,33 @@ func get_resume_button() -> Button:
 func get_exit_button() -> Button:
 	return exit_button
 
+func stop_showing_quests() -> void:
+	_can_quest_show = false
+	var vbox_ch: Array[Node] = quest_vbox.get_children()
+	for cq in vbox_ch:
+		cq.queue_free()
+
 func update_quest_list() -> void:
 	pass
 
 func _showcase_quest(_quest: Dictionary) -> void:
+	if !_can_quest_show:
+		return
 	quest_panel.show()
 	var this_quest: Quest = QuestManager.find_quest_by_title(_quest["TITLE"])
 	quest_showcase.receive_quest_details(this_quest.title, this_quest.description,
 	this_quest.steps, _quest["COMPLETED_STEPS"], _quest["IS_COMPLETE"])
 
 func stop_showcase() -> void:
+	if !_can_quest_show:
+		return
 	if quest_showcase.has_method("clear_details"):
 		quest_showcase.clear_details()
 	quest_panel.hide()
 
 func _setup_quest_buttons(_current_quests_dict: Array[Dictionary]) -> void:
+	if !_can_quest_show:
+		return
 	var vbox_ch: Array[Node] = quest_vbox.get_children()
 	for cq in _current_quests_dict:
 		var found: bool = false

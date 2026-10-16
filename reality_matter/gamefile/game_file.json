@@ -49,6 +49,7 @@
     "REWARD_ITEM_QUANTITY" : [3]
    }
   },
+  "SHOULD_SHOW_QUESTS" : true,
   "ITEMS_DICTIONARY" : {
    "ITEM_1" : {
     "ID" : "1",
@@ -246,6 +247,15 @@
 	   "TWEEN_PROPS" : ["frame"],
 	   "TWEEN_CHANGES" : [[0,6]],
 	   "TWEEN_DURATIONS" : [0.7]
+      },
+	  "QUEST_CHECK" : {
+       "QUEST_CHECK_1" : {
+        "STEP_NAME" : "Step 1",
+        "BEHAVIOUR" : {
+         "BEHAVIOUR_NAME" : "SPEAK",
+         "BEHAVIOUR_INFO" : {}
+        }
+       }
       }
      },
      "CHARACTER_SPAWN_2": {
@@ -280,7 +290,8 @@
 	   "TWEEN_PROPS" : ["frame"],
 	   "TWEEN_CHANGES" : [[0,6]],
 	   "TWEEN_DURATIONS" : [0.7]
-      }
+      },
+	  "QUEST_CHECK" : {}
      },
      "CHARACTER_SPAWN_3": {
       "NPC_SCENE" : "res://scenes/npc.tscn",
@@ -298,7 +309,8 @@
 	   "TWEEN_PROPS" : ["frame"],
 	   "TWEEN_CHANGES" : [[0,6]],
 	   "TWEEN_DURATIONS" : [0.7]
-      }
+      },
+	  "QUEST_CHECK" : {}
      }
     },
     "TILE_DICTIONARY" : {

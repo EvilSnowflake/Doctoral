@@ -15,6 +15,7 @@ var _theme_dictionary: Dictionary = {}
 var _battle_actions_dictionary: Dictionary = {}
 var _tilesize: Array[int]
 var _items_dictionary: Dictionary = {}
+var _should_show_quests: bool = true
 var _elementsnothere: Array[Dictionary] = []
 var _test_json: Dictionary = {
 	"GAME_DATA" : {
@@ -165,14 +166,18 @@ func _ready():
 	#Then we read the theme dictionary in order to set up the modifications specified inside
 	for key in theme_dictionary.keys():
 		_set_up_theme(theme_dictionary[key], _theme, key)
-	
-	print_debug(_elementsnothere)
-	
 	if !gamedata.has("BATTLE_ACTIONS_DICTIONARY"):
 		print_debug("File does not have any data for action behaviour")
 		return
 	_battle_actions_dictionary = gamedata["BATTLE_ACTIONS_DICTIONARY"]
 	print_debug(_battle_actions_dictionary.keys())
+	
+	if !gamedata.has("SHOULD_SHOW_QUESTS"):
+		print_debug("Does not have if we should show quests")
+	else:
+		_should_show_quests = gamedata["SHOULD_SHOW_QUESTS"]
+		print_debug(gamedata["SHOULD_SHOW_QUESTS"])
+	
 	if !gamedata.has("STAGES"):
 		print_debug("File does not have any data for STAGES")
 		return
@@ -207,10 +212,7 @@ func _ready():
 		print_debug(tile_dictionary.keys())
 	file.close()
 
-	#var stage_component = STAGE.instantiate()
-	#add_child(stage_component)
-
-func _process(delta):
+func _process(_delta):
 	#print_debug("Works")
 	if Input.is_action_just_pressed("test"):
 		print_debug(stage_button_h_box_container.get_child(0).is_connected("pressed",_start_stage))
@@ -227,7 +229,7 @@ func _start_stage(_stage_name: String) -> void:
 	if !stage_component.has_method("setup_stage_details"):
 		print_debug("Stage has no setup function")
 		return
-	stage_component.setup_stage_details(_player_dictionary, _battle_actions_dictionary, _stages_dictionary[_stage_name], _tilesize)
+	stage_component.setup_stage_details(_player_dictionary, _battle_actions_dictionary, _stages_dictionary[_stage_name], _tilesize, _elementsnothere, _should_show_quests)
 
 ## This function is responsible for changing the central theme for the game. The theme itself does
 ## not have any overrides to the User Interface elements but if we provide this function with a
@@ -268,7 +270,7 @@ func _set_up_theme(theme_dictionary: Dictionary, theme_source: Theme, current_th
 						element.theme_type_variation = theme_type_key
 					else:
 						var notin: Dictionary = {"ELEMENT" : var_name, "TYPE" : theme_type_key}
-						print_debug(notin)
+						#print_debug(notin)
 						_elementsnothere.append(notin)
 
 ## This function is used by the set up theme function and is specifically responsible for modifying

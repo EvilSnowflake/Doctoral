@@ -137,10 +137,11 @@ var _can_battle_text: String = "Press key to begin battle"
 ## This variable is not currently used extensively but it tracks how many
 ## times the user has disengaged a combat encounter with thi character
 var _player_run_amount: int = 0
+var _quests_check: Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	QuestManager.quest_updated.connect(_perfom_quest_check)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -161,7 +162,7 @@ func get_sprite() -> Sprite2D:
 	return sprite
 
 func stop_npc_animations() -> void:
-	print_debug("Stopped all npc animations")
+	#print_debug("Stopped all npc animations")
 	for key in TweenItems:
 		TweenItems[key].stop()
 		TweenItems[key].kill()
@@ -198,6 +199,10 @@ func get_npc_combat() -> Combat_Stats:
 
 func set_quest_to_give(_quest_dets: Dictionary) -> void:
 	_quest_to_give = _quest_dets
+
+func set_quest_checks(_checks: Dictionary) -> void:
+	_quests_check = _checks
+	print_debug(_quests_check)
 
 ## This function should be connected to the instance of the player colliding
 ## with the interactable component of the character. Depending on if the npc
@@ -345,6 +350,19 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 func _on_dialogue_continue(option: int = 0) -> void:
 	if option != 0:
 		option_chosen = option
+
+func _perfom_quest_check(_quests_changed: Array[Dictionary]) -> void:
+	if _quests_check == {}:
+		return
+	#print_debug(_quests_changed)
+	#print_debug(_quests_check)
+	for qc_key: String in _quests_check.keys():
+		for q: Dictionary in _quests_changed:
+			for step: String in q["COMPLETED_STEPS"]:
+				if _quests_check[qc_key]["STEP_NAME"].to_lower() == step.to_lower():
+					print_debug("Step completed")
+					_quests_check.erase(qc_key)
+					#print_debug(_quests_check)
 
 ## This function is used to increment the player_run variable when the user
 ## runs from an encounter with this npc
