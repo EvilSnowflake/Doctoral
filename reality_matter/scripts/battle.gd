@@ -295,8 +295,9 @@ func _end_combat(pl_died: bool = false):
 	battle_camera.enabled = false
 	engagement_ended.emit()
 
-func setup_actions(_names_array: Array, _actions_behaviour: Dictionary) -> void:
-	_button_array_names = _names_array
+## Using this function the stage can pass the behaviour of each action button from the json file to
+## the battle scene while also initializing the scene
+func setup_actions(_actions_behaviour: Dictionary) -> void:
 	_button_name_behaviour = _actions_behaviour
 	#During the creation of the scene we have to perform a routine to set the environemnt up for
 	#combat.

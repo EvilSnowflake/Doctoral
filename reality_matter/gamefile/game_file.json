@@ -2,7 +2,6 @@
  "GAME_DATA" :{
   "TILESIZE" : [64,64],
   "BATTLE_ACTIONS_DICTIONARY": {
-   "BUTTON_ARRAY_NAMES" : ["ATTACK","DEFEND","RUN"],
    "BUTTON_NAME_BEHAVIOUR" : {
     "ATTACK" : "DEAL_DAMAGE1",
 	"DEFEND" : "STOP_DAMAGE1",
@@ -253,7 +252,9 @@
         "STEP_NAME" : "Step 1",
         "BEHAVIOUR" : {
          "BEHAVIOUR_NAME" : "SPEAK",
-         "BEHAVIOUR_INFO" : {}
+         "BEHAVIOUR_INFO" : {
+          "INFO_1" : "This is something I say!"
+         }
         }
        }
       }
@@ -297,10 +298,21 @@
       "NPC_SCENE" : "res://scenes/npc.tscn",
       "NPC_POSITION" : [416.0,224.0],
       "NPC_ITEM_ID" : "1",
-      "NPC_DIALOGUE" : {},
+      "NPC_DIALOGUE" : {
+       "Dialogue_2": {
+        "STARTING_CONVERSATION" : "Can you give the other guy a bone?#1",
+        "Can you give the other guy a bone?#1": "We can battle if you do!#2",
+        "We can battle if you do!#2": "CAN_BATTLE"
+       },
+       "Dialogue_1": {
+        "STARTING_CONVERSATION" : "You gave the item?#1",
+        "You gave the item?#1": "Let's battle!#2",
+        "Let's battle!#2": "BATTLE"
+       }
+	  },
       "NPC_NAME" : "Greg",
       "NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
-      "NPC_COMBATABILITY" : true,
+      "NPC_COMBATABILITY" : false,
       "NPC_QUEST": {},
       "NPC_SPRITE_PATH" : "res://assets/sprites/characters/Torch_Blue.png",
       "NPC_TWEENS" : {
@@ -310,7 +322,15 @@
 	   "TWEEN_CHANGES" : [[0,6]],
 	   "TWEEN_DURATIONS" : [0.7]
       },
-	  "QUEST_CHECK" : {}
+	  "QUEST_CHECK" : {
+       "QUEST_CHECK_1" : {
+        "STEP_NAME" : "Step 2",
+        "BEHAVIOUR" : {
+         "BEHAVIOUR_NAME" : "BATTLE",
+         "BEHAVIOUR_INFO" : {}
+        }
+       }
+      }
      }
     },
     "TILE_DICTIONARY" : {

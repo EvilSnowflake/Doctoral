@@ -230,7 +230,7 @@ func _on_assign_item_to_give(item: Item) -> void:
 ## dialogue graphic shows up.
 func _on_player_interacted_with(player_character: CharacterBody2D) -> void:
 	#print_debug("Player interacted with me")
-	if can_combat:
+	if can_combat and _dialogues_num == 0:
 		engage_battle.emit(sprite, character_name, character_stats, _tweens)
 		adjust_player_movement.emit(false)
 	else:
@@ -301,6 +301,13 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 						QuestManager.update_quest(_quest_to_give["TITLE"],
 						_quest_to_give["COMPLETED_STEPS"],
 						_quest_to_give["IS_COMPLETE"])
+				elif w.begins_with("BATTLE"):
+					if can_combat:
+						dialogue_label.text = ""
+						end_dialogue.emit()
+						engage_battle.emit(sprite, character_name, character_stats, _tweens)
+				elif w.begins_with("CAN_BATTLE"):
+					_move_on_dialogue = can_combat
 				else:
 					#This part is appropriate when the current word spoken has no
 					#options and thus the user just has to press interact to
@@ -361,8 +368,20 @@ func _perfom_quest_check(_quests_changed: Array[Dictionary]) -> void:
 			for step: String in q["COMPLETED_STEPS"]:
 				if _quests_check[qc_key]["STEP_NAME"].to_lower() == step.to_lower():
 					print_debug("Step completed")
+					_find_quest_behaviour(_quests_check[qc_key]["BEHAVIOUR"])
 					_quests_check.erase(qc_key)
+					return
 					#print_debug(_quests_check)
+
+func _find_quest_behaviour(_what_quest_does: Dictionary):
+	print_debug(_what_quest_does)
+	match _what_quest_does["BEHAVIOUR_NAME"]:
+		"SPEAK":
+			_say_behaviour(_what_quest_does["BEHAVIOUR_INFO"]["INFO_1"])
+		"DIE":
+			_die_behaviour()
+		"BATTLE":
+			_battle_behaviour()
 
 ## This function is used to increment the player_run variable when the user
 ## runs from an encounter with this npc
@@ -378,7 +397,12 @@ func setup_npc_entity(_npc_sprite_path: String, _npc_tween_dictionary: Dictionar
 	if sprite == null:
 		sprite = find_child("Sprite2D")
 	if sprite != null:
-		_texturePath =  load(_npc_sprite_path)
+		var file_path: String = ""
+		if OS.has_feature("standalone"):
+			file_path = OS.get_executable_path().get_base_dir() + _npc_sprite_path
+		else:
+			file_path = _npc_sprite_path
+		_texturePath = load(file_path)
 		add_sprite(_texturePath, sprite)
 		sprite.hframes = hFrames
 		sprite.vframes = vFrames
@@ -425,3 +449,20 @@ func _die() -> void:
 		itm.stop()
 	adjust_player_movement.emit(true)
 	queue_free()
+
+func _move_behaviour() -> void:
+	#This is one of the behaviours for the quest check
+	print_debug("Called move behaviour")
+
+func _battle_behaviour() -> void:
+	#This is one of the behaviouyrs for the quest check
+	print_debug("Called battle behaviour")
+	can_combat = true
+
+func _die_behaviour() -> void:
+	#This is one of the behaviours for the quest check
+	print_debug("Called die behaviour")
+	_die()
+
+func _say_behaviour(_tx: String) -> void:
+	print_debug(_tx)

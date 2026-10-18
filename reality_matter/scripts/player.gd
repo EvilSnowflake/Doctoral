@@ -284,7 +284,12 @@ func setup_player_entity(_player_sprite_path: String, _player_tweens_dictionary:
 	if sprite == null:
 		sprite = find_child("Sprite2D")
 	if sprite != null:
-		texturePath =  load(_player_sprite_path)
+		var file_path: String = ""
+		if OS.has_feature("standalone"):
+			file_path = OS.get_executable_path().get_base_dir() + _player_sprite_path
+		else:
+			file_path = _player_sprite_path
+		texturePath =  load(file_path)
 		sprite.texture = texturePath
 		add_sprite(texturePath, sprite)
 		sprite.hframes = hFrames

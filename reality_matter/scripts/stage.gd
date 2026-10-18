@@ -227,7 +227,7 @@ func create_combat_environment(nm: String, sts: Combat_Stats, _actions_behaviour
 	if !_batt.has_method("setup_actions"):
 		print_debug("Battle does not have the ability to setup actions")
 		return
-	_batt.setup_actions(_actions_behaviour["BUTTON_ARRAY_NAMES"], _actions_behaviour["BUTTON_NAME_BEHAVIOUR"])
+	_batt.setup_actions(_actions_behaviour["BUTTON_NAME_BEHAVIOUR"])
 	if !_batt.has_method("set_up_player"):
 		print_debug("Battle does not have the ability for the player to be setup!")
 		return
@@ -310,7 +310,12 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 	var tileSetTemp: TileSet = null
 	var tileAtlasTemp : TileSetAtlasSource = null
 	for tile_spec in tile_dictionary.values():
-		tile_path = load(tile_spec["PATH"])
+		var file_path: String = ""
+		if OS.has_feature("standalone"):
+			file_path = OS.get_executable_path().get_base_dir() + tile_spec["PATH"]
+		else:
+			file_path = tile_spec["PATH"]
+		tile_path = load(file_path)
 		tilemapLayer = TileMapLayer.new()
 		tileSetTemp = TileSet.new()
 		tileAtlasTemp = TileSetAtlasSource.new()
