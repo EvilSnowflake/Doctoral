@@ -74,6 +74,7 @@ var _player: CharacterBody2D
 var quests_dict: Dictionary = {}
 ## This variable will inform the whole game of the size each tile will take in the grid of the game
 var _tilesize: Vector2i
+var _astar_grid: AStarGrid2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -83,7 +84,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
-	#if Input.is_action_just_pressed("Interact"):
+	if Input.is_action_just_pressed("test"):
+		%GridDisplay.toggle_grid_display()
 	#	print_debug(find_child("PlayerPanel",true,false))
 
 ## This function is used to spawn the player on the current scene. It requires a
@@ -304,6 +306,19 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 	#the tilemap's tiledata, we set the polygon's shape so that it covers all
 	#the tile's corners and thus we have given the elevated tilemap layer 
 	#collision
+	
+	#INITIALIZE A STAR GRID#
+	_astar_grid = AStarGrid2D.new()
+	_astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	_astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	_astar_grid.cell_size = _tilesize
+	#_astar_grid.region = Rect2(Vector2.ZERO, ceil(get_viewport_rect().size / _astar_grid.cell_size))
+	_astar_grid.region = Rect2(Vector2(-15.0,-15.0), Vector2(30.0,30.0))
+	_astar_grid.update()
+	print_debug(_astar_grid.region)
+	#INITIALIZE A STAR GRID#
+	
 	var tile_dictionary: Dictionary = _current_stage_dictionary["TILE_DICTIONARY"]
 	var tile_path: Resource = null
 	var tilemapLayer: TileMapLayer = null
@@ -329,7 +344,23 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 		tilemapLayer.tile_set = tileSetTemp
 		tilemapLayer.z_index = tile_spec["Z_INDEX"]
 		tilemapLayer.y_sort_enabled = tile_spec["Y_SORT"]
+		
+		#if tile_spec.has("OBSTACLE"):
+			#var tile_obstacle: Dictionary = tile_spec["OBSTACLE"]
+
+		
 		if tile_spec.has("COLLISION"):
+			
+			#WE NOW TRY TO MAKE THE OBSTACLE CUSTOM DATA LAYER
+			tileSetTemp.add_custom_data_layer(0)
+			tileSetTemp.set_custom_data_layer_name(0,"obstacle")
+			tileSetTemp.set_custom_data_layer_type(0,TYPE_BOOL)
+			var tile_data_temp_2: TileData = tileAtlasTemp.get_tile_data(Vector2i(3,5),0)
+			tile_data_temp_2.set_custom_data("obstacle",true)
+			#WE NOW TRY TO MAKE THE OBSTACLE CUSTOM DATA LAYER
+			
+			
+			
 			var tile_collision: Dictionary = tile_spec["COLLISION"]
 			tileSetTemp.add_physics_layer(tile_collision["PHYSICS_LAYER"])
 			var tile_data_temp: TileData = tileAtlasTemp.get_tile_data(Vector2i(tile_collision["ATLAS_COORDS"][0],tile_collision["ATLAS_COORDS"][1]),tile_collision["ALTERNATIVE_TILE"])
@@ -351,6 +382,19 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 				var s_id: int = coor_dets[1]
 				var at_coor: Vector2i = Vector2i(coor_dets[2][0],coor_dets[2][1])
 				tilemapLayer.set_cell(coor,s_id, at_coor)
+		
+		#APPLY THE OBSTACLES IN ASTARGRID#
+		if !tileSetTemp.has_custom_data_layer_by_name("obstacle"):
+			continue
+		for id in tilemapLayer.get_used_cells():
+			var data = tilemapLayer.get_cell_tile_data(id)
+			if data and data.get_custom_data('obstacle'):
+				#print_debug("FOUND AN OBSTACLE")
+				_astar_grid.set_point_solid(id)
+			#else:
+				#print_debug("NOT AN OBSTACLE")
+				#APPLY THE OBSTACLES IN ASTARGRID#
+	%GridDisplay.grid = _astar_grid
 	#print_debug(_elements_not_there)
 	for element in _elements_not_there:
 		var nd = find_child(element["ELEMENT"],true,false)

@@ -213,10 +213,11 @@ func _ready():
 	file.close()
 
 func _process(_delta):
+	pass
 	#print_debug("Works")
-	if Input.is_action_just_pressed("test"):
-		print_debug(stage_button_h_box_container.get_child(0).is_connected("pressed",_start_stage))
-		stage_button_h_box_container.get_child(0).pressed.emit()
+	#if Input.is_action_just_pressed("test"):
+		#print_debug(stage_button_h_box_container.get_child(0).is_connected("pressed",_start_stage))
+		#stage_button_h_box_container.get_child(0).pressed.emit()
 
 func _start_stage(_stage_name: String) -> void:
 	#for ch: Button in stage_button_h_box_container.get_children():

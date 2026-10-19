@@ -87,12 +87,16 @@ func find_quest(_quest: Quest) -> Dictionary:
 			return q
 	return { "TITLE" = "not found", "IS_COMPLETE" = false, "COMPLETED_STEPS" = [""] }
 
+## This function is used in order to identify a quest by it's title. Using the title we search the
+## quests variable and then we return the quest in its entierty if it exists
 func find_quest_by_title(_title: String) -> Quest:
 	for q in quests:
 		if q.title.to_upper() == _title.to_upper():
 			return q
 	return null
 
+## This function can be used in order to find the index of a quest in the user's current quests
+## array.
 func get_quest_index_by_title(_title: String) -> int:
 	for q in range(current_quests.size()):
 		if current_quests[q]["TITLE"].to_upper() == _title.to_upper():
@@ -102,10 +106,13 @@ func get_quest_index_by_title(_title: String) -> int:
 func sort_quests() -> void:
 	pass
 
+## This function should be used in order to obtain the user's combat stats and inventory so that
+## we can give the user experience and items
 func receive_player_requirements(_comb: Combat_Stats, _inv: Inventory):
 	if _comb != null and _inv != null:
 		_player_combat_stats = _comb
 		_player_inventory = _inv
 
+## This function can be used so that another script gets the user's current quests
 func get_current_quests() -> Array[Dictionary]:
 	return current_quests

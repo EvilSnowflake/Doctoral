@@ -26,3 +26,7 @@ collide_with_areas = true
 [node name="MoveTimer" type="Timer" parent="." unique_id=326598796]
 wait_time = 0.25
 one_shot = true
+
+[node name="PathPreviz" type="Line2D" parent="." unique_id=1165533041]
+top_level = true
+default_color = Color(1, 0, 0, 0.68235296)

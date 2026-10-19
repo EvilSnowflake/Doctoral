@@ -1,8 +1,25 @@
 [gd_scene format=3 uid="uid://bpgu6kb6jhg3q"]
 
 [ext_resource type="Script" uid="uid://cmm34oiqwaxsb" path="res://scripts/stage.gd" id="1_gi7kc"]
+[ext_resource type="Script" uid="uid://dykg1mewoyiqk" path="res://scripts/grid_display.gd" id="2_gi7kc"]
 
 [node name="Stage" type="Node2D" unique_id=1704407866]
 z_as_relative = false
 y_sort_enabled = true
 script = ExtResource("1_gi7kc")
+
+[node name="GridDisplay" type="Control" parent="." unique_id=1250325405]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_gi7kc")
+
+[node name="MarginContainer" type="MarginContainer" parent="GridDisplay" unique_id=2020354234]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="GridDisplay/MarginContainer" unique_id=1840439983]
+layout_mode = 2

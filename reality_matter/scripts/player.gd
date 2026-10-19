@@ -92,6 +92,13 @@ var vFrames: int = 8
 var texturePath: Resource
 ## This variable shows the direction the user is currently facing after movement
 var facing: Vector2
+
+#GRID MOVEMENT
+var grid: AStarGrid2D
+var current_cell: Vector2i
+var target_cell: Vector2i
+var move_pts: Array
+#GRID MOVEMENT
 #var sprite_path: String
 
 #NEW SCRIPT
@@ -107,19 +114,37 @@ var _tweens: Dictionary = {
 func _ready():
 	pass
 
+#MOVEMENT GRID
+func setup(_grid: AStarGrid2D):
+	grid = _grid
+	current_cell = pos_to_cell(global_position)
+	target_cell == current_cell
+
+func pos_to_cell(pos: Vector2):
+	return pos / grid.cell_size
+#MOVEMENT GRID
+
 ## This function is currently unused but can be if we have issues with input
 func _unhandled_input(_event: InputEvent) -> void:
-	if _event.is_action_pressed("test"):
-		#print_debug(QuestManager.find_quest(QuestManager.quests[0]))
-		#print_debug(QuestManager.find_quest_by_title("short quest"))
-		#print_debug(QuestManager.get_quest_index_by_title("long quest"))
-		#print_debug(QuestManager.get_quest_index_by_title("Recover Lost Magical Flute"))
-		print_debug("BEFORE : %s" %[str(QuestManager.current_quests)])
-		QuestManager.update_quest("short quest")
-		QuestManager.update_quest("Recover Lost Magical Flute", "Find the Magical Flute")
-		QuestManager.update_quest("Recover Lost Magical Flute", "Return Magical Flute to Bill", true)
-		QuestManager.update_quest("long quest", "", true)
-		print_debug("AFTER : %s" %[str(QuestManager.current_quests)])
+	if _event is InputEventMouseMotion and grid!=null:
+		var target = Vector2i(pos_to_cell(get_global_mouse_position()))
+		if target != target_cell:
+			move_pts = grid.get_point_path(current_cell, target)
+			move_pts = (move_pts as Array).map(func (p): return p + grid.cell_size / 2.0)
+			$PathPreviz.points = move_pts
+			target_cell = target
+
+	#if _event.is_action_pressed("test"):
+		##print_debug(QuestManager.find_quest(QuestManager.quests[0]))
+		##print_debug(QuestManager.find_quest_by_title("short quest"))
+		##print_debug(QuestManager.get_quest_index_by_title("long quest"))
+		##print_debug(QuestManager.get_quest_index_by_title("Recover Lost Magical Flute"))
+		#print_debug("BEFORE : %s" %[str(QuestManager.current_quests)])
+		#QuestManager.update_quest("short quest")
+		#QuestManager.update_quest("Recover Lost Magical Flute", "Find the Magical Flute")
+		#QuestManager.update_quest("Recover Lost Magical Flute", "Return Magical Flute to Bill", true)
+		#QuestManager.update_quest("long quest", "", true)
+		#print_debug("AFTER : %s" %[str(QuestManager.current_quests)])
 
 func _physics_process(_delta):
 	#If we are currently moving, the user can't engage with the controller
