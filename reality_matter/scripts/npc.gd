@@ -1,4 +1,4 @@
-extends StaticBody2D
+extends CharacterBody2D
 
 #This script gives non player characters the lgoic required to
 #converse with the player when interacted with
@@ -139,11 +139,60 @@ var _can_battle_text: String = "Press key to begin battle"
 var _player_run_amount: int = 0
 var _quests_check: Dictionary = {}
 
+#GRID MOVEMENT
+const SPEED = 200.0
+var grid: AStarGrid2D
+var current_cell: Vector2i
+var target_cell: Vector2i
+var move_pts: Array
+var cur_pt: int
+var moving: bool:
+	set(v):
+		moving = v; set_physics_process(moving)
+#GRID MOVEMENT
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	QuestManager.quest_updated.connect(_perfom_quest_check)
+	moving = false
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+#MOVEMENT GRID
+func setup(_grid: AStarGrid2D):
+	grid = _grid
+	current_cell = pos_to_cell(global_position)
+	target_cell = current_cell
+
+func pos_to_cell(pos: Vector2):
+	return pos / grid.cell_size
+
+func _take_moving_command(_target_position: Vector2i):
+	if moving: return
+	var target: Vector2i = Vector2i(pos_to_cell(_target_position))
+	if target != target_cell:
+		move_pts = grid.get_point_path(current_cell,target)
+		move_pts = (move_pts as Array).map(func (p): return p + grid.cell_size / 2.0)
+		target_cell = target
+	start_move()
+
+func start_move():
+	if move_pts.is_empty(): return
+	cur_pt = 0; moving = true
+
+func _physics_process(_delta: float):
+	if cur_pt == move_pts.size() - 1:
+		velocity = Vector2.ZERO
+		global_position = move_pts[-1]
+		current_cell = pos_to_cell(global_position)
+		moving = false
+	else:
+		var dir = (move_pts[cur_pt + 1] - move_pts[cur_pt]).normalized()
+		velocity = dir * SPEED
+		move_and_slide()
+		if (move_pts[cur_pt + 1] - global_position).length() < 4:
+			current_cell = pos_to_cell(global_position)
+			cur_pt += 1 
+#MOVEMENT GRID
+
 func _process(_delta):
 	pass
 
@@ -382,6 +431,8 @@ func _find_quest_behaviour(_what_quest_does: Dictionary):
 			_die_behaviour()
 		"BATTLE":
 			_battle_behaviour()
+		"MOVE":
+			_move_behaviour()
 
 ## This function is used to increment the player_run variable when the user
 ## runs from an encounter with this npc
@@ -452,6 +503,9 @@ func _die() -> void:
 
 func _move_behaviour() -> void:
 	#This is one of the behaviours for the quest check
+	#WE SHOULD CHANGE THE MOVI TO TAKE INPUT FROM THE QUEST CHECK DICTIONARY AS INPUT
+	var movi: Vector2i = Vector2i(64*5,64*5)
+	_take_moving_command(movi)
 	print_debug("Called move behaviour")
 
 func _battle_behaviour() -> void:

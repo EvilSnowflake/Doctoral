@@ -1,22 +1,48 @@
 extends Control
 
+#This script informs the behaviour of the main scene the game is set on. In this scene a user
+#interface is contained which has the title of the game along with the stages the user can enter
+#into to start playing the game. During startup the scene reads a JSON file from outside the game
+#into which all the info of the application should be contained. Using this file the script creates
+#a dictionary which then is passed on other scripts when the user interacts with any stage buttons.
+#The dictionary should ideally contain information on the player character, the theme of the
+#interface and the npcs, items, quests and environments of all the stages that are going to be
+#created. 
+
+## This constant has the stages scene preloaded to be used when the player enters the game
 const STAGE = preload("res://scenes/stage.tscn")
+## This constant contains the scene of the buttons that will let the user start a stage
 const OPTION_BUTTON = preload("res://scenes/option_button.tscn")
 
+## This variable points to the box container that will hold the stage buttons
 @onready var stage_button_h_box_container = $Panel/HBoxContainer/VBoxContainer/StageButtonHBoxContainer
 
 ## This variable points to the theme file that is used by some of the Interface
 ## elements. Will be modified depending on the contents of the theme dictionary
 var _theme: Theme = preload("res://assets/themes/game_theme.tres")
+## The stages dictionary contains all the information required to create a stage
 var _stages_dictionary: Dictionary = {}
+## The player dictionary contains data for the player character to be functional
 var _player_dictionary: Dictionary = {}
+## The quest dictionary is used to create all the quest resources used in the game
 var _quest_dictionary: Dictionary = {}
+## The theme dictionary can be used to modify the interface elements of the game
 var _theme_dictionary: Dictionary = {}
+## The battle actions dictionary holds info about the actions the player can use during battle
 var _battle_actions_dictionary: Dictionary = {}
+## The tilesize informs the whole game of how big each grid cell will be in the environment
 var _tilesize: Array[int]
+## The items dictionary is used to create all items that will be utilized in the game
 var _items_dictionary: Dictionary = {}
+## This variable is used to inform the game if we want the pause menu to show the user their
+## quest progress or not
 var _should_show_quests: bool = true
+## This variable should be given all the interface elements not present during the theme setup.
+## If there are elements that are not in the main menu then during the stage creation they are
+## passed on in order for them to be properly modified
 var _elementsnothere: Array[Dictionary] = []
+## This variable is used if there is no json file found to use during the start of the game. It
+## creates a file based on a dictionary that the user of them game can fill out to start the game
 var _test_json: Dictionary = {
 	"GAME_DATA" : {
 		"TILESIZE" : [64,64],
@@ -92,7 +118,13 @@ var _test_json: Dictionary = {
 	}
 }
 
-#FIRST WE NEED TO BE ABLE TO READ A FILE THAT IS IN THE SAME DIRECTORY AS THE EXECUTABLE
+#During the beginning of the game we start searching for a specific json file that will hold all
+#the info that the game needs to function. If there is no file there, one is created and will
+#need to be filled up with the appropriate information. If there is some information missing
+#the game will not start. The appropriate data is inserted on the right variable that is then
+#passed on when the user selects a specific stage to play. Depending on how many stages are
+#written in the json file, the menu creates the same amount of buttons that when the players selects
+#a stage is spawned and then the game starts.
 func _ready():
 	var folder: String = ""
 	var file_name: String = "game_file.json"
@@ -219,6 +251,10 @@ func _process(_delta):
 		#print_debug(stage_button_h_box_container.get_child(0).is_connected("pressed",_start_stage))
 		#stage_button_h_box_container.get_child(0).pressed.emit()
 
+## This function is connected to all the stage buttons that are created on game start. Each button
+## gets a specific name that is appropriate to each stage and when the player presses it the game
+## creates the stage scene that gets the right information from the json file and then uses it
+## to decorate the stage.
 func _start_stage(_stage_name: String) -> void:
 	#for ch: Button in stage_button_h_box_container.get_children():
 	#	ch.release_focus()

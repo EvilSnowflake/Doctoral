@@ -93,52 +93,26 @@ var texturePath: Resource
 ## This variable shows the direction the user is currently facing after movement
 var facing: Vector2
 
-#GRID MOVEMENT
-var grid: AStarGrid2D
-var current_cell: Vector2i
-var target_cell: Vector2i
-var move_pts: Array
-#GRID MOVEMENT
 #var sprite_path: String
 
 #NEW SCRIPT
-var _tweens: Dictionary = {
-	"TWEEN_NAMES" : ["IdleTween", "RunTween"],
-	"TWEEN_COMPS" : ["Sprite2D", "Sprite2D"],
-	"TWEEN_PROPS" : ["frame", "frame"],
-	"TWEEN_CHANGES" : [Vector2i(0,5), Vector2i(6,11)],
-	"TWEEN_DURATIONS" : [0.4, 0.4]
-}
+var _tweens: Dictionary = {}
 #NEW SCRIPT
-
 func _ready():
 	pass
 
-#MOVEMENT GRID
-func setup(_grid: AStarGrid2D):
-	grid = _grid
-	current_cell = pos_to_cell(global_position)
-	target_cell == current_cell
-
-func pos_to_cell(pos: Vector2):
-	return pos / grid.cell_size
-#MOVEMENT GRID
-
 ## This function is currently unused but can be if we have issues with input
 func _unhandled_input(_event: InputEvent) -> void:
-	if _event is InputEventMouseMotion and grid!=null:
-		var target = Vector2i(pos_to_cell(get_global_mouse_position()))
-		if target != target_cell:
-			move_pts = grid.get_point_path(current_cell, target)
-			move_pts = (move_pts as Array).map(func (p): return p + grid.cell_size / 2.0)
-			$PathPreviz.points = move_pts
-			target_cell = target
+	pass
+	#if _event is InputEventMouseMotion and grid!=null:
+		#var target = Vector2i(pos_to_cell(get_global_mouse_position()))
+		#if target != target_cell:
+			#move_pts = grid.get_point_path(current_cell, target)
+			#move_pts = (move_pts as Array).map(func (p): return p + grid.cell_size / 2.0)
+			#$PathPreviz.points = move_pts
+			#target_cell = target
 
 	#if _event.is_action_pressed("test"):
-		##print_debug(QuestManager.find_quest(QuestManager.quests[0]))
-		##print_debug(QuestManager.find_quest_by_title("short quest"))
-		##print_debug(QuestManager.get_quest_index_by_title("long quest"))
-		##print_debug(QuestManager.get_quest_index_by_title("Recover Lost Magical Flute"))
 		#print_debug("BEFORE : %s" %[str(QuestManager.current_quests)])
 		#QuestManager.update_quest("short quest")
 		#QuestManager.update_quest("Recover Lost Magical Flute", "Find the Magical Flute")
@@ -225,26 +199,22 @@ func move(dir: String) -> void:
 			return
 		#If we find an area 2d its a character and inform them that we collided
 		#with them
-		if ray.get_collider().get_class() == "Area2D" or ray.get_collider().get_class() == "StaticBody2D":
+		if ray.get_collider().get_class() == "Area2D" or ray.get_collider().get_class() == "CharacterBody2D":
 			_last_entity_collided = ray.get_collider()
 			if _last_entity_collided.has_signal("player_collided"):
 				_last_entity_collided.emit_signal("player_collided")
 	#If it is colliding then we check if the item we are colliding with is an
-	#area2d (npc) or a staticbody2d (item) and we act accordingly
+	#area2d (item) or a characterbody2d (npc) and we act accordingly
 	else:
 		#If we find a wall infornt of us we also stop moving
 		if current_state != State.IDLE:
 			current_state = State.IDLE
 			update_animation()
-		#if inputs[dir] != Vector2.ZERO and current_state == State.IDLE:
-		#	current_state = State.RUN
-		#	update_animation()
-		#print_debug("Cant move")
 		ray.target_position = _vector_position
 		ray.force_raycast_update()
 		if ray.get_collider() == null:
 			return
-		if ray.get_collider().get_class() == "Area2D" or ray.get_collider().get_class() == "StaticBody2D":
+		if ray.get_collider().get_class() == "Area2D" or ray.get_collider().get_class() == "CharacterBody2D":
 			_last_entity_collided = ray.get_collider()
 			if _last_entity_collided.has_signal("player_collided"):
 				_last_entity_collided.emit_signal("player_collided")

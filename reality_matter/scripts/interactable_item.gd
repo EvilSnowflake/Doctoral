@@ -91,5 +91,8 @@ func add_sprite(spritePath: Resource, sprite_comp: Sprite2D) -> void:
 	if spritePath != null and sprite_comp != null:
 		sprite_comp.texture = spritePath
 
+## This function is used to give the item a quest for it to pass to the player when they pick
+## the item up. The inputed quest is a dictionary containing the title of the quest, the step
+## that is going to be completed and whether or not the quest will be completed entierly
 func set_quest_to_give(_quest: Dictionary) -> void:
 	_item_quest_give = _quest

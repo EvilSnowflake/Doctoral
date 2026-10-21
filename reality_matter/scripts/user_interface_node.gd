@@ -24,7 +24,7 @@ signal close_stage_instance()
 var slot_graphic_resource: Resource
 
 ## This variable should hold the current npcs that talks to the user
-var _current_npc_conversing: StaticBody2D
+var _current_npc_conversing: CharacterBody2D
 ## This variable informs us if we need the user to give any inputs by pressing
 ## a button or choosing an option
 var _await_user_input: bool = false
@@ -99,7 +99,7 @@ func _make_item_appear_on_inventory(item_instance: Item) -> void:
 ## Here the interface connects to an npc's needed signals that: initiate a dialog
 ## end the dialogue, show the dialogue's next text, adds the user's options
 ## and await for the user to press something to continue
-func connect_characters_dialogues(npc: StaticBody2D) -> void:
+func connect_characters_dialogues(npc: CharacterBody2D) -> void:
 	if !npc.has_signal("initiate_dialogue") or !npc.has_signal("end_dialogue") or !npc.has_signal("show_dialogue_text") or !npc.has_signal("await_user_input") or !npc.has_signal("add_options"):
 		return
 	npc.initiate_dialogue.connect(_begin_dialogue_routine)
@@ -110,7 +110,7 @@ func connect_characters_dialogues(npc: StaticBody2D) -> void:
 
 ## Here we should have a function for the dialogue begin, we keep the npc
 ## currently conversing for the other functions
-func _begin_dialogue_routine(npc: StaticBody2D) -> void:
+func _begin_dialogue_routine(npc: CharacterBody2D) -> void:
 	_current_npc_conversing = npc
 
 ## Here we empty the variable that holds the currently conversing character when

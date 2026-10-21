@@ -85,7 +85,8 @@ func _ready():
 func _process(_delta):
 	pass
 	if Input.is_action_just_pressed("test"):
-		%GridDisplay.toggle_grid_display()
+		pass
+		#%GridDisplay.toggle_grid_display()
 	#	print_debug(find_child("PlayerPanel",true,false))
 
 ## This function is used to spawn the player on the current scene. It requires a
@@ -158,7 +159,6 @@ func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 	var npc_scene_component: PackedScene = load(_npc_dictionary["NPC_SCENE"])
 	var new_npc = npc_scene_component.instantiate()
 	add_child(new_npc)
-	
 	if !new_npc.has_method("setup_npc_entity"):
 		print_debug("NPC cannot be initiated")
 		return
@@ -203,6 +203,9 @@ func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
 		return
 	if _user_interface.has_method("connect_characters_dialogues"):
 		_user_interface.connect_characters_dialogues(new_npc)
+	#GRID#
+	new_npc.setup(_astar_grid)
+	#GRID#
 
 ## This function is used to instantiate the user interface on the scene. It only
 ## requires the interface's scene.
@@ -277,9 +280,6 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 	#by the item position list and then assign an item to it
 	for item_list_key in _current_stage_dictionary["ITEM_CREATION_DICTIONARY"].keys():
 		_spawn_item(_current_stage_dictionary["ITEM_CREATION_DICTIONARY"][item_list_key])
-	#After that we do the same but for non player characters
-	for npcs_list_key in _current_stage_dictionary["NPC_CREATION_DICTIONARY"].keys():
-		_spawn_non_players(_current_stage_dictionary["NPC_CREATION_DICTIONARY"][npcs_list_key])
 	_tilesize = Vector2i(_tile_size_info[0],_tile_size_info[1])
 	#Having completed the spawning of characters and items i then move on to the
 	#tileset of the environment
@@ -345,27 +345,21 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 		tilemapLayer.z_index = tile_spec["Z_INDEX"]
 		tilemapLayer.y_sort_enabled = tile_spec["Y_SORT"]
 		
-		#if tile_spec.has("OBSTACLE"):
-			#var tile_obstacle: Dictionary = tile_spec["OBSTACLE"]
-
-		
 		if tile_spec.has("COLLISION"):
-			
-			#WE NOW TRY TO MAKE THE OBSTACLE CUSTOM DATA LAYER
-			tileSetTemp.add_custom_data_layer(0)
-			tileSetTemp.set_custom_data_layer_name(0,"obstacle")
-			tileSetTemp.set_custom_data_layer_type(0,TYPE_BOOL)
-			var tile_data_temp_2: TileData = tileAtlasTemp.get_tile_data(Vector2i(3,5),0)
-			tile_data_temp_2.set_custom_data("obstacle",true)
-			#WE NOW TRY TO MAKE THE OBSTACLE CUSTOM DATA LAYER
-			
-			
-			
 			var tile_collision: Dictionary = tile_spec["COLLISION"]
 			tileSetTemp.add_physics_layer(tile_collision["PHYSICS_LAYER"])
 			var tile_data_temp: TileData = tileAtlasTemp.get_tile_data(Vector2i(tile_collision["ATLAS_COORDS"][0],tile_collision["ATLAS_COORDS"][1]),tile_collision["ALTERNATIVE_TILE"])
 			tile_data_temp.add_collision_polygon(tile_collision["LAYER_ID"])
 			tile_data_temp.set_collision_polygon_points(tile_collision["LAYER_ID"], tile_collision["POLYGON_INDEX"], PackedVector2Array([Vector2(tile_collision["POLYGON"][0][0], tile_collision["POLYGON"][0][1]),Vector2(tile_collision["POLYGON"][1][0], tile_collision["POLYGON"][1][1]),Vector2(tile_collision["POLYGON"][2][0], tile_collision["POLYGON"][2][1]),Vector2(tile_collision["POLYGON"][3][0], tile_collision["POLYGON"][3][1])]))
+			
+			#WE NOW TRY TO MAKE THE OBSTACLE CUSTOM DATA LAYER
+			tileSetTemp.add_custom_data_layer(tile_collision["LAYER_ID"])
+			tileSetTemp.set_custom_data_layer_name(tile_collision["LAYER_ID"],"obstacle")
+			tileSetTemp.set_custom_data_layer_type(tile_collision["LAYER_ID"],TYPE_BOOL)
+			var tile_data_temp_2: TileData = tileAtlasTemp.get_tile_data(Vector2i(tile_collision["ATLAS_COORDS"][0],tile_collision["ATLAS_COORDS"][1]),tile_collision["ALTERNATIVE_TILE"])
+			tile_data_temp_2.set_custom_data("obstacle",true)
+			#WE NOW TRY TO MAKE THE OBSTACLE CUSTOM DATA LAYER
+			
 		add_child(tilemapLayer)
 		if tile_spec.has("CELLS_BLOCK"):
 			var x_num: Array = [tile_spec["CELLS_BLOCK"][0][0][0],tile_spec["CELLS_BLOCK"][1][0][0]]
@@ -394,12 +388,15 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 			#else:
 				#print_debug("NOT AN OBSTACLE")
 				#APPLY THE OBSTACLES IN ASTARGRID#
-	%GridDisplay.grid = _astar_grid
-	#print_debug(_elements_not_there)
+	#%GridDisplay.grid = _astar_grid
 	for element in _elements_not_there:
 		var nd = find_child(element["ELEMENT"],true,false)
 		if nd != null:
 			nd.theme_type_variation = element["TYPE"]
+	
+	#After that we do the same but for non player characters
+	for npcs_list_key in _current_stage_dictionary["NPC_CREATION_DICTIONARY"].keys():
+		_spawn_non_players(_current_stage_dictionary["NPC_CREATION_DICTIONARY"][npcs_list_key])
 
 func _end_stage() -> void:
 	stage_discontinue.emit()

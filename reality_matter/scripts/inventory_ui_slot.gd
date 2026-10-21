@@ -2,9 +2,10 @@ extends PanelContainer
 
 #This script contains the logic for the item slots in the user interface.
 
+## This variable points to the item currently held by the ui slot
 var _currently_held_item: Item
 
-## The varible icon points to the texture that shows what item is contained
+## The variable icon points to the texture that shows what item is contained
 ## in the scene tree during the ready function.
 @onready var icon: TextureRect = $Icon
 ## This variable references the label showing how many of the item presented
