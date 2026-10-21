@@ -432,7 +432,7 @@ func _find_quest_behaviour(_what_quest_does: Dictionary):
 		"BATTLE":
 			_battle_behaviour()
 		"MOVE":
-			_move_behaviour()
+			_move_behaviour(_what_quest_does["BEHAVIOUR_INFO"]["INFO_1"])
 
 ## This function is used to increment the player_run variable when the user
 ## runs from an encounter with this npc
@@ -501,10 +501,10 @@ func _die() -> void:
 	adjust_player_movement.emit(true)
 	queue_free()
 
-func _move_behaviour() -> void:
+func _move_behaviour(_move_location: Array) -> void:
 	#This is one of the behaviours for the quest check
-	#WE SHOULD CHANGE THE MOVI TO TAKE INPUT FROM THE QUEST CHECK DICTIONARY AS INPUT
-	var movi: Vector2i = Vector2i(64*5,64*5)
+	if _move_location.size() < 2: print_debug("Format incorrect"); return
+	var movi: Vector2i = Vector2i(int(_move_location[0]),int(_move_location[1]))
 	_take_moving_command(movi)
 	print_debug("Called move behaviour")
 

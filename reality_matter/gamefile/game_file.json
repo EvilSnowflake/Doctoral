@@ -313,7 +313,7 @@
       "NPC_NAME" : "Greg",
       "NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
       "NPC_COMBATABILITY" : false,
-      "NPC_QUEST": {},
+      "NPC_QUEST": {"TITLE" : "long quest", "COMPLETED_STEPS" : "Step 3", "IS_COMPLETE" : false},
       "NPC_SPRITE_PATH" : "res://assets/sprites/characters/Torch_Blue.png",
       "NPC_TWEENS" : {
 	   "TWEEN_NAMES" : ["IdleTween"],
@@ -328,6 +328,41 @@
         "BEHAVIOUR" : {
          "BEHAVIOUR_NAME" : "BATTLE",
          "BEHAVIOUR_INFO" : {}
+        }
+       }
+      }
+     },
+     "CHARACTER_SPAWN_4": {
+      "NPC_SCENE" : "res://scenes/npc.tscn",
+      "NPC_POSITION" : [480.0,224.0],
+      "NPC_ITEM_ID" : "1",
+      "NPC_DIALOGUE" : {
+       "Dialogue_1": {
+        "STARTING_CONVERSATION" : "Hey did you fight the guy in front?#1",
+        "Hey did you fight the guy in front?#1": "Rude!#2",
+        "Rude!#2": "ENDING_CONVERSATION"
+       }
+	  },
+      "NPC_NAME" : "Brian",
+      "NPC_STATS" : { "MAX_HEALTH" : 20, "ATTACK_POWER" : 5, "DEFENSE" : 5, "SPEED" : 1},
+      "NPC_COMBATABILITY" : false,
+      "NPC_QUEST": {"TITLE" : "long quest", "COMPLETED_STEPS" : "Step 4", "IS_COMPLETE" : false},
+      "NPC_SPRITE_PATH" : "res://assets/sprites/characters/Torch_Blue.png",
+      "NPC_TWEENS" : {
+	   "TWEEN_NAMES" : ["IdleTween"],
+	   "TWEEN_COMPS" : ["Sprite2D"],
+	   "TWEEN_PROPS" : ["frame"],
+	   "TWEEN_CHANGES" : [[0,6]],
+	   "TWEEN_DURATIONS" : [0.7]
+      },
+	  "QUEST_CHECK" : {
+       "QUEST_CHECK_1" : {
+        "STEP_NAME" : "Step 3",
+        "BEHAVIOUR" : {
+         "BEHAVIOUR_NAME" : "MOVE",
+         "BEHAVIOUR_INFO" : {
+          "INFO_1" : [544.0,224.0]
+         }
         }
        }
       }

@@ -193,7 +193,7 @@ func _ready():
 		print_debug("File does not have any data for the theme")
 		return
 	var theme_dictionary: Dictionary = gamedata["THEME_DICTIONARY"]
-	print_debug(theme_dictionary)
+	print_debug(theme_dictionary.keys())
 	_theme_dictionary = theme_dictionary
 	#Then we read the theme dictionary in order to set up the modifications specified inside
 	for key in theme_dictionary.keys():
@@ -220,7 +220,7 @@ func _ready():
 		print_debug("New stage creation")
 		stage_info_array.append(stage_data[stg])
 		var stg_button: Button = OPTION_BUTTON.instantiate()
-		stg_button.text = stg
+		stg_button.text = stg.replace("_"," ")
 		stg_button.pressed.connect(_start_stage.bind(stg))
 		stage_button_h_box_container.add_child(stg_button)
 		if !stage_data[stg].has("ITEM_CREATION_DICTIONARY"):
