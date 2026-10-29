@@ -13,6 +13,10 @@ extends Node2D
 const USER_INTERFACE_NODE = preload("res://scenes/user_interface_node.tscn")
 ## The scene all battles happen on
 const BATTLE = preload("res://scenes/battle.tscn")
+const INTERACTABLE_ITEM = preload("res://scenes/interactable_item.tscn")
+const NPC = preload("res://scenes/npc.tscn")
+const PLAYER = preload("res://scenes/player.tscn")
+
 
 ## This signal should be called when we want to enable or disable the player's
 ## camera
@@ -94,8 +98,8 @@ func _process(_delta):
 ## position we then add a reference to the user's inventory on that character
 ## All those information should be inside a dictionary
 func _spawn_player(_player_create_dict: Dictionary, _battle_actions_dict: Dictionary) -> void:
-	var player_component_scene = load(_player_create_dict["PLAYER_SCENE"])
-	_player = player_component_scene.instantiate()
+	#var player_component_scene = load(_player_create_dict["PLAYER_SCENE"])
+	_player = PLAYER.instantiate()
 	add_child(_player)
 	var _player_sprite_path = _player_create_dict["PLAYER_SPRITE_PATH"]
 	var _player_tween_dictionary = _player_create_dict["PLAYER_TWEENS"]
@@ -134,8 +138,8 @@ func _spawn_player(_player_create_dict: Dictionary, _battle_actions_dict: Dictio
 ## It requires the interactive item's scene, the position the item is going
 ## to have and what item is going to be. All those information should be inside a dictionary
 func _spawn_item(_item_details: Dictionary) -> void:
-	var item_scene = load(_item_details["ITEM_SCENE"])
-	var it = item_scene.instantiate()
+	#var item_scene = load(_item_details["ITEM_SCENE"])
+	var it = INTERACTABLE_ITEM.instantiate()
 	add_child(it)
 	var vect_two_pos_x: float = _item_details["ITEM_POSITION"][0]
 	var vect_two_pos_y: float = _item_details["ITEM_POSITION"][1]
@@ -156,8 +160,8 @@ func _spawn_item(_item_details: Dictionary) -> void:
 ## on the environemnt, their dialogue and what item (if any) they can give the
 ## player character. All those information should be inside a dictionary
 func _spawn_non_players(_npc_dictionary: Dictionary) -> void:
-	var npc_scene_component: PackedScene = load(_npc_dictionary["NPC_SCENE"])
-	var new_npc = npc_scene_component.instantiate()
+	#var npc_scene_component: PackedScene = load(_npc_dictionary["NPC_SCENE"])
+	var new_npc = NPC.instantiate()
 	add_child(new_npc)
 	if !new_npc.has_method("setup_npc_entity"):
 		print_debug("NPC cannot be initiated")
@@ -337,9 +341,18 @@ func setup_stage_details(_player_dictionary_info: Dictionary, _battle_actions_in
 		tileSetTemp.tile_size = _tilesize
 		tileSetTemp.tile_shape = TileSet.TILE_SHAPE_SQUARE
 		tileAtlasTemp.texture = tile_path
-		for tl_create in tile_spec["TILE_CREATION"]:
-			tileAtlasTemp.create_tile(Vector2i(tl_create[0],tl_create[1]),Vector2i(1,1))
 		tileAtlasTemp.texture_region_size = _tilesize
+		#print_debug(tileAtlasTemp.get_atlas_grid_size())
+		#print_debug(tileAtlasTemp.texture.get_size())
+		#print_debug(tileAtlasTemp.margins)
+		#print_debug(tileAtlasTemp.texture_region_size)
+		if tile_spec["TILE_CREATION"] == []:
+			for x in range(tileAtlasTemp.get_atlas_grid_size().x):
+				for y in range(tileAtlasTemp.get_atlas_grid_size().y):
+					tileAtlasTemp.create_tile(Vector2i(x,y),Vector2i(1,1))
+		else:
+			for tl_create in tile_spec["TILE_CREATION"]:
+				tileAtlasTemp.create_tile(Vector2i(tl_create[0],tl_create[1]),Vector2i(1,1))
 		tileSetTemp.add_source(tileAtlasTemp)
 		tilemapLayer.tile_set = tileSetTemp
 		tilemapLayer.z_index = tile_spec["Z_INDEX"]

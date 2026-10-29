@@ -9,7 +9,6 @@
    }
   },
   "PLAYER_CREATION_DICTIONARY" :{
-   "PLAYER_SCENE" : "res://scenes/player.tscn",
    "PLAYER_POSITION" : [96.0,96.0],
    "PLAYER_COMBAT_STATS" : { "MAX_HEALTH" : 100, "ATTACK_POWER" : 10, "DEFENSE" : 5, "SPEED" : 1},
    "PLAYER_INVENTORY_SPACES" : 5,
@@ -190,7 +189,6 @@
    "STAGE_1" : {
     "ITEM_CREATION_DICTIONARY" : {
      "ITEM_SPAWN_1": {
-      "ITEM_SCENE" : "res://scenes/interactable_item.tscn",
       "ITEM_RESOURCE" : "1",
       "ITEM_POSITION" : [352.0,96.0],
       "ITEM_QUEST_TO_GIVE": {
@@ -202,7 +200,6 @@
     },
     "NPC_CREATION_DICTIONARY" : {
      "CHARACTER_SPAWN_1": {
-      "NPC_SCENE" : "res://scenes/npc.tscn",
       "NPC_POSITION" : [416.0,96.0],
       "NPC_ITEM_ID" : "1",
       "NPC_DIALOGUE" : {
@@ -260,7 +257,6 @@
       }
      },
      "CHARACTER_SPAWN_2": {
-      "NPC_SCENE" : "res://scenes/npc.tscn",
       "NPC_POSITION" : [416.0,160.0],
       "NPC_ITEM_ID" : "",
       "NPC_DIALOGUE" : {
@@ -295,7 +291,6 @@
 	  "QUEST_CHECK" : {}
      },
      "CHARACTER_SPAWN_3": {
-      "NPC_SCENE" : "res://scenes/npc.tscn",
       "NPC_POSITION" : [416.0,224.0],
       "NPC_ITEM_ID" : "1",
       "NPC_DIALOGUE" : {
@@ -333,7 +328,6 @@
       }
      },
      "CHARACTER_SPAWN_4": {
-      "NPC_SCENE" : "res://scenes/npc.tscn",
       "NPC_POSITION" : [480.0,224.0],
       "NPC_ITEM_ID" : "1",
       "NPC_DIALOGUE" : {
@@ -371,7 +365,7 @@
     "TILE_DICTIONARY" : {
      "WATER":{
       "PATH" : "res://assets/tiles/Water.png",
-      "TILE_CREATION" : [[0,0]],
+      "TILE_CREATION" : [],
       "Z_INDEX" : -2,
       "Y_SORT" : true,
       "CELLS_BLOCK" : [[[-15,-15],0,[0,0]],[[15,15],0,[0,0]]]

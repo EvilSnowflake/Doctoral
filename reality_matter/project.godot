@@ -22,6 +22,7 @@ QuestManager="*uid://ty1rqs3r84cl"
 
 [display]
 
+window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
