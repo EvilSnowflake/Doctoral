@@ -4,6 +4,13 @@ var csv_file_path: String = ""
 var png_file_path: String = ""
 var speadsheet_textbox
 var tile_set_path_textbox
+var num_of_stages: LineEdit
+var stage_premade_container: TabContainer
+var num_of_stage_items: LineEdit
+var stage_item_premade_container: TabContainer
+
+@onready var stages = %STAGES
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -11,6 +18,14 @@ func _ready():
 	tile_set_path_textbox = find_child("TileSetPathTextbox")
 	speadsheet_textbox.focus_entered.connect(on_spreadsheet_textbox_focus_entered)
 	tile_set_path_textbox.focus_entered.connect(on_tilepath_textbox_focus_entered)
+	
+	stage_premade_container = stages.find_child("StageTabContainer")
+	num_of_stages = stages.find_child("NUM_OF_STAGES")
+	num_of_stages.text_changed.connect(duplicate_form_element.bind(stage_premade_container, stage_premade_container.get_child(0).duplicate()))
+	
+	stage_item_premade_container = stages.find_child("ItemStageTabContainer")
+	num_of_stage_items = stages.find_child("NUM_OF_STAGE_ITEMS")
+	num_of_stage_items.text_changed.connect(duplicate_form_element.bind(stage_item_premade_container,stage_item_premade_container.get_child(0).duplicate()))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -58,3 +73,19 @@ func on_tilepath_textbox_focus_entered() -> void:
 	fil_Dil2.add_filter("*.png")
 	add_child(fil_Dil2)
 	fil_Dil2.show()
+
+func duplicate_form_element(_num: String, _cont, _ch) -> void:
+	var numbe: int = _num.to_int()
+	if numbe < _cont.get_child_count():
+		for i in range(_cont.get_child_count()-1,numbe-1, -1):
+			_cont.get_child(i).queue_free()
+			print_debug(_cont.get_child(-1).name)
+		return
+	while _cont.get_child_count() < numbe:
+		var element: MarginContainer = _ch.duplicate()
+		_cont.add_child(element)
+		element.name = _cont.get_child(0).name
+		print_debug(_cont.get_child(-1).name)
+	#print_debug(_num)
+	#print_debug(_ch)
+	
