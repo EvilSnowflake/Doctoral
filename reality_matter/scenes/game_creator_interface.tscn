@@ -16,6 +16,9 @@ bg_color = Color(0.18079731, 0, 0.0005567585, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tp7wb"]
 bg_color = Color(0.15502462, 0.063951544, 0.08537895, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fj34q"]
+bg_color = Color(1, 0.50816643, 0.46070224, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_joj73"]
 bg_color = Color(0.44876665, 0, 0.007713386, 1)
 
@@ -24,6 +27,9 @@ bg_color = Color(1.5341676e-07, 0.11079783, 0.14890096, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_27yhv"]
 bg_color = Color(0.26628128, 0.41199967, 0.51548123, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7n7s6"]
+bg_color = Color(0.21205953, 0.9268313, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjffo"]
 bg_color = Color(0, 0.45321733, 0.756788, 1)
@@ -36,6 +42,9 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yybgj"]
 bg_color = Color(0.056291588, 0.05629161, 0.05629155, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ktdci"]
+bg_color = Color(0.16924527, 0.16924533, 0.16924518, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fvyjv"]
 bg_color = Color(0, 0, 0, 1)
@@ -54,6 +63,9 @@ bg_color = Color(0, 0.25105113, 0.030731509, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4v7qm"]
 bg_color = Color(0.19562653, 0.26668888, 0.14021793, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lyber"]
+bg_color = Color(0.45632344, 0.99999994, 0.4435381, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f288m"]
 bg_color = Color(1.2754649e-06, 0.6369375, 0.14409217, 1)
@@ -276,6 +288,7 @@ custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_l82dc")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_tp7wb")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_fj34q")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_joj73")
 current_tab = 0
 
@@ -375,6 +388,7 @@ custom_minimum_size = Vector2(400.19, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_y4nfx")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_27yhv")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_7n7s6")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_cjffo")
 current_tab = 0
 
@@ -388,7 +402,7 @@ metadata/_tab_index = 0
 
 [node name="ScrollContain" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1" unique_id=1301888703]
 layout_mode = 2
-scroll_vertical = 100
+scroll_vertical = 354
 
 [node name="Vbox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain" unique_id=2018718189]
 layout_mode = 2
@@ -597,7 +611,7 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Character Animations : "
 
-[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/AnimationNumber" unique_id=1481230006]
+[node name="NUM_OF_STAGE_CHAR_ANIMATION" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/AnimationNumber" unique_id=1481230006]
 custom_minimum_size = Vector2(20, 0)
 custom_maximum_size = Vector2(45, 40)
 layout_mode = 2
@@ -606,14 +620,15 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_dldrw")
 text = "1"
 alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens" unique_id=678572302]
+[node name="StageCharAnimationTabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens" unique_id=678572302]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0m7qq")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_yybgj")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_ktdci")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_fvyjv")
 current_tab = 0
 
-[node name="Animation1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer" unique_id=1452829778]
+[node name="Animation1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer" unique_id=1452829778]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
@@ -621,21 +636,21 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 0
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1" unique_id=2022824031]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1" unique_id=2022824031]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="AnimationName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox" unique_id=518935751]
+[node name="AnimationName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox" unique_id=518935751]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationName" unique_id=2024831240]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationName" unique_id=2024831240]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Animation Name:"
 
-[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationName" unique_id=1677663229]
+[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationName" unique_id=1677663229]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -644,17 +659,17 @@ theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "Input a name"
 
-[node name="AnimationChanges" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox" unique_id=654560348]
+[node name="AnimationChanges" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox" unique_id=654560348]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=233398688]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationChanges" unique_id=233398688]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Which Frames Cycle:"
 
-[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=173353902]
+[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationChanges" unique_id=173353902]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
@@ -665,11 +680,11 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "From"
 alignment = 1
 
-[node name="Label2" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=284019864]
+[node name="Label2" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationChanges" unique_id=284019864]
 layout_mode = 2
 text = "-"
 
-[node name="LineEdit2" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=658215632]
+[node name="LineEdit2" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationChanges" unique_id=658215632]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
@@ -680,17 +695,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "To"
 alignment = 1
 
-[node name="AnimationDuration" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox" unique_id=426695288]
+[node name="AnimationDuration" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox" unique_id=426695288]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationDuration" unique_id=1830546526]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationDuration" unique_id=1830546526]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Animation Duration:"
 
-[node name="EditBox" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/TabContainer/Animation1/VBox/AnimationDuration" unique_id=1684901782]
+[node name="EditBox" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterTweens/StageCharAnimationTabContainer/Animation1/VBox/AnimationDuration" unique_id=1684901782]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -781,6 +796,7 @@ custom_minimum_size = Vector2(231.34, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_a1asa")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_4v7qm")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_lyber")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_f288m")
 current_tab = 0
 
