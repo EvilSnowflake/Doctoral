@@ -159,7 +159,7 @@ custom_minimum_size = Vector2(100, 0)
 custom_maximum_size = Vector2(100, -1)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_dldrw")
-text = "1"
+text = "16"
 placeholder_text = "x"
 alignment = 1
 
@@ -172,7 +172,7 @@ custom_minimum_size = Vector2(100, 0)
 custom_maximum_size = Vector2(100, -1)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_dldrw")
-text = "1"
+text = "16"
 placeholder_text = "y
 "
 alignment = 1
@@ -402,7 +402,7 @@ metadata/_tab_index = 0
 
 [node name="ScrollContain" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1" unique_id=1301888703]
 layout_mode = 2
-scroll_vertical = 354
+scroll_vertical = 100
 
 [node name="Vbox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain" unique_id=2018718189]
 layout_mode = 2
@@ -726,7 +726,7 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Character Quests to Check: "
 
-[node name="QuestCheckNums" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/HBoxContainer" unique_id=1867184504]
+[node name="NUM_OF_STAGE_CHAR_QUEST_CHECKS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/HBoxContainer" unique_id=1867184504]
 custom_minimum_size = Vector2(20, 0)
 custom_maximum_size = Vector2(45, 40)
 layout_mode = 2
@@ -735,32 +735,32 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_dldrw")
 text = "1"
 alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks" unique_id=1521215078]
+[node name="StageCharQuestCheckTabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks" unique_id=1521215078]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0m7qq")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_yybgj")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_fvyjv")
 current_tab = 0
 
-[node name="QuestCheck1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer" unique_id=1393360993]
+[node name="QuestCheck1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer" unique_id=1393360993]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1" unique_id=170455368]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1" unique_id=170455368]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="QuestCheckStepName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1/VBox" unique_id=1300734685]
+[node name="QuestCheckStepName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1/VBox" unique_id=1300734685]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1/VBox/QuestCheckStepName" unique_id=2093863689]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1/VBox/QuestCheckStepName" unique_id=2093863689]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Check Step Name:"
 
-[node name="EditBox" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1/VBox/QuestCheckStepName" unique_id=1691426287]
+[node name="EditBox" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1/VBox/QuestCheckStepName" unique_id=1691426287]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -769,17 +769,17 @@ theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "Input the name of the step"
 
-[node name="QuestCheckBehaviour" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1/VBox" unique_id=292254317]
+[node name="QuestCheckBehaviour" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1/VBox" unique_id=292254317]
 custom_minimum_size = Vector2(0, 20)
 custom_maximum_size = Vector2(-1, 25)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1/VBox/QuestCheckBehaviour" unique_id=107987524]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1/VBox/QuestCheckBehaviour" unique_id=107987524]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Behaviour:"
 
-[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/TabContainer/QuestCheck1/VBox/QuestCheckBehaviour" unique_id=2010427383]
+[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Stages/STAGES/StageTabContainer/Stage1/VBox/HBox/HBoxContainer/CharacterStageTabContainer/Character1/ScrollContain/Vbox/CharacterQuestChecks/StageCharQuestCheckTabContainer/QuestCheck1/VBox/QuestCheckBehaviour" unique_id=2010427383]
 layout_mode = 2
 item_count = 4
 popup/item_0/text = "BATTLE"
