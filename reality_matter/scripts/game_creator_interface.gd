@@ -42,6 +42,9 @@ var num_of_stage_char_quest_check_path: String
 var stage_char_quest_check_premade_container_path: String
 
 @onready var stages = %STAGES
+@onready var player_creation_dictionary = %PLAYER_CREATION_DICTIONARY
+@onready var quest_dictionary = %QUEST_DICTIONARY
+
 var testDict: Dictionary = {
 		"Stage": {
 			"stage_item_premade_container_path": "num_of_stage_item_path",
@@ -65,7 +68,7 @@ func _ready():
 	num_of_stages = stages.find_child("NUM_OF_STAGES")
 	num_of_stages_path = num_of_stages.get_path()
 	stage_premade_container_path = stage_premade_container.get_path()
-	num_of_stages.text_changed.connect(duplicate_form_element.bind(stage_premade_container, stage_premade_container.get_child(0).duplicate()))
+	#num_of_stages.text_changed.connect(duplicate_form_element.bind(stage_premade_container, stage_premade_container.get_child(0).duplicate()))
 	
 	stage_item_premade_container = stage_premade_container.find_child("ItemStageTabContainer")
 	num_of_stage_item = stage_premade_container.find_child("NUM_OF_STAGE_ITEMS")
@@ -89,8 +92,19 @@ func _ready():
 	num_of_stage_char_quest_check_path = stage_chars_premade_container.find_child("NUM_OF_STAGE_CHAR_QUEST_CHECKS").get_path()
 	stage_char_quest_check_premade_container_path = stage_chars_premade_container.find_child("StageCharQuestCheckTabContainer").get_path()
 	
+	var num_of_player_tweens_path: String = player_creation_dictionary.find_child("PLAYER_TWEENS").get_path()
+	var player_tweens_container_path: String = player_creation_dictionary.find_child("PlayerTweensTabContainer").get_path()
+	
+	var num_of_quest_path: String = quest_dictionary.find_child("QUEST_NUM").get_path()
+	var quest_container_path: String = quest_dictionary.find_child("QuestsTabContainer").get_path()
+	var num_of_quest_step_path: String = quest_dictionary.find_child("STEPS_NUM").get_path()
+	var quest_step_container_path: String = quest_dictionary.find_child("QuestStepTabContainer").get_path()
+	var num_of_quest_reward_path: String = quest_dictionary.find_child("REWARD_ITEM_NUM").get_path()
+	var quest_reward_container_path: String = quest_dictionary.find_child("QuestRewardTabContainer").get_path()
+	
 	var benchmark1: String = "Stage"
 	var benchmark12: String = "Character"
+	var benchmark3: String = "Quest"
 	
 	testDict = {stage_premade_container_path : num_of_stages_path,
 		benchmark1:
@@ -102,6 +116,12 @@ func _ready():
 					stage_char_quest_check_premade_container_path: num_of_stage_char_quest_check_path
 				},
 			stage_tileset_premade_container_path: num_of_stage_tileset_path
+		},
+		player_tweens_container_path: num_of_player_tweens_path,
+		quest_container_path: num_of_quest_path,
+		benchmark3: {
+			quest_step_container_path: num_of_quest_step_path,
+			quest_reward_container_path: num_of_quest_reward_path
 		}
 	}
 	
@@ -172,198 +192,108 @@ func duplicate_form_element(_num: String, _cont, _ch) -> void:
 	#print_debug(_ch)
 	
 func check_numbered_line_edits() -> void:
-	#MAYBE I CAN FIND A WAY TO FIND THE STATIC PATHS ONCE AND THEN DEPENDING ON
-	#THE NUM OF LINE EDITS WE MODIFY THE PATHS AND FIND THE APPROPRIATE ITEMS
-	#BY CHANGING THE [ITEM]1 WITH [ITEM][NUM]. SO DEPENDING 0N THE NUMS WE GO
-	#DOWN THE PATH OF A TREE THAT BRANCHES WHENEVER A NUM LINE EDIT IS FOUND
-	
-	for i in range(1,int(num_of_stages.text)+1):
-		var benchmark1: String = "Stage"
-		var new_stage_item_num_path = num_of_stage_item_path.replace(benchmark1+"1",benchmark1+str(i))
-		var new_stage_item_cont_path = stage_item_premade_container_path.replace(benchmark1+"1",benchmark1+str(i))
-		var new_stage_item_num_node: Node = get_node(new_stage_item_num_path)
-		var new_stage_item_cont_node: Node = get_node(new_stage_item_cont_path)
-		
-		if !new_stage_item_num_node.text_changed.is_connected(duplicate_form_element):
-			print_debug("Not connected")
-			new_stage_item_num_node.text_changed.connect(duplicate_form_element.bind(new_stage_item_cont_node,new_stage_item_cont_node.get_child(0).duplicate()))
-		
-		for j in range(1,int(num_of_stage_item.text)):
-			var benchmark12: String = "Item"
-		
-		var new_stage_char_num_path = num_of_stage_char_path.replace(benchmark1+"1",benchmark1+str(i))
-		var new_stage_char_cont_path = stage_char_premade_container_path.replace(benchmark1+"1",benchmark1+str(i))
-		var new_stage_char_num_node: Node = get_node(new_stage_char_num_path)
-		var new_stage_char_cont_node: Node = get_node(new_stage_char_cont_path)
-		
-		if !new_stage_char_num_node.text_changed.is_connected(duplicate_form_element):
-			print_debug("Not connected")
-			new_stage_char_num_node.text_changed.connect(duplicate_form_element.bind(new_stage_char_cont_node,new_stage_char_cont_node.get_child(0).duplicate()))
-		
-		for k in range(1,int(new_stage_char_num_node.text)+1):
-			var benchmark12: String = "Character"
-			var new_num_of_stage_char_animation_path = (num_of_stage_char_animation_path.replace(benchmark1+"1",benchmark1+str(i))).replace(benchmark12+"1",benchmark12+str(k))
-			var new_stage_char_animation_premade_container_path = (stage_char_animation_premade_container_path.replace(benchmark1+"1",benchmark1+str(i))).replace(benchmark12+"1",benchmark12+str(k))
-			var new_num_of_stage_char_animation_node: Node = get_node(new_num_of_stage_char_animation_path)
-			var new_stage_char_animation_premade_container_node: Node = get_node(new_stage_char_animation_premade_container_path)
-			#print_debug(new_num_of_stage_char_animation_node)
-			if !new_num_of_stage_char_animation_node.text_changed.is_connected(duplicate_form_element):
-				print_debug("Not connected")
-				new_num_of_stage_char_animation_node.text_changed.connect(duplicate_form_element.bind(new_stage_char_animation_premade_container_node,new_stage_char_animation_premade_container_node.get_child(0).duplicate()))
-		
-		var new_stage_tileset_num_path = num_of_stage_tileset_path.replace(benchmark1+"1",benchmark1+str(i))
-		var new_stage_tileset_cont_path = stage_tileset_premade_container_path.replace(benchmark1+"1",benchmark1+str(i))
-		var new_stage_tileset_num_node: Node = get_node(new_stage_tileset_num_path)
-		var new_stage_tileset_cont_node: Node = get_node(new_stage_tileset_cont_path)
-		
-		if !new_stage_tileset_num_node.text_changed.is_connected(duplicate_form_element):
-			print_debug("Not connected")
-			new_stage_tileset_num_node.text_changed.connect(duplicate_form_element.bind(new_stage_tileset_cont_node,new_stage_tileset_cont_node.get_child(0).duplicate()))
-		
-		for l in range(1,int(num_of_stage_tileset.text)):
-			var benchmark12: String = "TileSet"
-		
-		#print_debug(testDict)
-		var currval
-		var sum_of_benches: Array[String] = []
-		var sum_of_counter_benches: Array = []
-		var sum_of_keys: Array = []
-		var currkey
-		var currdictionary: Dictionary = {}
-		sum_of_keys.append(testDict.keys())
-		#print_debug("Current all keys: " + str(sum_of_keys))
-		var counter : int = 1000
-		while !sum_of_keys.is_empty():
-			counter -= 1
-			if counter == 0:
+	var currval
+	var sum_of_benches: Array[String] = []
+	var sum_of_counter_benches: Array = []
+	var sum_of_keys: Array = []
+	var currkey
+	var currdictionary: Dictionary = {}
+	sum_of_keys.append(testDict.keys())
+	#print_debug("Current all keys: " + str(sum_of_keys))
+	var counter : int = 10000
+	while !sum_of_keys.is_empty():
+		counter -= 1
+		if counter == 0:
+			break
+		if sum_of_keys[-1] == []:
+			#print_debug("No keys found on last sum of keys, skipping")
+			sum_of_keys.pop_back()
+			if sum_of_keys == []:
 				break
-			if sum_of_keys[-1] == []:
-				print_debug("No keys found on last sum of keys, skipping")
-				sum_of_keys.pop_back()
-				if sum_of_keys == []:
-					break
-				#sum_of_benches.pop_back()
-				sum_of_counter_benches[-1] -= 1
-				print_debug("Current sum of counters for benches :" + str(sum_of_counter_benches))
-				#print_debug("Current all keys: " + str(sum_of_keys))
-				if sum_of_counter_benches[-1] == 0:
-					sum_of_counter_benches.pop_back()
-					#sum_of_keys.pop_back()
-				continue
-			currkey = sum_of_keys[-1].front()
-			#print_debug("Current all keys: " + str(sum_of_keys))
-			print_debug("Current key: " + str(currkey))
-				
-			if sum_of_benches.is_empty():
-				print_debug("No benches found, getting the first one")
-				currval = testDict[currkey]
-				currdictionary = testDict
-			else:
-				print_debug("Found benches, searching them")
-				print_debug("Current sum of benches :" + str(sum_of_benches))
-				currdictionary = testDict[sum_of_benches[0]]
-				for be in range(1,sum_of_benches.size()):
-					currdictionary = currdictionary[sum_of_benches[be]]
-				if currkey == sum_of_benches[-1]:
-					sum_of_keys[-1].pop_front()
-					sum_of_benches.pop_back()
-					continue
-				currval = currdictionary[currkey]
-			#print_debug("Current value: " + str(currval))
-			#print_debug(currdictionary)
-			if typeof(currval) == TYPE_STRING:
-				print_debug("Current val is a string so applying!!")
-				var new_num_path = currval
-				var new_cont_path = currkey
-				#if sum_of_counter_benches.size() == sum_of_benches.size() and sum_of_counter_benches.size() > 0:	
-				#var next_num = 0
-				if sum_of_counter_benches.size() <= sum_of_benches.size() or sum_of_benches.size() == 0:
-					sum_of_counter_benches.append(2)
-						
-				#var curr_next_num_array: Array[int] = []
-				
-				print_debug("Current sum of counters for benches :" + str(sum_of_counter_benches))
-				print_debug("CURRENT NEW NUM WILL BE CONNECTED TO NEW CONT AT THE LAST NUMBER ON THE BENCHES")
-				if sum_of_keys[-1].size() > 1:
-					if typeof(currdictionary[sum_of_keys[-1][1]]) != TYPE_STRING:
-						sum_of_counter_benches[-1] += 1
-						sum_of_keys[-1].pop_front()
-				
-				#if sum_of_benches.size() == 0:
-					#print_debug("No benched so we just connect")
-					#print_debug(get_node(currval))
-					#print_debug(get_node(currkey))
-					#next_num = int(get_node(currval).text)
-					
-					#var new_cont_node: Node = get_node(currkey)
-					#var new_num_node: Node = get_node(currval)
-					#if !new_num_node.text_changed.is_connected(duplicate_form_element):
-						##print_debug("Not connected")
-						#new_num_node.text_changed.connect(duplicate_form_element.bind(new_cont_node,new_cont_node.get_child(0).duplicate()))
-				
-				#for b in range (sum_of_benches.size()):
-				#	var counter : int = 0
-				#	while counter < 100:
-				#		counter += 1
-				#		new_num_path = new_num_path.replace(sum_of_benches[b]+"1",sum_of_benches[b]+str(counter))
-				#		new_cont_path = new_cont_path.replace(sum_of_benches[b]+"1",sum_of_benches[b]+str(counter))
-				#		print_debug("Newly created num path: " + str(new_num_path))
-						#print_debug(get_node(new_num_path))
-						
-						
-				#		if !has_node(new_num_path):
-				#			break
-						#curr_next_num_array.append(next_num)
-						#print_debug("Newly created container path: " + str(new_cont_path))
-						#print_debug(get_node(new_cont_path))
-						
-						#var new_cont_node: Node = get_node(new_cont_path)
-						#var new_num_node: Node = get_node(new_num_path)
-						#if !new_num_node.text_changed.is_connected(duplicate_form_element):
-							#print_debug("Not connected")
-							#new_num_node.text_changed.connect(duplicate_form_element.bind(new_cont_node,new_cont_node.get_child(0).duplicate()))
-				#connect the num and container with duplicate
-				#add the number inside in the counter benches
-				#if sum_of_counter_benches.size() == sum_of_benches.size()+1 and sum_of_counter_benches.size() > 0:
-				#	sum_of_counter_benches[-1] = curr_next_num_array
-				#else:
-				#	sum_of_counter_benches.append(curr_next_num_array)
-				#sum_of_counter_benches.append(curr_next_num_array)
-				#print_debug(sum_of_counter_benches)
-				#var num_node = get_node(new_num_path)
-				#var cont_node = get_node(new_cont_path)
-				
-			elif typeof(currval) == TYPE_DICTIONARY:
-				print_debug("Current val is a dictionary so delving!!")
-				if sum_of_counter_benches[-1] == 0:
-					sum_of_keys[-1].pop_front()
-				sum_of_benches.append(currkey)
-				for cb in range(sum_of_counter_benches[-1]):
-					sum_of_keys.append(currval.keys())
-				continue
-			
+			#sum_of_benches.pop_back()
 			sum_of_counter_benches[-1] -= 1
-			if sum_of_counter_benches[-1] <= 0:
-				#break
-				sum_of_keys[-1].pop_front()
-				if sum_of_benches.size() == sum_of_counter_benches.size():
-					sum_of_benches.pop_back()
+			#print_debug("Current sum of counters for benches :" + str(sum_of_counter_benches))
+			#print_debug("Current all keys: " + str(sum_of_keys))
+			if sum_of_counter_benches[-1] == 0:
 				sum_of_counter_benches.pop_back()
-				
-		#for key1 in testDict.keys():
-			#currval = testDict[key1]
-			#if typeof(currval) == TYPE_STRING:
-				#var new_num_path = currval
-				#var new_cont_path = key1
-				#for b in range (sum_of_benches.size()):
-					#new_num_path = new_num_path.replace(sum_of_benches[b]+"1",sum_of_benches[b]+str(b))
-					#new_cont_path = new_cont_path.replace(sum_of_benches[b]+"1",sum_of_benches[b]+str(b))
-				#var num_node = get_node(new_num_path)
-				#var cont_node = get_node(new_cont_path)
-				#print_debug(new_num_path)
-				#print_debug(new_cont_path)
-			#if typeof(currval) == TYPE_DICTIONARY:
-				#sum_of_benches.append(currval)
+				#sum_of_keys.pop_back()
+			continue
+		currkey = sum_of_keys[-1].front()
+		#print_debug("Current all keys: " + str(sum_of_keys))
+		#print_debug("Current key: " + str(currkey))
+			
+		if sum_of_benches.is_empty():
+			#print_debug("No benches found, getting the first one")
+			currval = testDict[currkey]
+			currdictionary = testDict
+		else:
+			#print_debug("Found benches, searching them")
+			#print_debug("Current sum of benches :" + str(sum_of_benches))
+			currdictionary = testDict[sum_of_benches[0]]
+			for be in range(1,sum_of_benches.size()):
+				currdictionary = currdictionary[sum_of_benches[be]]
+			if currkey == sum_of_benches[-1]:
+				sum_of_keys[-1].pop_front()
+				sum_of_benches.pop_back()
+				continue
+			currval = currdictionary[currkey]
+		#print_debug("Current value: " + str(currval))
+		#print_debug(currdictionary)
+		if typeof(currval) == TYPE_STRING:
+			#print_debug("Current val is a string so applying!!")
+			var new_num_path: String = currval
+			var new_cont_path: String = currkey
+			#if sum_of_counter_benches.size() == sum_of_benches.size() and sum_of_counter_benches.size() > 0:	
+			#var next_num = 0
+			
+			for b in range(sum_of_benches.size()):
+				#print_debug(sum_of_benches[b]+"1" + "     " + sum_of_benches[b]+str(sum_of_counter_benches[b]))
+				if sum_of_counter_benches[b] == 1:
+					continue
+				new_num_path = new_num_path.replace(sum_of_benches[b]+"1",sum_of_benches[b]+str(sum_of_counter_benches[b]))
+				new_cont_path = new_cont_path.replace(sum_of_benches[b]+"1",sum_of_benches[b]+str(sum_of_counter_benches[b]))
+			
+			#print_debug(has_node(new_num_path))
+			#print_debug(has_node(new_cont_path))
+			var new_num_node = get_node(new_num_path)
+			var new_cont_node = get_node(new_cont_path)
+			if new_num_node == null or new_cont_node == null:
+				print_debug("A num or cont node does not exist")
+				break
+			
+			if !new_num_node.text_changed.is_connected(duplicate_form_element):
+					#print_debug("Not connected")
+					new_num_node.text_changed.connect(duplicate_form_element.bind(new_cont_node,new_cont_node.get_child(0).duplicate()))
+			
+			if sum_of_counter_benches.size() <= sum_of_benches.size() or sum_of_benches.size() == 0:
+				sum_of_counter_benches.append(int(new_num_node.text))
+					
+			#var curr_next_num_array: Array[int] = []
+			
+			#print_debug("Current sum of counters for benches :" + str(sum_of_counter_benches))
+			#print_debug("CURRENT NEW NUM WILL BE CONNECTED TO NEW CONT AT THE LAST NUMBER ON THE BENCHES")
+			if sum_of_keys[-1].size() > 1:
+				if typeof(currdictionary[sum_of_keys[-1][1]]) != TYPE_STRING:
+					sum_of_counter_benches[-1] += 1
+					sum_of_keys[-1].pop_front()
+			
+		elif typeof(currval) == TYPE_DICTIONARY:
+			#print_debug("Current val is a dictionary so delving!!")
+			if sum_of_counter_benches[-1] == 0:
+				sum_of_keys[-1].pop_front()
+			sum_of_benches.append(currkey)
+			for cb in range(sum_of_counter_benches[-1]):
+				sum_of_keys.append(currval.keys())
+			continue
+		
+		sum_of_counter_benches[-1] -= 1
+		if sum_of_counter_benches[-1] <= 0:
+			#break
+			sum_of_keys[-1].pop_front()
+			if sum_of_benches.size() == sum_of_counter_benches.size():
+				sum_of_benches.pop_back()
+			sum_of_counter_benches.pop_back()
+			
 
 func pass_through_dict(_currentdict) -> void:
 	var currval

@@ -73,14 +73,23 @@ bg_color = Color(1.2754649e-06, 0.6369375, 0.14409217, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5b8lh"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvn55"]
+bg_color = Color(0.2051174, 0.20511746, 0.20511732, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ihxim"]
+bg_color = Color(0.32544088, 0.3254409, 0.32544076, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_co48d"]
 bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aev6k"]
 bg_color = Color(0.74978, 0.74978, 0.7497799, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p8ka2"]
+bg_color = Color(0.851769, 0.8517689, 0.85176885, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hw0aq"]
-bg_color = Color(0.8992584, 0.8992584, 0.8992584, 1)
+bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqs8u"]
 bg_color = Color(1, 1, 1, 1)
@@ -739,6 +748,7 @@ alignment = 1
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0m7qq")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_yybgj")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_ktdci")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_fvyjv")
 current_tab = 0
 
@@ -968,6 +978,7 @@ theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 1
 
 [node name="PLAYER_CREATION_DICTIONARY" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player" unique_id=1546343708]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="PlayerPosition" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY" unique_id=28528642]
@@ -1145,14 +1156,15 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_dldrw")
 text = "1"
 alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens" unique_id=498726431]
+[node name="PlayerTweensTabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens" unique_id=498726431]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0m7qq")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_yybgj")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_kvn55")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_fvyjv")
 current_tab = 0
 
-[node name="Animation1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer" unique_id=477058130]
+[node name="Animation1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer" unique_id=477058130]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
@@ -1160,41 +1172,42 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 0
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1" unique_id=748236832]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1" unique_id=748236832]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="AnimationName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox" unique_id=1499933159]
+[node name="AnimationName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox" unique_id=1499933159]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationName" unique_id=938326568]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationName" unique_id=938326568]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 text = "Animation Name:"
 
-[node name="TWEEN_NAMES" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationName" unique_id=234077982]
+[node name="TWEEN_NAMES" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationName" unique_id=234077982]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "Input a name"
 
-[node name="AnimationComponent" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox" unique_id=850336990]
+[node name="AnimationComponent" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox" unique_id=850336990]
 visible = false
 custom_minimum_size = Vector2(0, 20)
 custom_maximum_size = Vector2(-1, 25)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationComponent" unique_id=1583953152]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationComponent" unique_id=1583953152]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Component:"
 
-[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationComponent" unique_id=1427385316]
+[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationComponent" unique_id=1427385316]
 layout_mode = 2
 item_count = 4
 popup/item_0/text = "BATTLE"
@@ -1206,58 +1219,61 @@ popup/item_2/id = 2
 popup/item_3/text = "SAY"
 popup/item_3/id = 3
 
-[node name="AnimationChanges" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox" unique_id=560755727]
+[node name="AnimationChanges" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox" unique_id=560755727]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=1179519002]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationChanges" unique_id=1179519002]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 text = "Which Frames Cycle:"
 
-[node name="TWEEN_CHANGES_1" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=956850833]
+[node name="TWEEN_CHANGES_1" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationChanges" unique_id=956850833]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "From"
 alignment = 1
 
-[node name="Label2" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=2015694149]
+[node name="Label2" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationChanges" unique_id=2015694149]
 layout_mode = 2
 text = "-"
 
-[node name="TWEEN_CHANGES_2" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationChanges" unique_id=1082525508]
+[node name="TWEEN_CHANGES_2" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationChanges" unique_id=1082525508]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "To"
 alignment = 1
 
-[node name="AnimationDuration" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox" unique_id=826841768]
+[node name="AnimationDuration" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox" unique_id=826841768]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationDuration" unique_id=2050544930]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationDuration" unique_id=2050544930]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 text = "Animation Duration:"
 
-[node name="TWEEN_DURATIONS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/TabContainer/Animation1/VBox/AnimationDuration" unique_id=419753915]
+[node name="TWEEN_DURATIONS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Player/PLAYER_CREATION_DICTIONARY/PlayerTweens/PlayerTweensTabContainer/Animation1/VBox/AnimationDuration" unique_id=419753915]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "Input Duration"
 
@@ -1271,6 +1287,7 @@ theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 2
 
 [node name="QUEST_DICTIONARY" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests" unique_id=178428876]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="ShouldShowQuests" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY" unique_id=12698316]
@@ -1308,15 +1325,16 @@ text = "1"
 placeholder_text = "Input a number..."
 alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY" unique_id=35819502]
+[node name="QuestsTabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY" unique_id=35819502]
 custom_minimum_size = Vector2(0, 441.3)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0m7qq")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_yybgj")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_ihxim")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_fvyjv")
 current_tab = 0
 
-[node name="Quest1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer" unique_id=1763805873]
+[node name="Quest1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer" unique_id=1763805873]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
@@ -1324,86 +1342,91 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1" unique_id=480615550]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1" unique_id=480615550]
 layout_mode = 2
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer" unique_id=160090429]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer" unique_id=160090429]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="QuestTitle" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox" unique_id=2020585351]
+[node name="QuestTitle" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox" unique_id=2020585351]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 80)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestTitle" unique_id=1007118861]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestTitle" unique_id=1007118861]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 text = "Quest Title:"
 
-[node name="TITLE" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestTitle" unique_id=1361265843]
+[node name="TITLE" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestTitle" unique_id=1361265843]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "Input a title...."
 
-[node name="QuestDescription" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox" unique_id=2038986327]
+[node name="QuestDescription" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox" unique_id=2038986327]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestDescription" unique_id=1480686000]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestDescription" unique_id=1480686000]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 text = "Quest Description:"
 
-[node name="DESCRIPTION" type="TextEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestDescription" unique_id=1181864038]
+[node name="DESCRIPTION" type="TextEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestDescription" unique_id=1181864038]
 custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
 theme_override_colors/background_color = Color(0.9515795, 0.95157963, 0.9515795, 1)
 placeholder_text = "Write here a description for your quests..."
 wrap_mode = 1
 
-[node name="QuestSteps" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox" unique_id=1044420457]
+[node name="QuestSteps" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox" unique_id=1044420457]
 layout_mode = 2
 
-[node name="StepsNumber" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps" unique_id=2129135981]
+[node name="StepsNumber" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps" unique_id=2129135981]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps/StepsNumber" unique_id=939923869]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps/StepsNumber" unique_id=939923869]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 text = "Number of Steps:"
 
-[node name="STEPS_NUM" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps/StepsNumber" unique_id=1365182247]
+[node name="STEPS_NUM" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps/StepsNumber" unique_id=1365182247]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(50, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 text = "1"
 alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps" unique_id=787465974]
+[node name="QuestStepTabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps" unique_id=787465974]
 layout_mode = 2
 theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hovered_color = Color(0.06879817, 0.068798296, 0.06879853, 1)
 theme_override_colors/font_unselected_color = Color(0.11119685, 0.11119684, 0.11119684, 1)
 theme_override_styles/panel = SubResource("StyleBoxFlat_co48d")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_aev6k")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_p8ka2")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hw0aq")
 current_tab = 0
 
-[node name="Step1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps/TabContainer" unique_id=324798445]
+[node name="Step1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps/QuestStepTabContainer" unique_id=324798445]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
@@ -1411,77 +1434,83 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 0
 
-[node name="StepName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps/TabContainer/Step1" unique_id=676635524]
+[node name="StepName" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps/QuestStepTabContainer/Step1" unique_id=676635524]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps/TabContainer/Step1/StepName" unique_id=2034652183]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps/QuestStepTabContainer/Step1/StepName" unique_id=2034652183]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Step Name: "
 
-[node name="STEPS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestSteps/TabContainer/Step1/StepName" unique_id=907243509]
+[node name="STEPS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestSteps/QuestStepTabContainer/Step1/StepName" unique_id=907243509]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_placeholder_color = Color(0.9428228, 0.94282264, 0.94282264, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 placeholder_text = "Input a title...."
 
-[node name="QuestExperienceReward" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox" unique_id=432514034]
+[node name="QuestExperienceReward" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox" unique_id=432514034]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 80)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestExperienceReward" unique_id=2117356121]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestExperienceReward" unique_id=2117356121]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 text = "Quest Experience:"
 
-[node name="REWARD_XP" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestExperienceReward" unique_id=1295198521]
+[node name="REWARD_XP" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestExperienceReward" unique_id=1295198521]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 placeholder_text = "Input a number..."
 
-[node name="QuestItemsReward" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox" unique_id=2125678140]
+[node name="QuestItemsReward" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox" unique_id=2125678140]
 layout_mode = 2
 
-[node name="ItemNumber" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward" unique_id=1089499074]
+[node name="ItemNumber" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward" unique_id=1089499074]
 custom_minimum_size = Vector2(0, 40)
 custom_maximum_size = Vector2(-1, 79.445)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/ItemNumber" unique_id=725253581]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/ItemNumber" unique_id=725253581]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 text = "Number of Item Rewards:"
 
-[node name="REWARD_ITEM_NUM" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/ItemNumber" unique_id=1388475818]
+[node name="REWARD_ITEM_NUM" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/ItemNumber" unique_id=1388475818]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(50, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_64t1g")
 text = "1"
+alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward" unique_id=1589132586]
+[node name="QuestRewardTabContainer" type="TabContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward" unique_id=1589132586]
 layout_mode = 2
 theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hovered_color = Color(0.10374341, 0.103743546, 0.10374386, 1)
 theme_override_colors/font_unselected_color = Color(0.11119685, 0.11119684, 0.11119684, 1)
 theme_override_styles/panel = SubResource("StyleBoxFlat_co48d")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_aev6k")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_p8ka2")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hw0aq")
 current_tab = 0
 
-[node name="Item1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer" unique_id=628264727]
+[node name="Item1" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer" unique_id=628264727]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
@@ -1489,20 +1518,20 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1" unique_id=693812935]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1" unique_id=693812935]
 layout_mode = 2
 
-[node name="ItemID" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1/VBoxContainer" unique_id=1492766036]
+[node name="ItemID" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1/VBoxContainer" unique_id=1492766036]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1/VBoxContainer/ItemID" unique_id=355769032]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1/VBoxContainer/ItemID" unique_id=355769032]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Item ID: "
 
-[node name="REWARD_ITEMS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1/VBoxContainer/ItemID" unique_id=1057990984]
+[node name="REWARD_ITEMS" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1/VBoxContainer/ItemID" unique_id=1057990984]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
@@ -1511,17 +1540,17 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_placeholder_color = Color(0.9428228, 0.94282264, 0.94282264, 0.6)
 placeholder_text = "Input an ID..."
 
-[node name="ItemQuantity" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1/VBoxContainer" unique_id=388715709]
+[node name="ItemQuantity" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1/VBoxContainer" unique_id=388715709]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1/VBoxContainer/ItemQuantity" unique_id=638851932]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1/VBoxContainer/ItemQuantity" unique_id=638851932]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Quantity of the item:"
 
-[node name="REWARD_ITEM_QUANTITY" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/TabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/TabContainer/Item1/VBoxContainer/ItemQuantity" unique_id=1784865350]
+[node name="REWARD_ITEM_QUANTITY" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/TabContainer/Quests/QUEST_DICTIONARY/QuestsTabContainer/Quest1/ScrollContainer/VBox/QuestItemsReward/QuestRewardTabContainer/Item1/VBoxContainer/ItemQuantity" unique_id=1784865350]
 custom_minimum_size = Vector2(50, 0)
 custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
