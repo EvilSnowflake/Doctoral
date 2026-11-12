@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Control
 
 var csv_file_path: String = ""
 var png_file_path: String = ""
@@ -44,6 +44,8 @@ var stage_char_quest_check_premade_container_path: String
 @onready var stages = %STAGES
 @onready var player_creation_dictionary = %PLAYER_CREATION_DICTIONARY
 @onready var quest_dictionary = %QUEST_DICTIONARY
+@onready var items_dictionary = %ITEMS_DICTIONARY
+@onready var theme_dictionary = %THEME_DICTIONARY
 
 var testDict: Dictionary = {
 		"Stage": {
@@ -102,6 +104,9 @@ func _ready():
 	var num_of_quest_reward_path: String = quest_dictionary.find_child("REWARD_ITEM_NUM").get_path()
 	var quest_reward_container_path: String = quest_dictionary.find_child("QuestRewardTabContainer").get_path()
 	
+	var num_of_item_path: String = items_dictionary.find_child("ITEMS_NUM").get_path()
+	var item_container_path: String = items_dictionary.find_child("ItemTabContainer").get_path()
+	
 	var benchmark1: String = "Stage"
 	var benchmark12: String = "Character"
 	var benchmark3: String = "Quest"
@@ -122,11 +127,11 @@ func _ready():
 		benchmark3: {
 			quest_step_container_path: num_of_quest_step_path,
 			quest_reward_container_path: num_of_quest_reward_path
-		}
+		},
+		item_container_path: num_of_item_path
 	}
-	
-	
 	check_numbered_line_edits()
+	check_add_remove_containers(theme_dictionary)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -177,6 +182,8 @@ func on_tilepath_textbox_focus_entered() -> void:
 
 func duplicate_form_element(_num: String, _cont, _ch) -> void:
 	var numbe: int = _num.to_int()
+	if numbe <=0 :
+		numbe = 1
 	if numbe < _cont.get_child_count():
 		for i in range(_cont.get_child_count()-1,numbe-1, -1):
 			_cont.get_child(i).queue_free()
@@ -192,6 +199,7 @@ func duplicate_form_element(_num: String, _cont, _ch) -> void:
 	#print_debug(_ch)
 	
 func check_numbered_line_edits() -> void:
+	#print_debug("CAlled")
 	var currval
 	var sum_of_benches: Array[String] = []
 	var sum_of_counter_benches: Array = []
@@ -266,7 +274,10 @@ func check_numbered_line_edits() -> void:
 					new_num_node.text_changed.connect(duplicate_form_element.bind(new_cont_node,new_cont_node.get_child(0).duplicate()))
 			
 			if sum_of_counter_benches.size() <= sum_of_benches.size() or sum_of_benches.size() == 0:
-				sum_of_counter_benches.append(int(new_num_node.text))
+				var numb_num_node: int = int(new_num_node.text)
+				if numb_num_node <= 0:
+					numb_num_node = 0
+				sum_of_counter_benches.append(numb_num_node)
 					
 			#var curr_next_num_array: Array[int] = []
 			
@@ -295,9 +306,28 @@ func check_numbered_line_edits() -> void:
 			sum_of_counter_benches.pop_back()
 			
 
-func pass_through_dict(_currentdict) -> void:
-	var currval
-	for key1 in _currentdict.keys():
-		currval = _currentdict[key1]
-		if typeof(currval) == TYPE_STRING:
-			pass
+func check_add_remove_containers(_theme_container_node: Node) -> void:
+	var add_remove_containers: Array[Node] = _theme_container_node.find_children("AddRemoveContainer")
+	for ar in add_remove_containers:
+		#print_debug(ar.get_path())
+		var add_button: Button = ar.get_child(0)
+		var remove_button: Button = ar.get_child(1)
+		var container: TabContainer = ar.get_parent().find_child("DuplicationContainer")
+		add_button.pressed.connect(modify_theme_form_elements.bind(true, container, container.get_child(0).duplicate(),add_button,remove_button))
+		remove_button.pressed.connect(modify_theme_form_elements.bind(false, container, container.get_child(0).duplicate(),add_button,remove_button))
+		remove_button.hide()
+		container.get_child(0).queue_free()
+		
+
+func modify_theme_form_elements(_add: bool, _cont: Node, _ch: Node, _add_child: Node, _remove_child: Node):
+	if _add:
+		var element = _ch.duplicate()
+		_cont.add_child(element)
+		element.name = _ch.name
+		if _cont.get_child_count() > 0:
+			_remove_child.show()
+	if !_add:
+		if _cont.get_child_count() > 0:
+			_cont.get_child(-1).queue_free()
+		if _cont.get_child_count() == 0:
+			_remove_child.hide()

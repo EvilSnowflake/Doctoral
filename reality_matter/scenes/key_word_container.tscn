@@ -1,0 +1,205 @@
+[gd_scene format=3 uid="uid://cp8ghpegkn08w"]
+
+[ext_resource type="Script" uid="uid://c0ikukxomr1hu" path="res://scripts/key_word_container.gd" id="1_re0u7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a4x40"]
+bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_re0u7"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5iqtk"]
+bg_color = Color(0.69135684, 0.6913568, 0.6913567, 1)
+border_color = Color(0.25565886, 0.2556588, 0.2556586, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2e1ft"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pqsa4"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x7ij1"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ttey5"]
+bg_color = Color(0.69135684, 0.6913568, 0.6913567, 1)
+border_color = Color(0.25565886, 0.2556588, 0.2556586, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efsaw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0tec"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_co48d"]
+bg_color = Color(0.0006938975, 0.0006938978, 0.00069389684, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aev6k"]
+bg_color = Color(0.05197096, 0.051970966, 0.051970914, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ise3h"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r4clq"]
+bg_color = Color(0.103743516, 0.103743546, 0.10374347, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4h73g"]
+bg_color = Color(0.35531357, 0.35531357, 0.35531345, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thssj"]
+bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fugss"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+
+[node name="KeyWordContainer" type="VBoxContainer" unique_id=977923216]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+theme_override_constants/separation = 66
+script = ExtResource("1_re0u7")
+
+[node name="KeywordLabel" type="Label" parent="." unique_id=499751576]
+custom_minimum_size = Vector2(650, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("StyleBoxFlat_a4x40")
+text = "Place Holder"
+horizontal_alignment = 1
+
+[node name="KeyWord" type="OptionButton" parent="." unique_id=1335775818]
+custom_minimum_size = Vector2(129, 64)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.0035191544, 0.0035191746, 0.0035191574, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.099985994, 0.099985994, 0.099985994, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_re0u7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5iqtk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2e1ft")
+alignment = 1
+selected = 0
+item_count = 2
+popup/item_0/text = "WORD"
+popup/item_0/id = 0
+popup/item_1/text = "KEY"
+popup/item_1/id = 1
+
+[node name="KeyOrWord" type="HBoxContainer" parent="." unique_id=1692605999]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="WordTextEdit" type="TextEdit" parent="KeyOrWord" unique_id=1271032998]
+visible = false
+custom_minimum_size = Vector2(259, 129)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_pqsa4")
+wrap_mode = 1
+tab_input_mode = false
+
+[node name="KeyVboxContainer" type="VBoxContainer" parent="KeyOrWord" unique_id=257296052]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="KeyHboxContainer" type="HBoxContainer" parent="KeyOrWord/KeyVboxContainer" unique_id=982113398]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="KeyDropdown" type="OptionButton" parent="KeyOrWord/KeyVboxContainer/KeyHboxContainer" unique_id=66224687]
+custom_minimum_size = Vector2(324, 64)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.0035191544, 0.0035191746, 0.0035191574, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.099985994, 0.099985994, 0.099985994, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_x7ij1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ttey5")
+theme_override_styles/hover = SubResource("StyleBoxFlat_efsaw")
+alignment = 1
+selected = 1
+item_count = 4
+popup/item_0/text = "ENDING_CONVERSATION"
+popup/item_0/id = 0
+popup/item_1/text = "GIVE_ITEM"
+popup/item_1/id = 1
+popup/item_2/text = "TAKE_ITEM"
+popup/item_2/id = 2
+popup/item_3/text = "NOT_TAKE_ITEM"
+popup/item_3/id = 3
+
+[node name="ExtraInfoLabel" type="Label" parent="KeyOrWord/KeyVboxContainer/KeyHboxContainer" unique_id=1675133181]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
+text = "EXTRA INFO : "
+
+[node name="ExtraInfo" type="LineEdit" parent="KeyOrWord/KeyVboxContainer/KeyHboxContainer" unique_id=404777005]
+visible = false
+custom_maximum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_co48d")
+theme_override_styles/focus = SubResource("StyleBoxFlat_aev6k")
+alignment = 1
+
+[node name="QuestInfo" type="LineEdit" parent="KeyOrWord/KeyVboxContainer" unique_id=1672240437]
+custom_maximum_size = Vector2(-1, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_co48d")
+theme_override_styles/focus = SubResource("StyleBoxFlat_aev6k")
+placeholder_text = "Add Quest Information Here..."
+alignment = 1
+
+[node name="AddOption" type="Button" parent="." unique_id=1525642077]
+visible = false
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_ise3h")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_r4clq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4h73g")
+text = "ADD OPTION"
+
+[node name="OptionContainer" type="VBoxContainer" parent="." unique_id=977947400]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="OptionLabel" type="Label" parent="OptionContainer" unique_id=626033556]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("StyleBoxFlat_thssj")
+text = "Option 1"
+horizontal_alignment = 1
+
+[node name="OptionWord" type="TextEdit" parent="OptionContainer" unique_id=945222339]
+custom_minimum_size = Vector2(259, 129)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_fugss")
+wrap_mode = 1
+tab_input_mode = false
