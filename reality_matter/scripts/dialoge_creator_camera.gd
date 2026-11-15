@@ -6,7 +6,7 @@ const ZOOM_INCREMENT: float = 0.1
 const ZOOM_RATE: float = 8.0
 const MIN_ZOOM: float = 0.4
 const MAX_ZOOM: float = 1.0
-const MOVE_SPEED: float = 2.0
+const MOVE_SPEED: float = 1.0
 
 func _physics_process(delta: float):
 	zoom = lerp(zoom,target_zoom * Vector2.ONE, ZOOM_RATE * delta)
@@ -18,7 +18,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		#print_debug("DOING IT")
 		if event.button_mask == MOUSE_BUTTON_MASK_LEFT:
 			#print_debug("MOVING IT")
-			position -= event.relative * zoom * MOVE_SPEED
+			position -= event.relative * (Vector2(1.0,1.0)/zoom) * MOVE_SPEED
 	
 	if event is InputEventMouseButton and event.is_pressed():
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:

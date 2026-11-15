@@ -57,9 +57,10 @@ bg_color = Color(1, 1, 1, 1)
 border_color = Color(0, 0, 0, 1)
 
 [node name="KeyWordContainer" type="VBoxContainer" unique_id=977923216]
+custom_maximum_size = Vector2(649, -1)
 offset_right = 40.0
 offset_bottom = 40.0
-size_flags_horizontal = 3
+size_flags_horizontal = 4
 theme_override_constants/separation = 66
 script = ExtResource("1_re0u7")
 
@@ -86,11 +87,13 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_5iqtk")
 theme_override_styles/hover = SubResource("StyleBoxFlat_2e1ft")
 alignment = 1
 selected = 0
-item_count = 2
-popup/item_0/text = "WORD"
+item_count = 3
+popup/item_0/text = "NONE"
 popup/item_0/id = 0
-popup/item_1/text = "KEY"
+popup/item_1/text = "WORD"
 popup/item_1/id = 1
+popup/item_2/text = "KEY"
+popup/item_2/id = 2
 
 [node name="KeyOrWord" type="HBoxContainer" parent="." unique_id=1692605999]
 layout_mode = 2
@@ -110,6 +113,7 @@ wrap_mode = 1
 tab_input_mode = false
 
 [node name="KeyVboxContainer" type="VBoxContainer" parent="KeyOrWord" unique_id=257296052]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 1
@@ -180,12 +184,15 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_r4clq")
 theme_override_styles/hover = SubResource("StyleBoxFlat_4h73g")
 text = "ADD OPTION"
 
-[node name="OptionContainer" type="VBoxContainer" parent="." unique_id=977947400]
-visible = false
+[node name="OptionsVBox" type="VBoxContainer" parent="." unique_id=1033044855]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="OptionContainer" unique_id=626033556]
+[node name="OptionContainer" type="VBoxContainer" parent="OptionsVBox" unique_id=977947400]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="OptionLabel" type="Label" parent="OptionsVBox/OptionContainer" unique_id=626033556]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
@@ -193,7 +200,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_thssj")
 text = "Option 1"
 horizontal_alignment = 1
 
-[node name="OptionWord" type="TextEdit" parent="OptionContainer" unique_id=945222339]
+[node name="OptionWord" type="TextEdit" parent="OptionsVBox/OptionContainer" unique_id=945222339]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -203,3 +210,14 @@ theme_override_font_sizes/font_size = 41
 theme_override_styles/normal = SubResource("StyleBoxFlat_fugss")
 wrap_mode = 1
 tab_input_mode = false
+
+[node name="RemoveOption" type="Button" parent="OptionsVBox/OptionContainer" unique_id=2118694411]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_ise3h")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_r4clq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4h73g")
+text = "REMOVE"

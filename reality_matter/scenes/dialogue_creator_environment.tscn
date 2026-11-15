@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cy3tmjmoao310" path="res://assets/tiles/GridImage3.png" id="3_h717q"]
 [ext_resource type="Script" uid="uid://dwfo3k54vf2gh" path="res://scripts/dialoge_creator_camera.gd" id="3_qyayw"]
 [ext_resource type="Texture2D" uid="uid://d2xq2s74bxqce" path="res://assets/sprites/uielements/Icon_08.png" id="4_h717q"]
+[ext_resource type="Theme" uid="uid://cg086027rtnh0" path="res://assets/themes/game_theme.tres" id="5_nb2s6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0tec"]
 bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
@@ -50,6 +51,7 @@ mouse_filter = 2
 script = ExtResource("1_72saa")
 
 [node name="dialoge_creator_camera" type="Camera2D" parent="." unique_id=1046434615]
+unique_name_in_owner = true
 limit_smoothed = true
 script = ExtResource("3_qyayw")
 
@@ -63,22 +65,20 @@ centered = false
 offset = Vector2(-32, -32)
 
 [node name="Line2D" type="Line2D" parent="." unique_id=1632395650]
+visible = false
 points = PackedVector2Array(788, 325, 394, 390)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=650237238]
+[node name="Column" type="VBoxContainer" parent="." unique_id=497411163]
+visible = false
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 0
 offset_left = 2.0
 offset_top = 1.0
-offset_right = 2864.0
-offset_bottom = 1233.0
+offset_right = 2211.0
+offset_bottom = 1885.0
 theme_override_constants/separation = 66
 
-[node name="Column" type="VBoxContainer" parent="HBoxContainer" unique_id=497411163]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-theme_override_constants/separation = 66
-
-[node name="DialogueNumber" type="Label" parent="HBoxContainer/Column" unique_id=1021705478]
+[node name="DialogueNumber" type="Label" parent="Column" unique_id=1021705478]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -87,12 +87,12 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "DIALOGUE 1"
 horizontal_alignment = 1
 
-[node name="Line" type="HBoxContainer" parent="HBoxContainer/Column" unique_id=1214424175]
+[node name="Line" type="HBoxContainer" parent="Column" unique_id=1214424175]
 layout_mode = 2
 theme_override_constants/separation = 66
 alignment = 1
 
-[node name="StartConversationLabel" type="Label" parent="HBoxContainer/Column/Line" unique_id=556725994]
+[node name="StartConversationLabel" type="Label" parent="Column/Line" unique_id=556725994]
 custom_minimum_size = Vector2(584, 64)
 custom_maximum_size = Vector2(-1, 64)
 layout_mode = 2
@@ -102,14 +102,14 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "START CONVERSATION   :   "
 horizontal_alignment = 1
 
-[node name="PointerImage" type="TextureRect" parent="HBoxContainer/Column/Line" unique_id=41957095]
+[node name="PointerImage" type="TextureRect" parent="Column/Line" unique_id=41957095]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("4_h717q")
 flip_h = true
 
-[node name="KeyWord" type="OptionButton" parent="HBoxContainer/Column/Line" unique_id=1194346532]
+[node name="KeyWord" type="OptionButton" parent="Column/Line" unique_id=1194346532]
 custom_minimum_size = Vector2(129, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -128,7 +128,7 @@ popup/item_0/id = 0
 popup/item_1/text = "KEY"
 popup/item_1/id = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column/Line" unique_id=80393829]
+[node name="TwoDot" type="Label" parent="Column/Line" unique_id=80393829]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -137,17 +137,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="Vbox" type="VBoxContainer" parent="HBoxContainer/Column/Line" unique_id=355901512]
+[node name="Vbox" type="VBoxContainer" parent="Column/Line" unique_id=355901512]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 1
 
-[node name="KeyOrWord" type="HBoxContainer" parent="HBoxContainer/Column/Line/Vbox" unique_id=1549231431]
+[node name="KeyOrWord" type="HBoxContainer" parent="Column/Line/Vbox" unique_id=1549231431]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="KeyDropdown" type="OptionButton" parent="HBoxContainer/Column/Line/Vbox/KeyOrWord" unique_id=463793122]
+[node name="KeyDropdown" type="OptionButton" parent="Column/Line/Vbox/KeyOrWord" unique_id=463793122]
 custom_minimum_size = Vector2(324, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -170,7 +170,7 @@ popup/item_2/id = 2
 popup/item_3/text = "NOT_TAKE_ITEM"
 popup/item_3/id = 3
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column/Line/Vbox/KeyOrWord" unique_id=703402023]
+[node name="TextEdit" type="TextEdit" parent="Column/Line/Vbox/KeyOrWord" unique_id=703402023]
 visible = false
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
@@ -182,7 +182,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column/Line/Vbox/KeyOrWord" unique_id=1065239830]
+[node name="PlusButton" type="Button" parent="Column/Line/Vbox/KeyOrWord" unique_id=1065239830]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -190,7 +190,7 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column/Line/Vbox" unique_id=970571216]
+[node name="PlusButton" type="Button" parent="Column/Line/Vbox" unique_id=970571216]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -198,15 +198,15 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Column/Line" unique_id=502100920]
+[node name="VBoxContainer" type="VBoxContainer" parent="Column/Line" unique_id=502100920]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Option1" type="HBoxContainer" parent="HBoxContainer/Column/Line/VBoxContainer" unique_id=1353537940]
+[node name="Option1" type="HBoxContainer" parent="Column/Line/VBoxContainer" unique_id=1353537940]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/Column/Line/VBoxContainer/Option1" unique_id=486943136]
+[node name="OptionLabel" type="Label" parent="Column/Line/VBoxContainer/Option1" unique_id=486943136]
 custom_minimum_size = Vector2(259, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -215,7 +215,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "OPTION 1"
 horizontal_alignment = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column/Line/VBoxContainer/Option1" unique_id=460934255]
+[node name="TwoDot" type="Label" parent="Column/Line/VBoxContainer/Option1" unique_id=460934255]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -224,7 +224,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column/Line/VBoxContainer/Option1" unique_id=493022006]
+[node name="TextEdit" type="TextEdit" parent="Column/Line/VBoxContainer/Option1" unique_id=493022006]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -235,7 +235,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column/Line/VBoxContainer/Option1" unique_id=195451534]
+[node name="PlusButton" type="Button" parent="Column/Line/VBoxContainer/Option1" unique_id=195451534]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -243,11 +243,11 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="Option2" type="HBoxContainer" parent="HBoxContainer/Column/Line/VBoxContainer" unique_id=451256043]
+[node name="Option2" type="HBoxContainer" parent="Column/Line/VBoxContainer" unique_id=451256043]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/Column/Line/VBoxContainer/Option2" unique_id=1617047689]
+[node name="OptionLabel" type="Label" parent="Column/Line/VBoxContainer/Option2" unique_id=1617047689]
 custom_minimum_size = Vector2(259, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -256,7 +256,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "OPTION 2"
 horizontal_alignment = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column/Line/VBoxContainer/Option2" unique_id=1593424548]
+[node name="TwoDot" type="Label" parent="Column/Line/VBoxContainer/Option2" unique_id=1593424548]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -265,7 +265,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column/Line/VBoxContainer/Option2" unique_id=983252664]
+[node name="TextEdit" type="TextEdit" parent="Column/Line/VBoxContainer/Option2" unique_id=983252664]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -276,7 +276,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column/Line/VBoxContainer/Option2" unique_id=1743701367]
+[node name="PlusButton" type="Button" parent="Column/Line/VBoxContainer/Option2" unique_id=1743701367]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -284,11 +284,11 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="Option3" type="HBoxContainer" parent="HBoxContainer/Column/Line/VBoxContainer" unique_id=1012542717]
+[node name="Option3" type="HBoxContainer" parent="Column/Line/VBoxContainer" unique_id=1012542717]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/Column/Line/VBoxContainer/Option3" unique_id=870258029]
+[node name="OptionLabel" type="Label" parent="Column/Line/VBoxContainer/Option3" unique_id=870258029]
 custom_minimum_size = Vector2(259, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -297,7 +297,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "OPTION 3"
 horizontal_alignment = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column/Line/VBoxContainer/Option3" unique_id=2068303353]
+[node name="TwoDot" type="Label" parent="Column/Line/VBoxContainer/Option3" unique_id=2068303353]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -306,7 +306,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column/Line/VBoxContainer/Option3" unique_id=1119481279]
+[node name="TextEdit" type="TextEdit" parent="Column/Line/VBoxContainer/Option3" unique_id=1119481279]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -317,7 +317,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column/Line/VBoxContainer/Option3" unique_id=168812375]
+[node name="PlusButton" type="Button" parent="Column/Line/VBoxContainer/Option3" unique_id=168812375]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -325,14 +325,18 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="Column2" type="VBoxContainer" parent="HBoxContainer" unique_id=1155545298]
+[node name="Column2" type="VBoxContainer" parent="." unique_id=1155545298]
 visible = false
 custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 651.0
+offset_bottom = 1040.0
 size_flags_vertical = 0
 theme_override_constants/separation = 1
 
-[node name="DialogueNumber" type="Label" parent="HBoxContainer/Column2" unique_id=1053146167]
+[node name="DialogueNumber" type="Label" parent="Column2" unique_id=1053146167]
 custom_minimum_size = Vector2(64, 64)
 custom_maximum_size = Vector2(-1, 64)
 layout_mode = 2
@@ -344,14 +348,14 @@ text = "DIALOGUE 2
 "
 horizontal_alignment = 1
 
-[node name="Line" type="VBoxContainer" parent="HBoxContainer/Column2" unique_id=662626330]
+[node name="Line" type="VBoxContainer" parent="Column2" unique_id=662626330]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/separation = 66
 alignment = 1
 
-[node name="StartConversationLabel" type="Label" parent="HBoxContainer/Column2/Line" unique_id=1504880009]
+[node name="StartConversationLabel" type="Label" parent="Column2/Line" unique_id=1504880009]
 custom_minimum_size = Vector2(584, 64)
 custom_maximum_size = Vector2(-1, 64)
 layout_mode = 2
@@ -361,7 +365,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "START CONVERSATION"
 horizontal_alignment = 1
 
-[node name="KeyWord" type="OptionButton" parent="HBoxContainer/Column2/Line" unique_id=2027934749]
+[node name="KeyWord" type="OptionButton" parent="Column2/Line" unique_id=2027934749]
 custom_minimum_size = Vector2(129, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -380,7 +384,7 @@ popup/item_0/id = 0
 popup/item_1/text = "KEY"
 popup/item_1/id = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column2/Line" unique_id=1166514091]
+[node name="TwoDot" type="Label" parent="Column2/Line" unique_id=1166514091]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -389,17 +393,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="Vbox" type="VBoxContainer" parent="HBoxContainer/Column2/Line" unique_id=1212252570]
+[node name="Vbox" type="VBoxContainer" parent="Column2/Line" unique_id=1212252570]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 1
 
-[node name="KeyOrWord" type="HBoxContainer" parent="HBoxContainer/Column2/Line/Vbox" unique_id=1345895570]
+[node name="KeyOrWord" type="HBoxContainer" parent="Column2/Line/Vbox" unique_id=1345895570]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="KeyDropdown" type="OptionButton" parent="HBoxContainer/Column2/Line/Vbox/KeyOrWord" unique_id=1375508007]
+[node name="KeyDropdown" type="OptionButton" parent="Column2/Line/Vbox/KeyOrWord" unique_id=1375508007]
 custom_minimum_size = Vector2(324, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -422,7 +426,7 @@ popup/item_2/id = 2
 popup/item_3/text = "NOT_TAKE_ITEM"
 popup/item_3/id = 3
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column2/Line/Vbox/KeyOrWord" unique_id=728457272]
+[node name="TextEdit" type="TextEdit" parent="Column2/Line/Vbox/KeyOrWord" unique_id=728457272]
 visible = false
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
@@ -434,7 +438,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column2/Line/Vbox/KeyOrWord" unique_id=22738201]
+[node name="PlusButton" type="Button" parent="Column2/Line/Vbox/KeyOrWord" unique_id=22738201]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -442,7 +446,7 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column2/Line/Vbox" unique_id=2061744864]
+[node name="PlusButton" type="Button" parent="Column2/Line/Vbox" unique_id=2061744864]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -450,15 +454,15 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Column2/Line" unique_id=151130965]
+[node name="VBoxContainer" type="VBoxContainer" parent="Column2/Line" unique_id=151130965]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Option1" type="HBoxContainer" parent="HBoxContainer/Column2/Line/VBoxContainer" unique_id=1529478777]
+[node name="Option1" type="HBoxContainer" parent="Column2/Line/VBoxContainer" unique_id=1529478777]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/Column2/Line/VBoxContainer/Option1" unique_id=159503834]
+[node name="OptionLabel" type="Label" parent="Column2/Line/VBoxContainer/Option1" unique_id=159503834]
 custom_minimum_size = Vector2(259, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -467,7 +471,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "OPTION 1"
 horizontal_alignment = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column2/Line/VBoxContainer/Option1" unique_id=1638947018]
+[node name="TwoDot" type="Label" parent="Column2/Line/VBoxContainer/Option1" unique_id=1638947018]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -476,7 +480,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column2/Line/VBoxContainer/Option1" unique_id=2079319202]
+[node name="TextEdit" type="TextEdit" parent="Column2/Line/VBoxContainer/Option1" unique_id=2079319202]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -487,7 +491,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column2/Line/VBoxContainer/Option1" unique_id=1484580802]
+[node name="PlusButton" type="Button" parent="Column2/Line/VBoxContainer/Option1" unique_id=1484580802]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -495,11 +499,11 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="Option2" type="HBoxContainer" parent="HBoxContainer/Column2/Line/VBoxContainer" unique_id=1836951552]
+[node name="Option2" type="HBoxContainer" parent="Column2/Line/VBoxContainer" unique_id=1836951552]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/Column2/Line/VBoxContainer/Option2" unique_id=282729085]
+[node name="OptionLabel" type="Label" parent="Column2/Line/VBoxContainer/Option2" unique_id=282729085]
 custom_minimum_size = Vector2(259, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -508,7 +512,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "OPTION 2"
 horizontal_alignment = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column2/Line/VBoxContainer/Option2" unique_id=487305841]
+[node name="TwoDot" type="Label" parent="Column2/Line/VBoxContainer/Option2" unique_id=487305841]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -517,7 +521,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column2/Line/VBoxContainer/Option2" unique_id=1216802067]
+[node name="TextEdit" type="TextEdit" parent="Column2/Line/VBoxContainer/Option2" unique_id=1216802067]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -528,7 +532,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column2/Line/VBoxContainer/Option2" unique_id=843322557]
+[node name="PlusButton" type="Button" parent="Column2/Line/VBoxContainer/Option2" unique_id=843322557]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -536,11 +540,11 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="Option3" type="HBoxContainer" parent="HBoxContainer/Column2/Line/VBoxContainer" unique_id=1802081884]
+[node name="Option3" type="HBoxContainer" parent="Column2/Line/VBoxContainer" unique_id=1802081884]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/Column2/Line/VBoxContainer/Option3" unique_id=1867264070]
+[node name="OptionLabel" type="Label" parent="Column2/Line/VBoxContainer/Option3" unique_id=1867264070]
 custom_minimum_size = Vector2(259, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -549,7 +553,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = "OPTION 3"
 horizontal_alignment = 1
 
-[node name="TwoDot" type="Label" parent="HBoxContainer/Column2/Line/VBoxContainer/Option3" unique_id=1268949244]
+[node name="TwoDot" type="Label" parent="Column2/Line/VBoxContainer/Option3" unique_id=1268949244]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -558,7 +562,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_i0tec")
 text = ":"
 horizontal_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Column2/Line/VBoxContainer/Option3" unique_id=542398578]
+[node name="TextEdit" type="TextEdit" parent="Column2/Line/VBoxContainer/Option3" unique_id=542398578]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -569,7 +573,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="PlusButton" type="Button" parent="HBoxContainer/Column2/Line/VBoxContainer/Option3" unique_id=899387692]
+[node name="PlusButton" type="Button" parent="Column2/Line/VBoxContainer/Option3" unique_id=899387692]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -577,16 +581,14 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 32
 text = "+"
 
-[node name="DialogueContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=169056160]
-custom_minimum_size = Vector2(584, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_constants/separation = 131
-
-[node name="DialogueNumber" type="Label" parent="HBoxContainer/DialogueContainer" unique_id=618947791]
+[node name="DialogueNumber" type="Label" parent="." unique_id=618947791]
+visible = false
 custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
+layout_mode = 0
+offset_left = 554.0
+offset_top = 1.0
+offset_right = 813.0
+offset_bottom = 65.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -594,17 +596,22 @@ theme_override_font_sizes/font_size = 44
 theme_override_styles/normal = SubResource("StyleBoxFlat_i87sk")
 text = "DIALOGUE 3"
 
-[node name="Line" type="HBoxContainer" parent="HBoxContainer/DialogueContainer" unique_id=1589406306]
-layout_mode = 2
+[node name="Line" type="HBoxContainer" parent="." unique_id=1589406306]
+visible = false
+layout_mode = 0
+offset_left = 359.0
+offset_top = 1.0
+offset_right = 1009.0
+offset_bottom = 1040.0
 size_flags_horizontal = 4
 theme_override_constants/separation = 64
 
-[node name="KeywordContainer" type="VBoxContainer" parent="HBoxContainer/DialogueContainer/Line" unique_id=495112657]
+[node name="KeywordContainer" type="VBoxContainer" parent="Line" unique_id=495112657]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 66
 
-[node name="KeywordLabel" type="Label" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=1985671668]
+[node name="KeywordLabel" type="Label" parent="Line/KeywordContainer" unique_id=1985671668]
 custom_minimum_size = Vector2(650, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
@@ -612,7 +619,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_bn5ea")
 text = "STARTING CONVERSATION"
 horizontal_alignment = 1
 
-[node name="WordText" type="TextEdit" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=857123912]
+[node name="WordText" type="TextEdit" parent="Line/KeywordContainer" unique_id=857123912]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -623,7 +630,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="AddOption" type="Button" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=1751591953]
+[node name="AddOption" type="Button" parent="Line/KeywordContainer" unique_id=1751591953]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -634,7 +641,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_aev6k")
 theme_override_styles/hover = SubResource("StyleBoxFlat_hw0aq")
 text = "ADD OPTION"
 
-[node name="OptionLabel" type="Label" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=2070989966]
+[node name="OptionLabel" type="Label" parent="Line/KeywordContainer" unique_id=2070989966]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
@@ -642,7 +649,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_bn5ea")
 text = "Option 1"
 horizontal_alignment = 1
 
-[node name="WordText2" type="TextEdit" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=852083511]
+[node name="WordText2" type="TextEdit" parent="Line/KeywordContainer" unique_id=852083511]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -654,7 +661,7 @@ text = "Hello"
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="OptionLabel2" type="Label" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=835136154]
+[node name="OptionLabel2" type="Label" parent="Line/KeywordContainer" unique_id=835136154]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
@@ -662,7 +669,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_bn5ea")
 text = "Option 2"
 horizontal_alignment = 1
 
-[node name="WordText3" type="TextEdit" parent="HBoxContainer/DialogueContainer/Line/KeywordContainer" unique_id=1136742500]
+[node name="WordText3" type="TextEdit" parent="Line/KeywordContainer" unique_id=1136742500]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -674,16 +681,21 @@ text = "Hi there!"
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="Line2" type="HBoxContainer" parent="HBoxContainer/DialogueContainer" unique_id=712889363]
-layout_mode = 2
+[node name="Line2" type="HBoxContainer" parent="." unique_id=712889363]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 1366.0
+offset_bottom = 520.0
 theme_override_constants/separation = 64
 
-[node name="KeywordContainer" type="VBoxContainer" parent="HBoxContainer/DialogueContainer/Line2" unique_id=523368031]
+[node name="KeywordContainer" type="VBoxContainer" parent="Line2" unique_id=523368031]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 66
 
-[node name="KeywordLabel" type="Label" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer" unique_id=1292356762]
+[node name="KeywordLabel" type="Label" parent="Line2/KeywordContainer" unique_id=1292356762]
 custom_minimum_size = Vector2(650, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
@@ -691,7 +703,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_bn5ea")
 text = "Hello#1"
 horizontal_alignment = 1
 
-[node name="KeyWord" type="OptionButton" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer" unique_id=943340105]
+[node name="KeyWord" type="OptionButton" parent="Line2/KeywordContainer" unique_id=943340105]
 custom_minimum_size = Vector2(129, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -712,12 +724,12 @@ popup/item_0/id = 0
 popup/item_1/text = "KEY"
 popup/item_1/id = 1
 
-[node name="KeyOrWord" type="HBoxContainer" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer" unique_id=1801998815]
+[node name="KeyOrWord" type="HBoxContainer" parent="Line2/KeywordContainer" unique_id=1801998815]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 1
 
-[node name="KeyDropdown" type="OptionButton" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer/KeyOrWord" unique_id=1678938276]
+[node name="KeyDropdown" type="OptionButton" parent="Line2/KeywordContainer/KeyOrWord" unique_id=1678938276]
 visible = false
 custom_minimum_size = Vector2(324, 64)
 layout_mode = 2
@@ -741,7 +753,7 @@ popup/item_2/id = 2
 popup/item_3/text = "NOT_TAKE_ITEM"
 popup/item_3/id = 3
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer/KeyOrWord" unique_id=1050134961]
+[node name="TextEdit" type="TextEdit" parent="Line2/KeywordContainer/KeyOrWord" unique_id=1050134961]
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
 size_flags_vertical = 0
@@ -752,7 +764,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
 
-[node name="AddOption" type="Button" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer" unique_id=631495410]
+[node name="AddOption" type="Button" parent="Line2/KeywordContainer" unique_id=631495410]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -763,12 +775,12 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_aev6k")
 theme_override_styles/hover = SubResource("StyleBoxFlat_hw0aq")
 text = "ADD OPTION"
 
-[node name="KeywordContainer2" type="VBoxContainer" parent="HBoxContainer/DialogueContainer/Line2" unique_id=1972312815]
+[node name="KeywordContainer2" type="VBoxContainer" parent="Line2" unique_id=1972312815]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 66
 
-[node name="KeywordLabel" type="Label" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer2" unique_id=1480502157]
+[node name="KeywordLabel" type="Label" parent="Line2/KeywordContainer2" unique_id=1480502157]
 custom_minimum_size = Vector2(650, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
@@ -776,7 +788,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_bn5ea")
 text = "Hi there#2"
 horizontal_alignment = 1
 
-[node name="KeyWord" type="OptionButton" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer2" unique_id=782160322]
+[node name="KeyWord" type="OptionButton" parent="Line2/KeywordContainer2" unique_id=782160322]
 custom_minimum_size = Vector2(129, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -797,12 +809,12 @@ popup/item_0/id = 0
 popup/item_1/text = "KEY"
 popup/item_1/id = 1
 
-[node name="KeyOrWord" type="HBoxContainer" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer2" unique_id=1218931614]
+[node name="KeyOrWord" type="HBoxContainer" parent="Line2/KeywordContainer2" unique_id=1218931614]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 1
 
-[node name="KeyDropdown" type="OptionButton" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer2/KeyOrWord" unique_id=1135834992]
+[node name="KeyDropdown" type="OptionButton" parent="Line2/KeywordContainer2/KeyOrWord" unique_id=1135834992]
 custom_minimum_size = Vector2(324, 64)
 layout_mode = 2
 size_flags_vertical = 0
@@ -827,7 +839,7 @@ popup/item_2/id = 2
 popup/item_3/text = "NOT_TAKE_ITEM"
 popup/item_3/id = 3
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer/DialogueContainer/Line2/KeywordContainer2/KeyOrWord" unique_id=463745024]
+[node name="TextEdit" type="TextEdit" parent="Line2/KeywordContainer2/KeyOrWord" unique_id=463745024]
 visible = false
 custom_minimum_size = Vector2(259, 129)
 layout_mode = 2
@@ -838,3 +850,32 @@ theme_override_font_sizes/font_size = 41
 theme_override_styles/normal = SubResource("StyleBoxFlat_nb2s6")
 wrap_mode = 1
 tab_input_mode = false
+
+[node name="DialogueContainer" type="VBoxContainer" parent="." unique_id=169056160]
+visible = false
+custom_minimum_size = Vector2(584, 0)
+layout_mode = 0
+offset_left = 196.0
+offset_top = 1.0
+offset_right = 780.0
+offset_bottom = 1.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/separation = 131
+
+[node name="DialoguesHBOX" type="HBoxContainer" parent="." unique_id=650237238]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 130.0
+offset_bottom = 65.0
+theme = ExtResource("5_nb2s6")
+theme_override_constants/separation = 66
+
+[node name="AddDialogueButton" type="Button" parent="DialoguesHBOX" unique_id=1638987700]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_vertical = 0
+text = "ADD DIALOGUE"
