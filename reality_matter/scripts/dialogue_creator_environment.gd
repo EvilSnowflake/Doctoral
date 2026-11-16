@@ -65,6 +65,7 @@ func add_keyword_instance_to_dialogue(_dial_num: int, _word: String , _line_num:
 	if _caller_comp == null: return
 	_caller_comp.add_child_keyword(new_keyword_cont)
 	new_keyword_cont.parent_keyword = _caller_comp
+	
 	#Here we will instantiate a new keyword that is either the beginning of the
 	#conversation where the name of the keyword will be STARTING CONVERSATION
 	#or the name will be linked to an option of a parent keyword. I need to know
