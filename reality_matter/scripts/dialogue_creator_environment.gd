@@ -2,8 +2,11 @@ extends Control
 
 const GAME_THEME: Theme = preload("res://assets/themes/game_theme.tres")
 const KEY_WORD_CONTAINER = preload("res://scenes/key_word_container.tscn")
+const KEYWORD_CONNECTOR = preload("res://scenes/keyword_connector.tscn")
 const KEYWORDVBOXNAME = "KeywordVBOX"
 const KEYWORDLINENAME = "LineHBOX"
+
+var lines2d_array: Array[Line2D] = []
 
 @onready var dialogues_hbox: HBoxContainer = %DialoguesHBOX
 @onready var add_dialogue_button: Button = %AddDialogueButton
@@ -52,6 +55,7 @@ func add_keyword_instance_to_dialogue(_dial_num: int, _word: String , _line_num:
 	var new_keyword_cont: VBoxContainer = KEY_WORD_CONTAINER.instantiate()
 	new_keyword_cont.current_line = _line_num
 	new_keyword_cont.current_dialogue = _dial_num
+	new_keyword_cont.keyword_modified.connect(_point_to_child)
 	var hbox_child_vbox: VBoxContainer = dialogues_hbox.get_child(_dial_num-1)
 	if hbox_child_vbox.get_child_count() == _line_num:
 		var new_line: HBoxContainer = HBoxContainer.new()
@@ -63,9 +67,12 @@ func add_keyword_instance_to_dialogue(_dial_num: int, _word: String , _line_num:
 	new_keyword_cont.modify_keyword_title(_word)
 	new_keyword_cont.option_added.connect(add_keyword_instance_to_dialogue)
 	if _caller_comp == null: return
+	var kw_connect: Line2D = KEYWORD_CONNECTOR.instantiate()
+	lines2d_array.append(kw_connect)
+	add_child(kw_connect)
+	kw_connect.set_point_node(_caller_comp, new_keyword_cont)
 	_caller_comp.add_child_keyword(new_keyword_cont)
 	new_keyword_cont.parent_keyword = _caller_comp
-	
 	#Here we will instantiate a new keyword that is either the beginning of the
 	#conversation where the name of the keyword will be STARTING CONVERSATION
 	#or the name will be linked to an option of a parent keyword. I need to know
@@ -73,3 +80,13 @@ func add_keyword_instance_to_dialogue(_dial_num: int, _word: String , _line_num:
 	#if that dialogvbox has the correct amount of lines for me to add the
 	#keyword to that numbered line, otherwise I should create a new one at the
 	#end.
+
+func _point_to_child(_dl: int, _ln: int):
+	var deleted_line: int = -1
+	for l in range(lines2d_array.size()):
+		if lines2d_array[l] == null:
+			deleted_line = l
+			continue
+		lines2d_array[l].fix_both_points()
+	if deleted_line != -1:
+		lines2d_array.pop_at(deleted_line)

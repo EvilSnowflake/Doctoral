@@ -2,13 +2,13 @@ extends VBoxContainer
 
 signal option_added()
 signal option_removed(num: int, dial: int, line: int)
-signal keyword_modified()
+signal keyword_modified(_dialogue:int, _line: int)
 
 const START: String = "STARTING CONVERSATION"
 
 var parent_keyword: VBoxContainer:
 	set(v):
-		parent_keyword = v
+		parent_keyword = v; keyword_modified.emit(current_dialogue, current_line)
 	get():
 		return parent_keyword
 var child_keywords: Array[VBoxContainer]
@@ -82,10 +82,15 @@ func add_option_to_keyword() -> void:
 	option_added.emit(current_dialogue,"",current_line+1,self)
 	var option_wrd: TextEdit = new_option.get_node("OptionWord")
 	option_wrd.text_changed.connect(_on_option_word_text_changed.bind(options_v_box.get_child_count()))
+	#keyword_modified.emit(current_dialogue, current_line)
 	#TEXT NOT SHOWN
 
 func remove_child_option(_ch_num: int) -> void:
 	#print_debug(_ch_num)
+	var has_ch: bool = child_keywords[_ch_num].child_keywords.size() > 0
+	if has_ch:
+		print_debug("OPTIONS HAS CHILDREN, YOU CANT DELETE IT!")
+		return
 	var counter: int = 0
 	var counter_name: int = 0
 	#for ch in options_v_box.get_children():
@@ -126,6 +131,7 @@ func remove_child_option(_ch_num: int) -> void:
 	child_keywords.pop_at(_ch_num).queue_free()
 	
 	option_removed.emit(_ch_num,current_dialogue,current_line)
+	keyword_modified.emit(current_dialogue, current_line)
 
 func _on_key_drpodown_index_selected(_ind: int):
 	match _ind:

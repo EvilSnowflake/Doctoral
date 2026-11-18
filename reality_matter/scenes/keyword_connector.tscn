@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://b8qdvktw2q00i"]
+
+[ext_resource type="Script" uid="uid://bf0tmrdg68xia" path="res://scripts/keyword_connector.gd" id="1_knbx0"]
+
+[node name="keyword_connector" type="Line2D" unique_id=1977241402]
+script = ExtResource("1_knbx0")
+
+[node name="wait_tim" type="Timer" parent="." unique_id=2127376710]
+wait_time = 0.1
+one_shot = true
