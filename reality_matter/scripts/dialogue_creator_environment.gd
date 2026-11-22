@@ -7,6 +7,8 @@ const KEYWORDVBOXNAME = "KeywordVBOX"
 const KEYWORDLINENAME = "LineHBOX"
 
 var lines2d_array: Array[Line2D] = []
+var base_color_number: Array[int] = [0,0,0]
+var increment: float = 16
 
 @onready var dialogues_hbox: HBoxContainer = %DialoguesHBOX
 @onready var add_dialogue_button: Button = %AddDialogueButton
@@ -28,7 +30,6 @@ func _ready():
 	GAME_THEME.set_type_variation(KEYWORDLINENAME,"HBoxContainer")
 	GAME_THEME.set_constant("separation",KEYWORDLINENAME,64)
 	
-	
 
 func _create_dialogue_instance() -> void:
 	var new_dialogue_vbox: VBoxContainer = VBoxContainer.new()
@@ -48,14 +49,23 @@ func _create_dialogue_instance() -> void:
 	new_dialogue_num_label.add_theme_stylebox_override("normal",new_label_stylebox)
 	new_dialogue_vbox.add_child(new_dialogue_num_label)
 	dialogues_hbox.move_child(add_dialogue_button,-1)
-	add_keyword_instance_to_dialogue(dialogues_hbox.get_child_count()-1,"STARTING CONVERSATION")
+	var color_number_array: Array[int] = base_color_number
+	color_number_array[0] = int(((dialogues_hbox.get_child_count()-1)*(increment*2))-1)
+	add_keyword_instance_to_dialogue(dialogues_hbox.get_child_count()-1,"STARTING CONVERSATION", color_number_array)
 	dialoge_creator_camera.position = add_dialogue_button.global_position
 
-func add_keyword_instance_to_dialogue(_dial_num: int, _word: String , _line_num: int = 1, _caller_comp: Node = null) -> void:
+func add_keyword_instance_to_dialogue(_dial_num: int, _word: String, _col: Array , _line_num: int = 1, _caller_comp: Node = null, _option_num: int = 0) -> void:
 	var new_keyword_cont: VBoxContainer = KEY_WORD_CONTAINER.instantiate()
 	new_keyword_cont.current_line = _line_num
 	new_keyword_cont.current_dialogue = _dial_num
 	new_keyword_cont.keyword_modified.connect(_point_to_child)
+	#FIND THE NUMBER FOR THE COLOR HERE
+	
+	new_keyword_cont.col_number = [_col[0], int(_col[1] + increment + _line_num + _option_num), max(int(increment*+_option_num) - 1,0)]
+	#new_keyword_cont.col_number = _col + (increment/_line_num) + ((_option_num+1)/(increment/2))
+	#FIND THE NUMBER FOR THE COLOR HERE
+	if _option_num != 0:
+		new_keyword_cont.option_number = _option_num
 	var hbox_child_vbox: VBoxContainer = dialogues_hbox.get_child(_dial_num-1)
 	if hbox_child_vbox.get_child_count() == _line_num:
 		var new_line: HBoxContainer = HBoxContainer.new()
@@ -73,6 +83,18 @@ func add_keyword_instance_to_dialogue(_dial_num: int, _word: String , _line_num:
 	kw_connect.set_point_node(_caller_comp, new_keyword_cont)
 	_caller_comp.add_child_keyword(new_keyword_cont)
 	new_keyword_cont.parent_keyword = _caller_comp
+	
+	#CHECK IF THE POSITION OF THIS KEYWORD IN THE LINE IS CORRECT
+	#WHLIE THE POSITION IS INCORRECT MOVE THE CHILD
+	var caller_index: int = _caller_comp.get_index()
+	var par_ln: Node = new_keyword_cont.get_parent()
+	var index_to_go: int = new_keyword_cont.get_index()
+	while index_to_go > 0:
+		var other_ch: Node = par_ln.get_child(index_to_go - 1)
+		var other_prnt: Node = other_ch.parent_keyword
+		if other_prnt.get_index() > caller_index : index_to_go -= 1
+		else: break
+	if index_to_go != new_keyword_cont.get_index(): par_ln.move_child(new_keyword_cont,index_to_go);
 	#Here we will instantiate a new keyword that is either the beginning of the
 	#conversation where the name of the keyword will be STARTING CONVERSATION
 	#or the name will be linked to an option of a parent keyword. I need to know

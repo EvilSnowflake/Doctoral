@@ -18,8 +18,10 @@ func set_point_node(_start: Node, _end: Node) -> void:
 	#_follow_end_point_node(0,0)
 	_start.tree_exited.connect(queue_free)
 	_end.tree_exited.connect(queue_free)
+	_end.opt_num_modified.connect(change_color)
+	change_color(_end.col_number)
 
-func fix_both_points():
+func fix_both_points() -> void:
 	await get_tree().process_frame
 	var start_pos: Vector2 = start_point_node.global_position
 	start_pos.y = start_pos.y + start_point_node.size.y
@@ -30,4 +32,7 @@ func fix_both_points():
 	end_pos.x = end_pos.x + (end_point_node.size.x / 2)
 	if get_point_count() >= 2: set_point_position(1, end_pos)
 	else: add_point(end_pos, 1)
-	
+
+func change_color(_col: Array) -> void:
+	#print_debug([_col[0]/255.0,_col[1]/255.0,_col[2]/255.0])
+	default_color = Color(_col[0]/255.0,_col[1]/255.0,_col[2]/255.0)
