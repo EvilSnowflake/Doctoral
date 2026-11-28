@@ -203,7 +203,7 @@
       "NPC_POSITION" : [416.0,96.0],
       "NPC_ITEM_ID" : "1",
       "NPC_DIALOGUE" : {
-       "Dialogue_2":{
+       "Dialogue_1":{
         "STARTING_CONVERSATION" :{
 	     "Hello#1":{
           "OPTION_1": "Hi there#1",
@@ -218,16 +218,16 @@
         },
         "Hello to you too!#1":{
          "Goodbye#2":{
-          "OPTION_1": "Bye#2",
+          "OPTION_1": "Farewell#2",
           "OPTION_2": "Sure#2"
          }
         },
         "Bye#2":"ENDING_CONVERSATION",
-        "Goodbye#2": "ENDING_CONVERSATION",
+        "Farewell#2": "ENDING_CONVERSATION",
         "Sure#2": "ENDING_CONVERSATION",
         "Thanks#2": "GIVE_ITEM"
        },
-       "Dialogue_1":{
+       "Dialogue_2":{
         "STARTING_CONVERSATION" : "I already said hi go away#1",
         "I already said hi go away#1": "ENDING_CONVERSATION"
        }
@@ -260,7 +260,7 @@
       "NPC_POSITION" : [416.0,160.0],
       "NPC_ITEM_ID" : "",
       "NPC_DIALOGUE" : {
-       "Dialogue_2":{
+       "Dialogue_1":{
         "STARTING_CONVERSATION" : "Do you perhaps have a bone item on you?#1",
         "Do you perhaps have a bone item on you?#1":{
          "If you do please give it to me#2":{
@@ -271,7 +271,7 @@
         "Sure#2":"TAKE_ITEM_1|QUEST_0",
         "No#2":"NOT_TAKE_ITEM"
        },
-       "Dialogue_1":{
+       "Dialogue_2":{
         "STARTING_CONVERSATION" : "Thank you for the item#1",
         "Thank you for the item#1": "ENDING_CONVERSATION"
        }
@@ -294,12 +294,12 @@
       "NPC_POSITION" : [416.0,224.0],
       "NPC_ITEM_ID" : "1",
       "NPC_DIALOGUE" : {
-       "Dialogue_2": {
+       "Dialogue_1": {
         "STARTING_CONVERSATION" : "Can you give the other guy a bone?#1",
         "Can you give the other guy a bone?#1": "We can battle if you do!#2",
         "We can battle if you do!#2": "CAN_BATTLE"
        },
-       "Dialogue_1": {
+       "Dialogue_2": {
         "STARTING_CONVERSATION" : "You gave the item?#1",
         "You gave the item?#1": "Let's battle!#2",
         "Let's battle!#2": "BATTLE"

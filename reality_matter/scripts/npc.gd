@@ -219,10 +219,10 @@ func stop_npc_animations() -> void:
 
 ## This function is used by other scripts to give the npc dialogue. When adding
 ## the dialogue we search how many dialogues are contained so that we start with
-## the last one
+## the first one
 func add_dialogue(dial: Dictionary) -> void:
 	CharacterDialogue = dial
-	_dialogues_num = CharacterDialogue.keys().size()
+	_dialogues_num = 1
 
 ## Used to modify the npc's name by other scripts
 func set_char_name(nm: String) -> void:
@@ -394,9 +394,9 @@ func _on_player_start_conversing(player_character: CharacterBody2D) -> void:
 	#After ending the conversation we hide the text and signal the player to move
 	#again
 	dialogue_label.text = ""
-	if _dialogues_num > 1 and _move_on_dialogue:
+	if _dialogues_num < CharacterDialogue.keys().size() and _move_on_dialogue:
 		#print_debug("Moved on the next dialogue")
-		_dialogues_num -= 1
+		_dialogues_num += 1
 	#print_debug("ending conversation")
 	end_dialogue.emit()
 	adjust_player_movement.emit(true)

@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://c77op1odmgf03"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thssj"]
+bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fugss"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ise3h"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r4clq"]
+bg_color = Color(0.103743516, 0.103743546, 0.10374347, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4h73g"]
+bg_color = Color(0.35531357, 0.35531357, 0.35531345, 1)
+
+[node name="OptionContainer" type="VBoxContainer" unique_id=1970092716]
+theme_override_constants/separation = 1
+
+[node name="OptionLabel" type="Label" parent="." unique_id=1953009786]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("StyleBoxFlat_thssj")
+text = "Option 1"
+horizontal_alignment = 1
+
+[node name="OptionWord" type="TextEdit" parent="." unique_id=1250880371]
+custom_minimum_size = Vector2(259, 129)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_fugss")
+wrap_mode = 1
+tab_input_mode = false
+
+[node name="RemoveOption" type="Button" parent="." unique_id=479837778]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_ise3h")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_r4clq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4h73g")
+text = "REMOVE"
